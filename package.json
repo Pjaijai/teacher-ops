@@ -8,7 +8,10 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "test:handwriting": "tsx scripts/handwriting-test.mts",
-    "test:checks": "tsx scripts/check-selftest.mts"
+    "test:checks": "tsx scripts/check-selftest.mts",
+    "render:pdf": "tsx scripts/render-pdf.mts",
+    "corpus:build": "tsx scripts/build-corpus.mts",
+    "test:scoring": "tsx scripts/scoring-test.mts"
   },
   "dependencies": {
     "mathjs": "^15.2.0",
@@ -18,9 +21,11 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@napi-rs/canvas": "^1.0.10",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "pdfjs-dist": "^6.4.299",
     "tsx": "^4.23.15",
     "typescript": "^5"
   }
