@@ -41,7 +41,8 @@
     "tabs": {
       "topic": "按課題",
       "type": "按題型",
-      "reference": "參考題目"
+      "reference": "參考題目",
+      "solve": "解答我的題目"
     },
     "typeHint": "不限課題：選擇題型和難度。",
     "descriptionLocal": "我們會為你出一道新的 DSE 模擬題，並以程式核對答案。題目會儲存在這個瀏覽器。",
@@ -105,7 +106,8 @@
       "community": "同學答案"
     },
     "solutionAfter": "作答後便可查看題解和同學答案。",
-    "solutionAfterLocal": "作答後便可查看題解。"
+    "solutionAfterLocal": "作答後便可查看題解。",
+    "showAnswer": "直接顯示答案（毋須先作答）"
   },
   "mc": {
     "correct": "答對了！",
@@ -202,5 +204,16 @@
       "review": "待檢查",
       "marking": "批改中"
     }
+  },
+  "solve": {
+    "intro": "輸入或拍攝任何物理題目。AI 會找出課程範疇，寫出答案及文憑試式評分準則，並附解題思路及提示。",
+    "photo": "加入題目相片（可多於一頁）",
+    "text": "或輸入題目（連同選項等所需資料）",
+    "placeholder": "例：一輛質量為 1200 kg 的汽車由靜止開始，在 8 s 內均勻加速至 20 m s⁻¹。(a) 求加速度……",
+    "language": "解說語言",
+    "languageAuto": "與題目相同",
+    "button": "解答及評分",
+    "note": "題目會儲存在此裝置的「我的題目」。答案會盡量由程式核對。",
+    "pagesNote": "這 {count} 張相片會按此次序當作同一題目閱讀，可用箭咀調整頁序。"
   }
 }

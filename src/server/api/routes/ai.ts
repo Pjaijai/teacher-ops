@@ -5,6 +5,7 @@ import {
   AiGenerateSchema,
   AiPracticeMarkSchema,
   AiPracticeTranscribeSchema,
+  AiPracticeSolveSchema,
   AiPracticeUnderstandSchema,
   AiWritingFeedbackSchema,
   AiWritingHelperSchema,
@@ -26,6 +27,7 @@ import {
   toPhysicsKind,
   understandPhysicsReference,
   type PhysicsGenerateRequest,
+  solvePhysicsQuestion,
 } from "@/server/services/practice/generate-physics-question";
 import { markMathAnswer } from "@/server/services/practice/mark-answer";
 import { understandReference } from "@/server/services/practice/reference-understand";
@@ -227,6 +229,24 @@ export const aiRoutes = new Hono<AppEnv>()
       }
       if (out.length === 0) throw new Error(failures[0] ?? "No question could be generated.");
       return { questions: out, failed: input.count - out.length };
+    });
+  })
+  .post("/practice/solve", zValidator("json", AiPracticeSolveSchema), (c) => {
+    const { images, text, language } = c.req.valid("json");
+    return streamWork(c, async (step) => {
+      const r = await solvePhysicsQuestion({ images, text, language, onUsage: noUsage, step });
+      const question = toLite({
+        subject: "physics",
+        kind: r.kind,
+        language: language ?? r.language,
+        title: r.question.title.trim().slice(0, 200),
+        topicIds: r.question.topicIds,
+        difficulty: 3,
+        extension: false,
+        content: r.question.content,
+        checkProblems: r.problems,
+      });
+      return { question, note: r.note };
     });
   })
   .post("/practice/transcribe", zValidator("json", AiPracticeTranscribeSchema), (c) => {

@@ -12,6 +12,7 @@ import {
 import { AiPhysicsUnderstandingSchema, physicsUnderstandingFromAi, physicsUnderstandSystem, type PhysicsUnderstanding } from "@/server/ai/prompts/physics-reference";
 import { understandUserPrompt } from "@/server/ai/prompts/math-reference";
 import { PHYSICS_TOPIC_IDS } from "@/server/ai/prompts/physics-rules";
+import { AiSolvedPhysicsQuestionSchema, physicsSolveRepairPrompt, physicsSolveSystem, physicsSolveUserPrompt } from "@/server/ai/prompts/physics-solve";
 import { registerGenerator } from "@/server/services/questions/generators";
 import type { NewQuestion } from "@/server/services/questions/question-bank";
 import { checkPhysicsFigure, checkPhysicsQuestion } from "./physics-check";
@@ -143,3 +144,69 @@ registerGenerator(["physics"], async ({ input, step, onUsage }) => {
   const { question, problems } = await generateCheckedPhysicsQuestion(req, onUsage, step);
   return toNewPhysicsQuestion(req, question, problems);
 });
+
+// --- "Solve my question": the student's own question → answer + HKEAA-style marking scheme ---
+
+export type SolvedPhysicsQuestion = {
+  question: GeneratedPhysicsQuestion;
+  kind: PhysicsKind;
+  language: "zh" | "en";
+  problems: string[];
+  note: string | null;
+};
+
+/** Top model reads the student's question (photo and/or text), solves it; code checks the answers; one repair round. */
+export async function solvePhysicsQuestion(opts: {
+  images: ImageInput[];
+  text?: string;
+  language?: "zh" | "en";
+  onUsage?: UsageSink;
+  step?: <T>(name: string, fn: () => Promise<T>) => Promise<T>;
+}): Promise<SolvedPhysicsQuestion> {
+  const step = opts.step ?? ((_n, fn) => fn());
+  const raw = await step("solve", () =>
+    askStructured({
+      purpose: "physics_solve",
+      tier: "top",
+      system: physicsSolveSystem(),
+      text: physicsSolveUserPrompt({ text: opts.text, hasImages: opts.images.length > 0, language: opts.language }),
+      images: opts.images,
+      schema: AiSolvedPhysicsQuestionSchema,
+      onUsage: opts.onUsage,
+    }),
+  );
+  if (!raw.readable) throw new Error(raw.problemNote ?? "That doesn't look like a readable physics question. Try a clearer photo or type it in.");
+  const kind = raw.kind;
+  const solved = (d: PhysicsDraft): PhysicsDraft => {
+    const topicIds = cleanTopicIds(d.question.topicIds);
+    const content = { ...d.question.content, materials: null, writing: null, figure: null };
+    if (kind !== "mc") Object.assign(content, { options: [], correctOption: null, distractorNotes: [] });
+    return { ...d, question: { ...d.question, topicIds, content } };
+  };
+
+  const first = solved(fromAi(raw));
+  let question = first.question;
+  let problems = await step("check", async () => checkPhysicsDraft(first, kind));
+  if (problems.length > 0) {
+    const repaired = await step("repair", async () =>
+      solved(
+        fromAi(
+          await askStructured({
+            purpose: "physics_solve_repair",
+            tier: "top",
+            system: physicsSolveSystem(),
+            text: physicsSolveRepairPrompt(question, problems),
+            schema: AiGeneratedPhysicsQuestionSchema,
+            onUsage: opts.onUsage,
+          }),
+        ),
+      ),
+    );
+    const after = checkPhysicsDraft(repaired, kind);
+    if (after.length <= problems.length) {
+      question = repaired.question;
+      problems = after;
+    }
+  }
+  return { question, kind, language: raw.language, problems, note: raw.problemNote };
+}

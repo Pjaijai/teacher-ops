@@ -2,12 +2,14 @@
 
 import { ArrowLeft, History } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CommunityAnswers } from "@/features/community/components/community-answers";
 import { ApiClientError } from "@/lib/api-client";
@@ -22,11 +24,42 @@ import { WrittenAnswer } from "./written-answer";
 
 const UNFINISHED = ["answering", "transcribing", "review", "marking"];
 
+/** Subjects with a "Show answer" toggle (see the answer without answering first). */
+const SHOW_ANSWER_SUBJECTS = ["physics"];
+const showAnswerKey = (subject: string) => `practice.showAnswer.${subject}`;
+
+function readShowAnswer(subject: string) {
+  try {
+    return localStorage.getItem(showAnswerKey(subject)) === "1";
+  } catch {
+    return false;
+  }
+}
+
 /** /practice/[questionId]: the question, answering (MC or written), then Solution and Community tabs. */
 export function PracticeQuestionPage({ questionId }: { questionId: string }) {
   const t = useTranslations("practice.question");
   const common = useTranslations("common");
-  const q = usePracticeQuestion(questionId);
+  // "?answer=1" (e.g. after "Solve my question") opens with the answer shown.
+  const [reveal, setReveal] = useState(false);
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("answer") === "1") setReveal(true);
+  }, []);
+  const q = usePracticeQuestion(questionId, reveal);
+  const subject = q.data?.question.subject;
+  const canToggle = Boolean(subject && SHOW_ANSWER_SUBJECTS.includes(subject));
+  useEffect(() => {
+    if (subject && SHOW_ANSWER_SUBJECTS.includes(subject) && readShowAnswer(subject)) setReveal(true);
+  }, [subject]);
+  const toggleReveal = (on: boolean) => {
+    setReveal(on);
+    if (!subject) return;
+    try {
+      localStorage.setItem(showAnswerKey(subject), on ? "1" : "0");
+    } catch {
+      /* private window: the toggle still works for this page */
+    }
+  };
   const create = useCreateAttempt();
   const answerMc = useAnswerMc(questionId);
   const [mcResult, setMcResult] = useState<McResponse | null>(null);
@@ -37,6 +70,7 @@ export function PracticeQuestionPage({ questionId }: { questionId: string }) {
   const { question, attempts } = q.data;
   const solution = mcResult?.solution ?? q.data.solution;
   const attempted = q.data.attempted || mcResult !== null;
+  const showSolution = attempted || (reveal && Boolean(solution));
   const isMc = question.kind === "mc";
   const lastMc = attempts.find((a) => a.mcChoice);
   const resume = attempts.find((a) => UNFINISHED.includes(a.status))?.id ?? null;
@@ -97,7 +131,13 @@ export function PracticeQuestionPage({ questionId }: { questionId: string }) {
         </Card>
       )}
 
-      {attempted && (
+      {canToggle && (
+        <Label className="flex w-fit items-center gap-3 font-normal print:hidden">
+          <Switch checked={reveal} onCheckedChange={toggleReveal} />
+          {t("showAnswer")}
+        </Label>
+      )}
+      {showSolution && (
         <Tabs defaultValue="solution">
           {!isLocalMode && (
             <TabsList className="print:hidden">
@@ -115,7 +155,7 @@ export function PracticeQuestionPage({ questionId }: { questionId: string }) {
           </TabsContent>
         </Tabs>
       )}
-      {!attempted && <p className="text-muted-foreground text-sm print:hidden">{isLocalMode ? t("solutionAfterLocal") : t("solutionAfter")}</p>}
+      {!showSolution && <p className="text-muted-foreground text-sm print:hidden">{isLocalMode ? t("solutionAfterLocal") : t("solutionAfter")}</p>}
     </div>
   );
 }

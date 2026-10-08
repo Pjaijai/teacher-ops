@@ -135,14 +135,15 @@ export async function localNextQuestion(req: {
   return { jobId } as { questionId?: string; jobId?: string };
 }
 
-export async function localPracticeQuestion(questionId: string) {
+/** `reveal`: the student switched "Show answer" on, so the solution shows without answering first. */
+export async function localPracticeQuestion(questionId: string, reveal = false) {
   const q = await loadQuestion(questionId);
   const mine = await Promise.all((await listAttempts(questionId)).slice(0, 20).map(recover));
   const attempted = mine.some(submitted);
   return {
     question: toPublic(q),
     attempted,
-    solution: attempted ? toSolution(q) : null,
+    solution: attempted || reveal ? toSolution(q) : null,
     attempts: mine.map((a) => ({
       id: a.id,
       status: a.status,
@@ -363,6 +364,29 @@ export async function localReferenceGenerate(
       for (const q of questions) questionIds.push((await saveQuestion({ ...q, origin: "reference_image" })).id);
       onSettled();
       return { questionIds, failed };
+    },
+  });
+  return { jobId };
+}
+
+// --- Solve my question ---------------------------------------------------------------------
+
+/**
+ * The student's own question (photos and/or text) → the AI reads it, finds the topic, and writes the answer and an
+ * HKEAA-style marking scheme. Saved as a private question; job.output = { questionId, note }.
+ */
+export async function localSolveQuestion({ subject, files, text, language }: { subject: "physics"; files: File[]; text: string; language?: "zh" | "en" }) {
+  if (files.length > 8) throw fail(400, "Up to 8 photos.");
+  if (files.length === 0 && !text.trim()) throw fail(400, "Upload a photo or type the question.");
+  const images = files.length ? await imagesForAi(await saveImages(files)) : [];
+  const jobId = startAiJob<{ question: GeneratedQuestion; note: string | null }>({
+    path: "practice/solve",
+    body: { subject, images, text: text.trim() || undefined, language },
+    kind: "reference_understand",
+    resourceRef: subject,
+    onResult: async ({ question, note }) => {
+      const row = await saveQuestion({ ...question, origin: "own_prompt" });
+      return { questionId: row.id, note };
     },
   });
   return { jobId };
