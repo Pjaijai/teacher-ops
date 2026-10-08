@@ -51,3 +51,16 @@ export const AiPracticeMarkSchema = z.object({
   question: QuestionLiteSchema,
   lines: z.array(z.object({ latex: z.string().max(2000) })).min(1).max(400),
 });
+
+/** "Solve my question": the student's own question (photo and/or text) → answer + marking scheme. Physics for now. */
+export const SOLVE_SUBJECTS = ["physics"] as const;
+export const AiPracticeSolveSchema = z
+  .object({
+    subject: z.enum(SOLVE_SUBJECTS),
+    /** Pages of ONE question, in order (its parts may continue across photos). */
+    images: z.array(ImageSchema).max(8).default([]),
+    text: z.string().max(6000).optional(),
+    /** Language for the explanations; default = the question's own language */
+    language: ExamLanguageSchema.optional(),
+  })
+  .refine((v) => v.images.length > 0 || (v.text?.trim().length ?? 0) > 0, "Upload a photo or type the question.");

@@ -89,7 +89,7 @@ export function fromAi(q: AiGeneratedPhysicsQuestion): { question: GeneratedPhys
   };
 }
 
-function toAi(q: GeneratedPhysicsQuestion): AiGeneratedPhysicsQuestion {
+export function toAi(q: GeneratedPhysicsQuestion): AiGeneratedPhysicsQuestion {
   const { figure: _f, graph, physicsFigure, materials: _m, writing: _w, symbolicChecks: _s, variables, ...rest } = q.content;
   return {
     title: q.title,

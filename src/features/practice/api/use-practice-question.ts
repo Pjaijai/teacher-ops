@@ -7,7 +7,7 @@ import { qk } from "@/lib/query-keys";
 import type { PracticeKind } from "@/lib/schemas/practice";
 import type { Subject } from "@/lib/subjects";
 import { topicsFor } from "@/lib/topic-tree";
-import { localNextQuestion, localPracticeQuestion } from "./local-practice";
+import { localNextQuestion, localPracticeQuestion, localSolveQuestion } from "./local-practice";
 
 /** Separate from qk.question (the bank's GET /questions/:id) because the payload differs. */
 export const practiceQuestionKey = (id: string) => ["practice", "question", id] as const;
@@ -15,12 +15,28 @@ export const practiceQuestionKey = (id: string) => ["practice", "question", id] 
 type PracticeQuestion = Awaited<ReturnType<typeof cloudPracticeQuestion>>;
 const cloudPracticeQuestion = (questionId: string) => unwrap(api.practice.questions[":id"].$get({ param: { id: questionId } }));
 
-/** The practice question view: question (public), my attempts, and the solution once attempted. */
-export function usePracticeQuestion(questionId: string) {
+/**
+ * The practice question view: question (public), my attempts, and the solution once attempted —
+ * or straight away when `reveal` is on (the "Show answer" toggle).
+ */
+export function usePracticeQuestion(questionId: string, reveal = false) {
   return useQuery({
-    queryKey: practiceQuestionKey(questionId),
-    queryFn: () => (isLocalMode ? (localPracticeQuestion(questionId) as Promise<PracticeQuestion>) : cloudPracticeQuestion(questionId)),
+    queryKey: [...practiceQuestionKey(questionId), reveal ? "revealed" : "hidden"],
+    queryFn: async () => {
+      if (isLocalMode) return localPracticeQuestion(questionId, reveal) as Promise<PracticeQuestion>;
+      const data = await cloudPracticeQuestion(questionId);
+      if (!reveal || data.solution) return data;
+      const solution = await unwrap(fetch(`/api/questions/${questionId}/solution?reveal=1`));
+      return { ...data, solution } as PracticeQuestion;
+    },
     retry: isLocalMode ? false : undefined,
+  });
+}
+
+/** "Solve my question" (local mode): returns `{jobId}`; job.output = { questionId, note }. */
+export function useSolveQuestion() {
+  return useMutation({
+    mutationFn: (body: { subject: "physics"; files: File[]; text: string; language?: "zh" | "en" }) => localSolveQuestion(body),
   });
 }
 

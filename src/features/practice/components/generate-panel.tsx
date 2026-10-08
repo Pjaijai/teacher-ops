@@ -19,6 +19,7 @@ import type { Subject } from "@/lib/subjects";
 import { useNextQuestion, type NextQuestionRequest } from "../api/use-practice-question";
 import { QuestionOptions, type QuestionOptionsValue } from "./question-options";
 import { ReferencePanel } from "./reference-panel";
+import { SolvePanel } from "./solve-panel";
 import { hasExtension, kindsFor } from "../lib/units";
 import { TopicTreePicker } from "./topic-tree-picker";
 
@@ -62,6 +63,8 @@ export function GeneratePanel({ subject, defaultTopicIds = [] as string[] }: { s
     extension: me.data?.profile?.extensionTrack ?? true,
   });
   const { start, busy, job, jobId } = useGetQuestion();
+  // "Solve my question" saves to this device, so it's a local-mode feature (Physics for now).
+  const canSolve = isLocalMode && subject === "physics";
 
   const go = () =>
     start({
@@ -96,6 +99,7 @@ export function GeneratePanel({ subject, defaultTopicIds = [] as string[] }: { s
             <TabsTrigger value="topic">{t("tabs.topic")}</TabsTrigger>
             <TabsTrigger value="type">{t("tabs.type")}</TabsTrigger>
             <TabsTrigger value="reference">{t("tabs.reference")}</TabsTrigger>
+            {canSolve && <TabsTrigger value="solve">{t("tabs.solve")}</TabsTrigger>}
           </TabsList>
           <TabsContent value="topic" className="grid gap-5">
             <TopicTreePicker subject={subject} value={topicIds} onChange={setTopicIds} />
@@ -110,8 +114,13 @@ export function GeneratePanel({ subject, defaultTopicIds = [] as string[] }: { s
           <TabsContent value="reference">
             <ReferencePanel subject={subject} language={language} />
           </TabsContent>
+          {canSolve && (
+            <TabsContent value="solve">
+              <SolvePanel subject="physics" />
+            </TabsContent>
+          )}
         </Tabs>
-        {jobId && tab !== "reference" && (
+        {jobId && tab !== "reference" && tab !== "solve" && (
           <div className="bg-muted/40 mt-5 rounded-md border p-3">
             <JobProgress job={job} />
           </div>

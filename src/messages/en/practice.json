@@ -41,7 +41,8 @@
     "tabs": {
       "topic": "By topic",
       "type": "By type",
-      "reference": "From a reference"
+      "reference": "From a reference",
+      "solve": "Solve my question"
     },
     "typeHint": "Any topic: choose the question type and difficulty.",
     "descriptionLocal": "We write a new DSE-style question for you, checked by code. It's saved in this browser.",
@@ -105,7 +106,8 @@
       "community": "Community answers"
     },
     "solutionAfter": "The solution and community answers unlock after you answer.",
-    "solutionAfterLocal": "The solution unlocks after you answer."
+    "solutionAfterLocal": "The solution unlocks after you answer.",
+    "showAnswer": "Show answer (no need to answer first)"
   },
   "mc": {
     "correct": "Correct!",
@@ -202,5 +204,16 @@
       "review": "To check",
       "marking": "Marking"
     }
+  },
+  "solve": {
+    "intro": "Type or photograph any physics question. The AI finds the syllabus topic and writes the answer and a DSE-style marking scheme, with 解題 thinking and tips.",
+    "photo": "Add photos of the question (several pages are fine)",
+    "text": "Or type the question (and anything else it needs, like the options)",
+    "placeholder": "e.g. A car of mass 1200 kg accelerates uniformly from rest to 20 m s⁻¹ in 8 s. (a) Find the acceleration…",
+    "language": "Explanations in",
+    "languageAuto": "Same as the question",
+    "button": "Solve and mark",
+    "note": "Saved on this device under My questions. Answers are checked by code where possible.",
+    "pagesNote": "{count} photos will be read as one question, in this order — use the arrows to reorder pages."
   }
 }
