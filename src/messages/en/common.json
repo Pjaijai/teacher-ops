@@ -1,0 +1,54 @@
+{
+  "appName": "DSE Practice",
+  "nav": {
+    "dashboard": "Dashboard",
+    "writing": "Writing",
+    "practice": "Practice",
+    "bank": "Question bank",
+    "history": "History",
+    "settings": "Settings"
+  },
+  "credits": {
+    "label": "{balance} credits",
+    "tooltip": "{balance} of {quota} daily credits left. Resets at midnight HKT.",
+    "cost": "{cost, plural, =0 {Free} one {# credit} other {# credits}}",
+    "outTitle": "Out of credits for today",
+    "outBody": "This needs {cost} credits and you have {balance}. Credits reset at midnight Hong Kong time.",
+    "ok": "OK"
+  },
+  "subjects": {
+    "chi_writing": "Chinese writing",
+    "eng_writing": "English writing",
+    "math_cp": "Maths (Compulsory)",
+    "math_m1": "M1 Calculus & Statistics",
+    "math_m2": "M2 Algebra & Calculus",
+    "physics": "Physics"
+  },
+  "comingSoon": "Coming soon",
+  "beta": "beta",
+  "loading": "Loading…",
+  "error": "Something went wrong.",
+  "retry": "Try again",
+  "save": "Save",
+  "cancel": "Cancel",
+  "signOut": "Sign out",
+  "language": "Language",
+  "job": {
+    "running": "Working…",
+    "failed": "That didn't work: {error} Your credits were refunded.",
+    "steps": {
+      "load": "Loading",
+      "transcribe": "Reading your handwriting",
+      "feedback": "Writing feedback",
+      "estimate": "Estimating the DSE level",
+      "sample": "Writing the sample",
+      "profile": "Updating your profile",
+      "generate": "Writing the question",
+      "check": "Checking the answer",
+      "repair": "Fixing a problem",
+      "save": "Saving",
+      "mark": "Marking"
+    },
+    "failedLocal": "That didn't work: {error}"
+  }
+}

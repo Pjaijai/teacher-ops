@@ -1,0 +1,614 @@
+[
+  {
+    "id": "CP-1",
+    "subject": "math_cp",
+    "strand": "Number and Algebra",
+    "nameEn": "Quadratic equations in one unknown",
+    "nameZh": "一元二次方程",
+    "foundation": "mixed",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-1.1",
+        "textEn": "Solve quadratic equations by factorisation."
+      },
+      {
+        "id": "CP-1.2",
+        "textEn": "Form a quadratic equation from given (real) roots."
+      },
+      {
+        "id": "CP-1.3",
+        "textEn": "Solve ax²+bx+c=0 by reading x-intercepts from the parabola's graph."
+      },
+      {
+        "id": "CP-1.4",
+        "textEn": "Solve quadratic equations with the quadratic formula."
+      },
+      {
+        "id": "CP-1.5",
+        "textEn": "Relate the discriminant to the nature of the roots."
+      },
+      {
+        "id": "CP-1.6",
+        "textEn": "Solve real-life problems leading to quadratic equations."
+      },
+      {
+        "id": "CP-1.7",
+        "textEn": "Use the sum and product of roots (-b/a, c/a) and form equations from them."
+      },
+      {
+        "id": "CP-1.8",
+        "textEn": "Appreciate how number systems developed, including complex numbers."
+      },
+      {
+        "id": "CP-1.9",
+        "textEn": "Add, subtract, multiply and divide complex numbers (form a+bi)."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-2",
+    "subject": "math_cp",
+    "strand": "Number and Algebra",
+    "nameEn": "Functions and graphs",
+    "nameZh": "函數及其圖像",
+    "foundation": "mixed",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-2.1",
+        "textEn": "Recognise intuitively functions, domain and co-domain, independent and dependent variables."
+      },
+      {
+        "id": "CP-2.2",
+        "textEn": "Use function notation; represent functions in tables, algebraically and graphically."
+      },
+      {
+        "id": "CP-2.3",
+        "textEn": "Describe features of quadratic graphs (vertex, axis, direction, axis intercepts); read max/min from the graph."
+      },
+      {
+        "id": "CP-2.4",
+        "textEn": "Find max/min of a quadratic algebraically by completing the square, and solve related problems."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-3",
+    "subject": "math_cp",
+    "strand": "Number and Algebra",
+    "nameEn": "Exponential and logarithmic functions",
+    "nameZh": "指數函數與對數函數",
+    "foundation": "NFT",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-3.1",
+        "textEn": "Understand definitions of rational indices."
+      },
+      {
+        "id": "CP-3.2",
+        "textEn": "Apply the laws of rational indices."
+      },
+      {
+        "id": "CP-3.3",
+        "textEn": "Understand logarithms and their laws, including change of base."
+      },
+      {
+        "id": "CP-3.4",
+        "textEn": "Know properties and graph features of exponential and logarithmic functions (domain, monotonicity, symmetry about y=x, intercepts)."
+      },
+      {
+        "id": "CP-3.5",
+        "textEn": "Solve exponential and logarithmic equations."
+      },
+      {
+        "id": "CP-3.6",
+        "textEn": "Appreciate real-life uses of logarithms (e.g. Richter scale, decibels)."
+      },
+      {
+        "id": "CP-3.7",
+        "textEn": "Appreciate the historical development of logarithms."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-4",
+    "subject": "math_cp",
+    "strand": "Number and Algebra",
+    "nameEn": "More about polynomials",
+    "nameZh": "續多項式",
+    "foundation": "mixed",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-4.1",
+        "textEn": "Divide polynomials (long division or other methods)."
+      },
+      {
+        "id": "CP-4.2",
+        "textEn": "Understand the remainder theorem."
+      },
+      {
+        "id": "CP-4.3",
+        "textEn": "Understand the factor theorem; factorise e.g. x³-a³."
+      },
+      {
+        "id": "CP-4.4",
+        "textEn": "Understand H.C.F. and L.C.M. of polynomials."
+      },
+      {
+        "id": "CP-4.5",
+        "textEn": "Add, subtract, multiply and divide rational functions."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-5",
+    "subject": "math_cp",
+    "strand": "Number and Algebra",
+    "nameEn": "More about equations",
+    "nameZh": "續方程",
+    "foundation": "NFT",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-5.1",
+        "textEn": "Solve a linear + quadratic (y=ax²+bx+c) pair of simultaneous equations graphically."
+      },
+      {
+        "id": "CP-5.2",
+        "textEn": "Solve a linear + quadratic pair algebraically."
+      },
+      {
+        "id": "CP-5.3",
+        "textEn": "Solve equations reducible to quadratics: fractional, exponential, logarithmic, trigonometric (0 to 360 degrees)."
+      },
+      {
+        "id": "CP-5.4",
+        "textEn": "Solve problems leading to such equations."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-6",
+    "subject": "math_cp",
+    "strand": "Number and Algebra",
+    "nameEn": "Variations",
+    "nameZh": "變分",
+    "foundation": "FT",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-6.1",
+        "textEn": "Understand direct and inverse variation and apply to real-life problems."
+      },
+      {
+        "id": "CP-6.2",
+        "textEn": "Understand graphs of direct and inverse variation."
+      },
+      {
+        "id": "CP-6.3",
+        "textEn": "Understand joint and partial variations and apply them."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-7",
+    "subject": "math_cp",
+    "strand": "Number and Algebra",
+    "nameEn": "Arithmetic and geometric sequences and their summations",
+    "nameZh": "等差數列與等比數列及其求和法",
+    "foundation": "NFT",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-7.1",
+        "textEn": "Understand the concept and properties of arithmetic sequences."
+      },
+      {
+        "id": "CP-7.2",
+        "textEn": "Understand the general term of an arithmetic sequence."
+      },
+      {
+        "id": "CP-7.3",
+        "textEn": "Understand the concept and properties of geometric sequences."
+      },
+      {
+        "id": "CP-7.4",
+        "textEn": "Understand the general term of a geometric sequence."
+      },
+      {
+        "id": "CP-7.5",
+        "textEn": "Use formulae for the sum of finitely many terms of arithmetic and geometric sequences."
+      },
+      {
+        "id": "CP-7.6",
+        "textEn": "Explore the sum to infinity of suitable geometric sequences and use it."
+      },
+      {
+        "id": "CP-7.7",
+        "textEn": "Solve real-life problems (interest, growth, depreciation)."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-8",
+    "subject": "math_cp",
+    "strand": "Number and Algebra",
+    "nameEn": "Inequalities and linear programming",
+    "nameZh": "不等式與線性規畫",
+    "foundation": "mixed",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-8.1",
+        "textEn": "Solve compound linear inequalities in one unknown ('and'/'or'), including triangle-inequality problems."
+      },
+      {
+        "id": "CP-8.2",
+        "textEn": "Solve quadratic inequalities in one unknown graphically."
+      },
+      {
+        "id": "CP-8.3",
+        "textEn": "Solve quadratic inequalities in one unknown algebraically."
+      },
+      {
+        "id": "CP-8.4",
+        "textEn": "Graph linear inequalities in two unknowns on the coordinate plane."
+      },
+      {
+        "id": "CP-8.5",
+        "textEn": "Solve systems of linear inequalities in two unknowns."
+      },
+      {
+        "id": "CP-8.6",
+        "textEn": "Solve linear programming problems."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-9",
+    "subject": "math_cp",
+    "strand": "Number and Algebra",
+    "nameEn": "More about graphs of functions",
+    "nameZh": "續函數圖像",
+    "foundation": "mixed",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-9.1",
+        "textEn": "Sketch and compare graphs of constant, linear, quadratic, trigonometric (FT) and exponential/logarithmic (NFT) functions: domain, extrema, symmetry, periodicity."
+      },
+      {
+        "id": "CP-9.2",
+        "textEn": "Solve f(x)=k using the graph of y=f(x)."
+      },
+      {
+        "id": "CP-9.3",
+        "textEn": "Solve f(x)>k, <k, >=k, <=k using the graph of y=f(x)."
+      },
+      {
+        "id": "CP-9.4",
+        "textEn": "Understand transformations f(x)+k, f(x+k), kf(x), f(kx) in table, symbolic and graph forms."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-10",
+    "subject": "math_cp",
+    "strand": "Measures, Shape and Space",
+    "nameEn": "Equations of straight lines",
+    "nameZh": "直線方程",
+    "foundation": "FT",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-10.1",
+        "textEn": "Find the equation of a line from two points, slope+point, or slope+intercept; read slope, intercepts and point-membership from an equation; relate slope and inclination."
+      },
+      {
+        "id": "CP-10.2",
+        "textEn": "Determine how two straight lines can intersect (number of intersection points)."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-11",
+    "subject": "math_cp",
+    "strand": "Measures, Shape and Space",
+    "nameEn": "Basic properties of circles",
+    "nameZh": "圓的基本性質",
+    "foundation": "mixed",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-11.1",
+        "textEn": "Chord and arc properties (equal arcs/chords, perpendicular from centre bisects chord, equidistance); one circle through 3 non-collinear points."
+      },
+      {
+        "id": "CP-11.2",
+        "textEn": "Angle properties (angle at centre = 2x angle at circumference, same segment, semicircle)."
+      },
+      {
+        "id": "CP-11.3",
+        "textEn": "Properties of cyclic quadrilaterals (opposite angles supplementary, exterior angle)."
+      },
+      {
+        "id": "CP-11.4",
+        "textEn": "Tests for concyclic points and cyclic quadrilaterals."
+      },
+      {
+        "id": "CP-11.5",
+        "textEn": "Tangent properties and the alternate segment theorem (and its converse)."
+      },
+      {
+        "id": "CP-11.6",
+        "textEn": "Use circle properties in simple geometric proofs (Key Stage 3 geometry may be used)."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-12",
+    "subject": "math_cp",
+    "strand": "Measures, Shape and Space",
+    "nameEn": "Loci",
+    "nameZh": "軌跡",
+    "foundation": "FT",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-12.1",
+        "textEn": "Understand the concept of a locus."
+      },
+      {
+        "id": "CP-12.2",
+        "textEn": "Describe and sketch loci from geometric conditions (fixed distance from a point/line, equidistant from two points/parallels/intersecting lines)."
+      },
+      {
+        "id": "CP-12.3",
+        "textEn": "Describe loci with equations: lines, circles, parabolas y=ax²+bx+c."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-13",
+    "subject": "math_cp",
+    "strand": "Measures, Shape and Space",
+    "nameEn": "Equations of circles",
+    "nameZh": "圓方程",
+    "foundation": "mixed",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-13.1",
+        "textEn": "Find the equation of a circle (centre+radius, or three points); read centre, radius and point position (inside/on/outside)."
+      },
+      {
+        "id": "CP-13.2",
+        "textEn": "Find intersections of a line and a circle, determine how they can meet, find tangent equations."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-14",
+    "subject": "math_cp",
+    "strand": "Measures, Shape and Space",
+    "nameEn": "More about trigonometry",
+    "nameZh": "續三角學",
+    "foundation": "mixed",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-14.1",
+        "textEn": "Sine, cosine, tangent functions: graphs, max/min, periodicity; simplify expressions with angles such as 90°±θ, 180°±θ."
+      },
+      {
+        "id": "CP-14.2",
+        "textEn": "Solve a sinθ=b, a cosθ=b, a tanθ=b for 0° to 360° (FT); other trigonometric equations in that range (NFT)."
+      },
+      {
+        "id": "CP-14.3",
+        "textEn": "Area of triangle = ½ab sin C."
+      },
+      {
+        "id": "CP-14.4",
+        "textEn": "Sine and cosine formulae."
+      },
+      {
+        "id": "CP-14.5",
+        "textEn": "Heron's formula."
+      },
+      {
+        "id": "CP-14.6",
+        "textEn": "Concept of projection."
+      },
+      {
+        "id": "CP-14.7",
+        "textEn": "Angle between a line and a plane; between two planes (inclination)."
+      },
+      {
+        "id": "CP-14.8",
+        "textEn": "Theorem of three perpendiculars."
+      },
+      {
+        "id": "CP-14.9",
+        "textEn": "Solve 2-D and 3-D problems (angles between lines/planes, distances point-point, point-line, point-plane)."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-15",
+    "subject": "math_cp",
+    "strand": "Data Handling",
+    "nameEn": "Permutations and combinations",
+    "nameZh": "排列與組合",
+    "foundation": "NFT",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-15.1",
+        "textEn": "Addition and multiplication rules of counting."
+      },
+      {
+        "id": "CP-15.2",
+        "textEn": "Concept and notation of permutation (nPr)."
+      },
+      {
+        "id": "CP-15.3",
+        "textEn": "Permutations of distinct objects without repetition (e.g. three particular objects together)."
+      },
+      {
+        "id": "CP-15.4",
+        "textEn": "Concept and notation of combination (nCr)."
+      },
+      {
+        "id": "CP-15.5",
+        "textEn": "Combinations of distinct objects without repetition."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-16",
+    "subject": "math_cp",
+    "strand": "Data Handling",
+    "nameEn": "More about probability",
+    "nameZh": "續概率",
+    "foundation": "NFT",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-16.1",
+        "textEn": "Set notation (union, intersection, complement) and Venn diagrams."
+      },
+      {
+        "id": "CP-16.2",
+        "textEn": "Addition law P(A∪B)=P(A)+P(B)-P(A∩B); mutually exclusive and complementary events."
+      },
+      {
+        "id": "CP-16.3",
+        "textEn": "Multiplication law for independent events."
+      },
+      {
+        "id": "CP-16.4",
+        "textEn": "Conditional probability; P(A∩B)=P(A)P(B|A)."
+      },
+      {
+        "id": "CP-16.5",
+        "textEn": "Use permutations/combinations in probability problems."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-17",
+    "subject": "math_cp",
+    "strand": "Data Handling",
+    "nameEn": "Measures of dispersion",
+    "nameZh": "離差的度量",
+    "foundation": "mixed",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-17.1",
+        "textEn": "Concept of dispersion."
+      },
+      {
+        "id": "CP-17.2",
+        "textEn": "Range and inter-quartile range."
+      },
+      {
+        "id": "CP-17.3",
+        "textEn": "Construct and interpret box-and-whisker diagrams; compare distributions."
+      },
+      {
+        "id": "CP-17.4",
+        "textEn": "Standard deviation for grouped and ungrouped data; variance = SD²."
+      },
+      {
+        "id": "CP-17.5",
+        "textEn": "Compare dispersion of data sets using suitable measures."
+      },
+      {
+        "id": "CP-17.6",
+        "textEn": "Apply SD to standard scores and the normal distribution."
+      },
+      {
+        "id": "CP-17.7",
+        "textEn": "Effect on dispersion of adding a constant or multiplying by a constant."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-18",
+    "subject": "math_cp",
+    "strand": "Data Handling",
+    "nameEn": "Uses and abuses of statistics",
+    "nameZh": "統計的應用及誤用",
+    "foundation": "FT",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-18.1",
+        "textEn": "Sampling techniques (probability vs non-probability), population/sample, questionnaire design principles."
+      },
+      {
+        "id": "CP-18.2",
+        "textEn": "Discuss uses and abuses of statistics in daily life."
+      },
+      {
+        "id": "CP-18.3",
+        "textEn": "Assess statistical investigations in news media and reports."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-19",
+    "subject": "math_cp",
+    "strand": "Further Learning Unit",
+    "nameEn": "Further applications",
+    "nameZh": "進階應用",
+    "foundation": "mixed",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-19.1",
+        "textEn": "Solve more sophisticated real-life/mathematical problems needing information search, strategy exploration or integration of several areas (e.g. tax/instalments, survey data, graphs, Ptolemy's and Ceva's theorems, reducing y=m√x+c and y=k·a^x to linear relations, Fibonacci/golden ratio, cryptography, games)."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "CP-20",
+    "subject": "math_cp",
+    "strand": "Further Learning Unit",
+    "nameEn": "Inquiry and investigation",
+    "nameZh": "探索與研究",
+    "foundation": "n/a",
+    "extension": false,
+    "objectives": [
+      {
+        "id": "CP-20.1",
+        "textEn": "Discover and construct knowledge through learning activities; build inquiry, communication, reasoning and conceptualisation skills."
+      }
+    ],
+    "prerequisites": []
+  }
+]

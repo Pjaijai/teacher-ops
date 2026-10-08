@@ -1,0 +1,855 @@
+[
+  {
+    "id": "PHY-I-1",
+    "subject": "physics",
+    "strand": "Heat and Gases",
+    "nameEn": "Temperature, heat and internal energy",
+    "nameZh": "溫度、熱及內能",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-I-1.1",
+        "textEn": "Temperature and thermometers: degree of hotness, related to average KE of molecules; temperature-dependent properties; calibrating a thermometer from a linear graph."
+      },
+      {
+        "id": "PHY-I-1.2",
+        "textEn": "Heat as energy transferred due to a temperature difference; internal energy = random KE + PE of molecules."
+      },
+      {
+        "id": "PHY-I-1.3",
+        "textEn": "Heat capacity C = Q/ΔT and specific heat capacity c = Q/(mΔT); measuring c (electrical method, method of mixtures); high c of water."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "PHY-I-2",
+    "subject": "physics",
+    "strand": "Heat and Gases",
+    "nameEn": "Transfer processes",
+    "nameZh": "熱轉移過程",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-I-2.1",
+        "textEn": "Conduction, convection and radiation; molecular account of conduction; infrared radiation; factors affecting emission and absorption of radiation (colour, texture, surface area, temperature)."
+      }
+    ],
+    "prerequisites": [
+      "PHY-I-1"
+    ]
+  },
+  {
+    "id": "PHY-I-3",
+    "subject": "physics",
+    "strand": "Heat and Gases",
+    "nameEn": "Change of state",
+    "nameZh": "物態的改變",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-I-3.1",
+        "textEn": "Melting/freezing and boiling/condensing; melting and boiling points; heating and cooling curves."
+      },
+      {
+        "id": "PHY-I-3.2",
+        "textEn": "Latent heat as PE change of molecules; specific latent heat of fusion and vaporisation ℓ = Q/m; problems."
+      },
+      {
+        "id": "PHY-I-3.3",
+        "textEn": "Evaporation below the boiling point; cooling effect; factors affecting the rate; molecular explanation (qualitative)."
+      }
+    ],
+    "prerequisites": [
+      "PHY-I-1"
+    ]
+  },
+  {
+    "id": "PHY-I-4",
+    "subject": "physics",
+    "strand": "Heat and Gases",
+    "nameEn": "Gases",
+    "nameZh": "氣體",
+    "foundation": null,
+    "extension": true,
+    "objectives": [
+      {
+        "id": "PHY-I-4.1",
+        "textEn": "General gas law: Boyle's law, p–T and V–T relationships, absolute zero by extrapolation, kelvin scale; pV/T = constant; pV = nRT (moles, N_A). [EXT]"
+      },
+      {
+        "id": "PHY-I-4.2",
+        "textEn": "Kinetic theory: ideal-gas assumptions; pV = ⅓Nm⟨c²⟩; average KE = 3RT/(2N_A); real gases at high T and low p. No derivation. [EXT]"
+      }
+    ],
+    "prerequisites": [
+      "PHY-I-1"
+    ]
+  },
+  {
+    "id": "PHY-II-1",
+    "subject": "physics",
+    "strand": "Force and Motion",
+    "nameEn": "Position and movement",
+    "nameZh": "位置和移動",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-II-1.1",
+        "textEn": "Position, distance and displacement; scalars and vectors; s–t graphs."
+      },
+      {
+        "id": "PHY-II-1.2",
+        "textEn": "Speed and velocity (average, instantaneous); v–t graphs; uniform motion. Relative velocity not required."
+      },
+      {
+        "id": "PHY-II-1.3",
+        "textEn": "Acceleration from v–t graphs; a–t graphs."
+      },
+      {
+        "id": "PHY-II-1.4",
+        "textEn": "Equations of uniformly accelerated motion (suvat): derive and apply."
+      },
+      {
+        "id": "PHY-II-1.5",
+        "textEn": "Vertical motion under gravity: measuring g; graphs; effect of air resistance (qualitative)."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "PHY-II-2",
+    "subject": "physics",
+    "strand": "Force and Motion",
+    "nameEn": "Force and motion",
+    "nameZh": "力和運動",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-II-2.1",
+        "textEn": "Newton's First Law: inertia, mass, friction (no friction formulae)."
+      },
+      {
+        "id": "PHY-II-2.2",
+        "textEn": "Addition and resolution of forces, graphically and algebraically."
+      },
+      {
+        "id": "PHY-II-2.3",
+        "textEn": "Newton's Second Law F = ma; free-body diagrams; net force; connected bodies (two-body and many-body problems in 1-D)."
+      },
+      {
+        "id": "PHY-II-2.4",
+        "textEn": "Newton's Third Law: action–reaction pairs."
+      },
+      {
+        "id": "PHY-II-2.5",
+        "textEn": "Mass and weight."
+      },
+      {
+        "id": "PHY-II-2.6",
+        "textEn": "Moment of a force, torque and couples; equilibrium of a rigid body with a fixed pivot; centre of gravity; non-perpendicular forces."
+      }
+    ],
+    "prerequisites": [
+      "PHY-II-1"
+    ]
+  },
+  {
+    "id": "PHY-II-3",
+    "subject": "physics",
+    "strand": "Force and Motion",
+    "nameEn": "Projectile motion",
+    "nameZh": "拋體運動",
+    "foundation": null,
+    "extension": true,
+    "objectives": [
+      {
+        "id": "PHY-II-3.1",
+        "textEn": "Path of a projectile; independence of horizontal and vertical motion; problems (no range or trajectory formulae). [EXT]"
+      }
+    ],
+    "prerequisites": [
+      "PHY-II-1",
+      "PHY-II-2"
+    ]
+  },
+  {
+    "id": "PHY-II-4",
+    "subject": "physics",
+    "strand": "Force and Motion",
+    "nameEn": "Work, energy and power",
+    "nameZh": "作功、能量和功率",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-II-4.1",
+        "textEn": "Mechanical work W = Fs cosθ."
+      },
+      {
+        "id": "PHY-II-4.2",
+        "textEn": "Gravitational PE = mgh and KE = ½mv² (derivations)."
+      },
+      {
+        "id": "PHY-II-4.3",
+        "textEn": "Conservation of energy in a closed system, with energy losses; 2-D problems."
+      },
+      {
+        "id": "PHY-II-4.4",
+        "textEn": "Power P = W/t and P = Fv; efficiency."
+      }
+    ],
+    "prerequisites": [
+      "PHY-II-2"
+    ]
+  },
+  {
+    "id": "PHY-II-5",
+    "subject": "physics",
+    "strand": "Force and Motion",
+    "nameEn": "Momentum",
+    "nameZh": "動量",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-II-5.1",
+        "textEn": "Linear momentum p = mv."
+      },
+      {
+        "id": "PHY-II-5.2",
+        "textEn": "Change in momentum and net force F = Δp/Δt; F–t graphs (area = change in momentum)."
+      },
+      {
+        "id": "PHY-II-5.3",
+        "textEn": "Conservation of momentum (link to Newton's third law); elastic and inelastic collisions; 1-D problems; equal-mass elastic right-angle fork collision."
+      }
+    ],
+    "prerequisites": [
+      "PHY-II-2"
+    ]
+  },
+  {
+    "id": "PHY-II-6",
+    "subject": "physics",
+    "strand": "Force and Motion",
+    "nameEn": "Uniform circular motion",
+    "nameZh": "勻速圓周運動",
+    "foundation": null,
+    "extension": true,
+    "objectives": [
+      {
+        "id": "PHY-II-6.1",
+        "textEn": "Angular velocity ω; v = ωr; centripetal acceleration a = v²/r = ω²r; identifying the force providing the centripetal force. [EXT]"
+      }
+    ],
+    "prerequisites": [
+      "PHY-II-2"
+    ]
+  },
+  {
+    "id": "PHY-II-7",
+    "subject": "physics",
+    "strand": "Force and Motion",
+    "nameEn": "Gravitation",
+    "nameZh": "引力",
+    "foundation": null,
+    "extension": true,
+    "objectives": [
+      {
+        "id": "PHY-II-7.1",
+        "textEn": "Newton's law of gravitation F = GMm/r²; gravitational field strength g = GM/r²; g above a planet; orbital velocity of satellites. Kepler's laws and escape velocity not required here. [EXT]"
+      }
+    ],
+    "prerequisites": [
+      "PHY-II-6"
+    ]
+  },
+  {
+    "id": "PHY-III-1",
+    "subject": "physics",
+    "strand": "Wave Motion",
+    "nameEn": "Nature and properties of waves",
+    "nameZh": "波的本質和特性",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-III-1.1",
+        "textEn": "Waves transfer energy without transferring matter; transverse and longitudinal waves; crest, trough, compression, rarefaction, phase (in phase / antiphase)."
+      },
+      {
+        "id": "PHY-III-1.2",
+        "textEn": "Displacement–time and displacement–distance graphs; f = 1/T; v = fλ."
+      },
+      {
+        "id": "PHY-III-1.3",
+        "textEn": "Reflection and refraction of waves; refractive index in terms of wave speeds; wavefront diagrams."
+      },
+      {
+        "id": "PHY-III-1.4",
+        "textEn": "Diffraction (effect of gap width) and interference of two coherent sources; path-difference conditions."
+      },
+      {
+        "id": "PHY-III-1.5",
+        "textEn": "Stationary (transverse) waves: formation, nodes and antinodes, node separation = λ/2."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "PHY-III-2",
+    "subject": "physics",
+    "strand": "Wave Motion",
+    "nameEn": "Light",
+    "nameZh": "光",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-III-2.1",
+        "textEn": "Light in the EM spectrum; c = 3.0 × 10⁸ m s⁻¹; order of the spectrum."
+      },
+      {
+        "id": "PHY-III-2.2",
+        "textEn": "Reflection of light; plane-mirror images."
+      },
+      {
+        "id": "PHY-III-2.3",
+        "textEn": "Refraction of light: Snell's law n = sin i / sin r; dispersion."
+      },
+      {
+        "id": "PHY-III-2.4",
+        "textEn": "Total internal reflection and critical angle sin C = 1/n."
+      },
+      {
+        "id": "PHY-III-2.5",
+        "textEn": "Image formation by converging and diverging lenses: ray constructions, real and virtual images, magnification. [EXT] 1/u + 1/v = 1/f with 'real is positive'."
+      },
+      {
+        "id": "PHY-III-2.6",
+        "textEn": "Wave nature of light: Young's double slit. [EXT] Δy = λD/a; diffraction grating d sinθ = nλ."
+      }
+    ],
+    "prerequisites": [
+      "PHY-III-1"
+    ]
+  },
+  {
+    "id": "PHY-III-3",
+    "subject": "physics",
+    "strand": "Wave Motion",
+    "nameEn": "Sound",
+    "nameZh": "聲音",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-III-3.1",
+        "textEn": "Sound as a longitudinal wave needing a medium; reflection, refraction, diffraction and interference of sound; comparison with light."
+      },
+      {
+        "id": "PHY-III-3.2",
+        "textEn": "Audible frequency range; ultrasound."
+      },
+      {
+        "id": "PHY-III-3.3",
+        "textEn": "Pitch, loudness and quality related to frequency, amplitude and waveform."
+      },
+      {
+        "id": "PHY-III-3.4",
+        "textEn": "Noise; the decibel (qualitative); acoustic protection."
+      }
+    ],
+    "prerequisites": [
+      "PHY-III-1"
+    ]
+  },
+  {
+    "id": "PHY-IV-1",
+    "subject": "physics",
+    "strand": "Electricity and Magnetism",
+    "nameEn": "Electrostatics",
+    "nameZh": "靜電學",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-IV-1.1",
+        "textEn": "Charging by friction, sharing and induction; Coulomb's law F = Q₁Q₂/(4πε₀r²); 2-D vector addition of electric forces."
+      },
+      {
+        "id": "PHY-IV-1.2",
+        "textEn": "Electric field lines; E = F/q. [EXT] E = Q/(4πε₀r²); E = V/d between parallel plates."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "PHY-IV-2",
+    "subject": "physics",
+    "strand": "Electricity and Magnetism",
+    "nameEn": "Circuits and domestic electricity",
+    "nameZh": "電路和家居用電",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-IV-2.1",
+        "textEn": "Electric current I = Q/t; conventional current."
+      },
+      {
+        "id": "PHY-IV-2.2",
+        "textEn": "Potential difference and e.m.f."
+      },
+      {
+        "id": "PHY-IV-2.3",
+        "textEn": "Resistance R = V/I; I–V characteristics (metal, filament, diode); Ohm's law; resistivity ρ = RA/l; effect of temperature."
+      },
+      {
+        "id": "PHY-IV-2.4",
+        "textEn": "Series and parallel combinations of resistors."
+      },
+      {
+        "id": "PHY-IV-2.5",
+        "textEn": "Simple circuits: measuring I, V and R; internal resistance; effect of meters; potential divider."
+      },
+      {
+        "id": "PHY-IV-2.6",
+        "textEn": "Electrical power P = VI = I²R = V²/R; heating effect."
+      },
+      {
+        "id": "PHY-IV-2.7",
+        "textEn": "Domestic electricity: power rating, kWh and cost, live/neutral/earth wires, fuses and circuit breakers, ring circuit."
+      }
+    ],
+    "prerequisites": [
+      "PHY-IV-1"
+    ]
+  },
+  {
+    "id": "PHY-IV-3",
+    "subject": "physics",
+    "strand": "Electricity and Magnetism",
+    "nameEn": "Electromagnetism",
+    "nameZh": "電磁學",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-IV-3.1",
+        "textEn": "Magnetic fields and field lines; magnetic effect of currents: B = μ₀I/(2πr) (wire), B = μ₀NI/l (solenoid)."
+      },
+      {
+        "id": "PHY-IV-3.2",
+        "textEn": "Force on a current-carrying conductor F = BIl sinθ; d.c. motor; force between parallel currents. [EXT] F = BQv sinθ."
+      },
+      {
+        "id": "PHY-IV-3.3",
+        "textEn": "Electromagnetic induction; Lenz's law; generators; eddy currents. [EXT] Magnetic flux Φ = BA cosθ; Faraday's law ε = −ΔΦ/Δt."
+      },
+      {
+        "id": "PHY-IV-3.4",
+        "textEn": "[EXT] Alternating current: r.m.s. and peak values (sinusoidal)."
+      },
+      {
+        "id": "PHY-IV-3.5",
+        "textEn": "[EXT] Transformers Vp/Vs = Np/Ns; efficiency; high-voltage transmission."
+      }
+    ],
+    "prerequisites": [
+      "PHY-IV-2"
+    ]
+  },
+  {
+    "id": "PHY-V-1",
+    "subject": "physics",
+    "strand": "Radioactivity and Nuclear Energy",
+    "nameEn": "Radiation and radioactivity",
+    "nameZh": "輻射與放射現象",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-V-1.1",
+        "textEn": "X-rays: production, properties and uses."
+      },
+      {
+        "id": "PHY-V-1.2",
+        "textEn": "α, β and γ radiations: nature, penetrating and ionizing power, deflection in fields."
+      },
+      {
+        "id": "PHY-V-1.3",
+        "textEn": "Random decay; activity; half-life from graphs and data; background radiation. [EXT] N = N₀e^(−kt); decay constant k = ln2 / t½."
+      },
+      {
+        "id": "PHY-V-1.4",
+        "textEn": "Detection (GM counter, count rate); radiation safety, the sievert."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "PHY-V-2",
+    "subject": "physics",
+    "strand": "Radioactivity and Nuclear Energy",
+    "nameEn": "Atomic model",
+    "nameZh": "原子模型",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-V-2.1",
+        "textEn": "Atomic structure; atomic number Z, mass number A; nuclide notation."
+      },
+      {
+        "id": "PHY-V-2.2",
+        "textEn": "Isotopes; radioactive transmutation; decay equations."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "PHY-V-3",
+    "subject": "physics",
+    "strand": "Radioactivity and Nuclear Energy",
+    "nameEn": "Nuclear energy",
+    "nameZh": "核能",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-V-3.1",
+        "textEn": "Nuclear fission and fusion; chain reaction."
+      },
+      {
+        "id": "PHY-V-3.2",
+        "textEn": "[EXT] Mass–energy relationship ΔE = Δmc²; 1 u = 931 MeV; energy released in nuclear reactions."
+      }
+    ],
+    "prerequisites": [
+      "PHY-V-2"
+    ]
+  },
+  {
+    "id": "PHY-VI-1",
+    "subject": "physics",
+    "strand": "Astronomy and Space Science",
+    "nameEn": "The universe as seen in different scales",
+    "nameZh": "不同空間標度下的宇宙面貌",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-VI-1.1",
+        "textEn": "Hierarchy of objects (planet, star, cluster, nebula, galaxy); light year; astronomical unit."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "PHY-VI-2",
+    "subject": "physics",
+    "strand": "Astronomy and Space Science",
+    "nameEn": "Astronomy through history",
+    "nameZh": "天文學的發展史",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-VI-2.1",
+        "textEn": "Geocentric and heliocentric models; retrograde motion; Galileo's discoveries; Kepler's laws."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "PHY-VI-3",
+    "subject": "physics",
+    "strand": "Astronomy and Space Science",
+    "nameEn": "Orbital motions under gravity",
+    "nameZh": "重力下的軌道運動",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-VI-3.1",
+        "textEn": "Circular orbits; T² ∝ r³; Kepler's third law T² = 4π²a³/(GM)."
+      },
+      {
+        "id": "PHY-VI-3.2",
+        "textEn": "Apparent weightlessness in orbit."
+      },
+      {
+        "id": "PHY-VI-3.3",
+        "textEn": "Gravitational PE U = −GMm/r; orbital energy; escape velocity."
+      }
+    ],
+    "prerequisites": [
+      "PHY-II-7"
+    ]
+  },
+  {
+    "id": "PHY-VI-4",
+    "subject": "physics",
+    "strand": "Astronomy and Space Science",
+    "nameEn": "Stars and the universe",
+    "nameZh": "恆星和宇宙",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-VI-4.1",
+        "textEn": "Parallax d = 1/p (parsec); apparent and absolute magnitude (qualitative); blackbody radiation; spectral classes OBAFGKM; Stefan's law L = 4πR²σT⁴; H–R diagram."
+      },
+      {
+        "id": "PHY-VI-4.2",
+        "textEn": "Doppler effect Δλ/λ₀ ≈ v/c; radial-velocity curves; rotation curves and dark matter; red shift and the expanding universe."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "PHY-VII-1",
+    "subject": "physics",
+    "strand": "Atomic World",
+    "nameEn": "Rutherford's atomic model",
+    "nameZh": "盧瑟福原子模型",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-VII-1.1",
+        "textEn": "α-scattering and the nuclear model; limitations of Rutherford's model."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "PHY-VII-2",
+    "subject": "physics",
+    "strand": "Atomic World",
+    "nameEn": "Photoelectric effect",
+    "nameZh": "光電效應",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-VII-2.1",
+        "textEn": "Photoelectric experiment and failure of the wave model; photon energy E = hf; intensity and photon number."
+      },
+      {
+        "id": "PHY-VII-2.2",
+        "textEn": "Einstein's equation hf = φ + ½mv²max; stopping potential; threshold frequency φ = hf₀."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "PHY-VII-3",
+    "subject": "physics",
+    "strand": "Atomic World",
+    "nameEn": "Bohr's atomic model of hydrogen",
+    "nameZh": "玻爾的氫原子模型",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-VII-3.1",
+        "textEn": "Line spectra; energy levels E_n = −13.6/n² eV; electron volt; excitation and ionization."
+      },
+      {
+        "id": "PHY-VII-3.2",
+        "textEn": "Emission and absorption spectra; photon wavelength from energy-level transitions."
+      }
+    ],
+    "prerequisites": [
+      "PHY-VII-2"
+    ]
+  },
+  {
+    "id": "PHY-VII-4",
+    "subject": "physics",
+    "strand": "Atomic World",
+    "nameEn": "Particles or waves",
+    "nameZh": "粒子或波",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-VII-4.1",
+        "textEn": "Wave–particle duality; electron diffraction; de Broglie wavelength λ = h/p."
+      }
+    ],
+    "prerequisites": [
+      "PHY-VII-2"
+    ]
+  },
+  {
+    "id": "PHY-VII-5",
+    "subject": "physics",
+    "strand": "Atomic World",
+    "nameEn": "Probing into nano scale",
+    "nameZh": "窺探納米世界",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-VII-5.1",
+        "textEn": "Properties of nanomaterials; TEM and STM; Rayleigh criterion θ ≈ 1.22λ/d; applications and risks of nanotechnology."
+      }
+    ],
+    "prerequisites": [
+      "PHY-VII-4"
+    ]
+  },
+  {
+    "id": "PHY-VIII-1",
+    "subject": "physics",
+    "strand": "Energy and Use of Energy",
+    "nameEn": "Electricity at home",
+    "nameZh": "家居用電",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-VIII-1.1",
+        "textEn": "Lighting: lumen, lux, efficacy (lm/W); inverse-square and cosine laws for illuminance."
+      },
+      {
+        "id": "PHY-VIII-1.2",
+        "textEn": "Cooking: hotplate, induction cooker, microwave oven; efficiency and running cost."
+      },
+      {
+        "id": "PHY-VIII-1.3",
+        "textEn": "Air conditioners as heat pumps; cooling capacity; COP = Q_C / W with Q_H = Q_C + W."
+      },
+      {
+        "id": "PHY-VIII-1.4",
+        "textEn": "Energy Efficiency Labelling Scheme."
+      }
+    ],
+    "prerequisites": [
+      "PHY-IV-2"
+    ]
+  },
+  {
+    "id": "PHY-VIII-2",
+    "subject": "physics",
+    "strand": "Energy and Use of Energy",
+    "nameEn": "Energy efficiency in building and transportation",
+    "nameZh": "在建築和運輸業中的能源效率",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-VIII-2.1",
+        "textEn": "Rate of conduction Q/t = κA(T_H − T_C)/d; U-value; OTTV; solar control film."
+      },
+      {
+        "id": "PHY-VIII-2.2",
+        "textEn": "Electric and hybrid vehicles; regenerative braking; efficiency of transport."
+      }
+    ],
+    "prerequisites": [
+      "PHY-I-2"
+    ]
+  },
+  {
+    "id": "PHY-VIII-3",
+    "subject": "physics",
+    "strand": "Energy and Use of Energy",
+    "nameEn": "Renewable and non-renewable energy sources",
+    "nameZh": "可再生和不可再生能源",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-VIII-3.1",
+        "textEn": "Solar constant and solar cells; wind turbine P = ½ρAv³η; hydroelectric power; binding energy curve; fission reactor (moderator, coolant, control rods)."
+      },
+      {
+        "id": "PHY-VIII-3.2",
+        "textEn": "Environmental impact of energy use."
+      }
+    ],
+    "prerequisites": [
+      "PHY-V-3"
+    ]
+  },
+  {
+    "id": "PHY-IX-1",
+    "subject": "physics",
+    "strand": "Medical Physics",
+    "nameEn": "Making sense of the eye and the ear",
+    "nameZh": "眼和耳的感官",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-IX-1.1",
+        "textEn": "Vision: rods and cones; accommodation; resolving power θ ≈ 1.22λ/d."
+      },
+      {
+        "id": "PHY-IX-1.2",
+        "textEn": "Defects of vision and correction: lens power in dioptres (D = 1/f); near and far points."
+      },
+      {
+        "id": "PHY-IX-1.3",
+        "textEn": "Hearing: sound intensity level L = 10 log(I/I₀) dB; equal-loudness curves (phon)."
+      }
+    ],
+    "prerequisites": [
+      "PHY-III-2"
+    ]
+  },
+  {
+    "id": "PHY-IX-2",
+    "subject": "physics",
+    "strand": "Medical Physics",
+    "nameEn": "Medical imaging using non-ionizing radiation",
+    "nameZh": "非電離輻射醫學影像學",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-IX-2.1",
+        "textEn": "Ultrasound: acoustic impedance Z = ρc; intensity reflection coefficient α = (Z₂ − Z₁)²/(Z₂ + Z₁)²; A-scan and B-scan; depth = vt/2."
+      },
+      {
+        "id": "PHY-IX-2.2",
+        "textEn": "Fibre-optic endoscopy; optical fibres and coherent bundles."
+      }
+    ],
+    "prerequisites": [
+      "PHY-III-1"
+    ]
+  },
+  {
+    "id": "PHY-IX-3",
+    "subject": "physics",
+    "strand": "Medical Physics",
+    "nameEn": "Medical imaging using ionizing radiation",
+    "nameZh": "電離輻射醫學影像學",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "PHY-IX-3.1",
+        "textEn": "X-ray imaging: I = I₀e^(−μx); half-value thickness = ln2/μ; contrast media; CT scans."
+      },
+      {
+        "id": "PHY-IX-3.2",
+        "textEn": "Radionuclide imaging: Tc-99m; effective half-life 1/T_e = 1/T_p + 1/T_b; gamma camera; radiation dose."
+      }
+    ],
+    "prerequisites": [
+      "PHY-V-1"
+    ]
+  }
+]

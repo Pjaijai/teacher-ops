@@ -1,0 +1,305 @@
+{
+  "home": {
+    "title": "寫作",
+    "subtitle": "選一道文憑試模式的題目，先用 AI 鷹架構思，自己動筆，再取得詳細回饋。",
+    "tabs": {
+      "generate": "出題",
+      "bank": "題庫",
+      "own": "自訂題目"
+    },
+    "localNote": "你的題目和文章只會儲存在這部裝置（此瀏覽器）上。"
+  },
+  "parts": {
+    "chi_writing": {
+      "A": "甲部 實用寫作",
+      "B": "乙部 命題寫作"
+    },
+    "eng_writing": {
+      "A": "Part A 指引寫作",
+      "B": "Part B 延伸寫作"
+    }
+  },
+  "generate": {
+    "title": "取得題目",
+    "description": "我們會先從共享題庫中給你未做過的題目；如沒有合適的，就為你新擬一道。",
+    "subject": "科目",
+    "part": "卷別部分",
+    "genre": "文類",
+    "textType": "文體",
+    "any": "不限",
+    "forceNew": "一定要新擬題目",
+    "submit": "取得題目",
+    "costNote": "題庫題目免費；如需新擬題目，扣 {cost} 點。",
+    "descriptionLocal": "AI 會為你新擬一道文憑試模式的題目，並儲存在這部裝置上。"
+  },
+  "bank": {
+    "title": "瀏覽題庫",
+    "description": "按文類、文體、卷別部分或關鍵字搜尋所有已檢查的寫作題目。瀏覽免費。",
+    "descriptionLocal": "瀏覽儲存在這部裝置上的寫作題目。"
+  },
+  "own": {
+    "title": "自訂題目",
+    "description": "貼上老師給你的題目或以往的練習。題目只有你看得到。",
+    "taskTitle": "題目名稱（選填）",
+    "taskTitlePlaceholder": "例如：致校長信，建議改善學校小食部",
+    "prompt": "題目",
+    "promptPlaceholder": "在此貼上完整題目……",
+    "materials": "資料（選填）",
+    "materialsPlaceholder": "甲部／Part A 的閱讀資料（如有）……",
+    "privateNote": "自訂題目屬私人題目，因此你的答案不能公開。",
+    "submit": "使用這道題目",
+    "descriptionLocal": "貼上老師給你的題目或以往的練習。題目會儲存在這部裝置上。"
+  },
+  "recent": {
+    "title": "最近的寫作",
+    "empty": "暫時未有紀錄。選一道題目開始吧。",
+    "level": "第 {level} 級",
+    "revision": "修訂版"
+  },
+  "status": {
+    "draft": "草稿",
+    "transcribing": "辨識手寫中",
+    "transcribe_failed": "辨識失敗",
+    "review": "待核對",
+    "grading": "批改中",
+    "graded": "已有回饋"
+  },
+  "nav": {
+    "back": "全部寫作",
+    "backToTask": "返回題目",
+    "previousVersion": "上一版本",
+    "revision": "修訂版 {n}",
+    "showTask": "題目"
+  },
+  "task": {
+    "materials": "資料",
+    "private": "私人",
+    "limit": {
+      "chars": "{n} 字",
+      "words": "約 {n} 字（英文）"
+    },
+    "mySubmissions": "我的作答",
+    "community": "同學答案"
+  },
+  "helpers": {
+    "title": "動筆前問 AI",
+    "scaffoldingOnly": "只提供鷹架——要點、詞語和句式。文章要自己寫。",
+    "ask": "問 AI",
+    "failed": "AI 暫時未能協助，已退還點數。",
+    "cachedNote": "答案會為這道題目保存，再次查看免費。",
+    "tabs": {
+      "zh": {
+        "task_analysis": "解題",
+        "outline": "寫作大綱",
+        "vocabulary": "詞彙",
+        "sentence_patterns": "句式",
+        "idioms": "成語"
+      },
+      "en": {
+        "task_analysis": "解題 Task analysis",
+        "outline": "大綱 Outline",
+        "vocabulary": "詞彙 Vocabulary",
+        "sentence_patterns": "句式 Patterns",
+        "idioms": "習語 Idioms"
+      }
+    },
+    "about": {
+      "task_analysis": "題目真正要求甚麼：文體、對象、目的、語氣、審題陷阱，以及動筆前要準備甚麼。",
+      "outline": "段落計劃，每段列出簡短要點。",
+      "vocabulary": "按主題分組的相關詞語，附近義詞及用法說明。",
+      "sentence_patterns": "適合本題的句式，每個附一句簡短例句。",
+      "idioms": "切合題目的成語或習語，附解釋、用法及簡短例句。"
+    },
+    "fields": {
+      "asks": "題目要求",
+      "textType": "文體",
+      "audience": "對象",
+      "purpose": "目的",
+      "toneRegister": "語氣與語域",
+      "keyRequirements": "必須涵蓋",
+      "traps": "審題陷阱",
+      "prepare": "動筆前準備",
+      "centralIdea": "中心思想",
+      "tips": "如何再上一級"
+    },
+    "failedLocal": "AI 暫時未能協助，請再試一次。",
+    "cachedNoteLocal": "答案會為這道題目儲存在這部裝置上，再次查看即時顯示。"
+  },
+  "editor": {
+    "title": "作答",
+    "reviseTitle": "修訂後再提交",
+    "description": "直接輸入，或上載手寫稿相片。",
+    "typed": "輸入",
+    "photo": "相片",
+    "placeholder": "開始寫作……",
+    "count": {
+      "chars": "{n} 字",
+      "words": "{n} 個英文字"
+    },
+    "autosaved": "草稿已儲存在此瀏覽器",
+    "continue": "下一步",
+    "photoHelp": "請按頁序拍攝清晰、平整的相片。我們會逐字照抄你的手寫稿（包括錯字），回饋才公平。",
+    "addPhotos": "加入相片",
+    "transcribe": "上載並辨識",
+    "failed": "未能完成，請再試一次。"
+  },
+  "review": {
+    "photos": "你的手寫稿",
+    "page": "第 {n} 頁",
+    "zoomIn": "放大",
+    "zoomOut": "縮小",
+    "titlePhoto": "核對轉錄文字",
+    "titleTyped": "核對文字",
+    "descriptionPhoto": "對照手寫稿，修正我們讀錯的地方。所有改動都會記錄，並在回饋中顯示。",
+    "descriptionTyped": "提交前可作最後修改。",
+    "legend": {
+      "unsure": "未能肯定",
+      "insertion": "插入字（∨）",
+      "malformed": "字形錯誤",
+      "wrong_char": "字形錯誤",
+      "edit": "你的改動"
+    },
+    "preview": "預覽",
+    "edit": "修改",
+    "count": {
+      "chars": "{n} 字",
+      "words": "{n} 個英文字"
+    },
+    "markerHelp": "[X?]＝我們未能肯定；[X!]＝字形看來有誤；{+…+}＝你插入的字。可修改或保留——提交時會移除括號。",
+    "save": "儲存修改",
+    "saved": "已儲存",
+    "edits": "你對辨識結果的改動（{n}）",
+    "submitTitle": "提交批改",
+    "submitDescription": "回饋包括是否切題、優點、錯誤，以及扣連你原句的用詞和句式提升建議。",
+    "estimate": "加上文憑試等級估算",
+    "estimateHelp": "按考評局示例校準，估算各評分項目分數及等級。只供參考，並非正式成績。",
+    "noEstimatePartA": "甲部只提供回饋——實用寫作暫未設等級估算。",
+    "submit": "取得回饋"
+  },
+  "progress": {
+    "transcribing": "正在辨識你的手寫稿……",
+    "transcribingHelp": "通常不用一分鐘。你可以離開此頁，我們會繼續處理。",
+    "grading": "正在撰寫回饋……",
+    "gradingHelp": "通常需時一至兩分鐘。",
+    "refresh": "重新整理",
+    "transcribeFailed": "未能辨識你的手寫稿",
+    "transcribeFailedHelp": "點數已退還。你可以再試一次，或改為直接輸入。",
+    "retry": "再試一次",
+    "transcribingHelpLocal": "通常不用一分鐘。完成前請保持此分頁開啟。",
+    "gradingHelpLocal": "通常需時一至兩分鐘。完成前請保持此分頁開啟。",
+    "transcribeFailedHelpLocal": "辨識失敗或被中斷。你可以再試一次，或改為直接輸入。"
+  },
+  "feedback": {
+    "yourEssay": "你的文章",
+    "layers": {
+      "wrongChars": "錯別字",
+      "errors": "錯誤",
+      "problem": "病句",
+      "good": "佳句",
+      "sentences": "句子",
+      "upgrades": "提升建議",
+      "script": "繁簡混用",
+      "edits": "你的改動"
+    },
+    "tabs": {
+      "overview": "總評",
+      "errors": "錯誤",
+      "upgrades": "提升",
+      "edits": "改動"
+    },
+    "recap": "解題回顧",
+    "verdict": {
+      "met": "切合題目",
+      "partly": "部分切題",
+      "not_met": "未切題"
+    },
+    "strengths": "優點",
+    "overall": "整體評語",
+    "groups": {
+      "wrongChars": "錯別字（{n}）",
+      "problem": "病句（{n}）",
+      "script": "繁簡混用（{n}）——你主要用{script}",
+      "scriptNote": "考評局接受繁簡混用，不影響分數；但統一字體仍是好習慣。",
+      "good": "佳句（{n}）",
+      "vocab": "用詞提升",
+      "structure": "句式提升",
+      "none": "沒有發現——做得好！"
+    },
+    "script": {
+      "trad": "繁體字",
+      "simp": "簡體字"
+    },
+    "malformed": "字形錯誤",
+    "notLocated": "在你的文章中找不到這段文字。",
+    "editsNote": "以下是你對手寫辨識結果所作的改動。",
+    "next": {
+      "title": "下一步",
+      "sample": "升格示範",
+      "sampleHelp": "看看你自己的文章升格到更高等級的樣子——保留你的立意和佈局——每處改動都附說明。",
+      "revise": "修訂後再提交"
+    }
+  },
+  "estimate": {
+    "title": "文憑試等級估算",
+    "disclaimer": "按考評局示例校準的 AI 估算，只供參考；一切以老師評分為準。",
+    "level": "估算等級",
+    "total": "總分",
+    "criteria": {
+      "content": "內容",
+      "expression": "表達",
+      "structure": "結構",
+      "presentation": "標點字體",
+      "wrong_chars": "錯別字",
+      "language": "語言",
+      "organisation": "組織"
+    }
+  },
+  "sample": {
+    "title": "升格示範",
+    "target": "第 {level} 級",
+    "description": "保留你的立意、例子和佈局，把文章升格。把滑鼠移到或點按標示處，可看改動原因。",
+    "yours": "你的文章",
+    "upgraded": "第 {level} 級版本",
+    "changes": "改動（{n}）",
+    "targetLabel": "目標等級",
+    "levelOption": "第 {level} 級",
+    "generate": "生成升格示範",
+    "defaultFromEstimate": "建議：第 {level} 級，比你的估算高一級。",
+    "defaultNoEstimate": "建議：第 4 級（你未要求等級估算）。"
+  },
+  "tags": {
+    "sva": "主謂一致",
+    "verb_form": "動詞形式",
+    "tense_consistency": "時態一致",
+    "tense_choice": "時態選用",
+    "passive": "被動語態",
+    "missing_be": "漏寫 be 動詞",
+    "double_verb": "一句兩個主要動詞",
+    "article": "冠詞",
+    "count_noun": "可數／不可數名詞",
+    "relative_clause": "關係子句",
+    "pronoun_case": "代詞格",
+    "preposition_pattern": "介詞及動詞搭配",
+    "word_form": "詞性",
+    "word_choice": "用詞",
+    "misused_idiom": "誤用習語",
+    "l1_transfer": "中式英文句式",
+    "run_on": "連寫句",
+    "fragment": "不完整句子",
+    "double_subject": "重複主語",
+    "comparative": "比較級",
+    "dangling_modifier": "懸垂修飾語",
+    "spelling": "串字",
+    "register": "語域與語氣",
+    "convention": "文體格式",
+    "template_linkers": "套用連接詞",
+    "task_copy": "抄錄題目"
+  },
+  "errors": {
+    "generic": "出現錯誤，請再試一次。",
+    "jobFailed": "未能完成：{error} 點數已退還。",
+    "taskNotFound": "此題目不存在，或你無權查看。",
+    "submissionNotFound": "此作答不存在。",
+    "jobFailedLocal": "未能完成：{error} 請再試一次。"
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "title": "Practice",
+  "subtitle": "DSE-style Maths, M1, M2 and Physics questions with marking schemes, instant MC feedback and AI marking of your written work.",
+  "subject": "Subject",
+  "topics": {
+    "none": "No topics found.",
+    "hint": "Choose up to {max} Learning Units.",
+    "strands": {
+      "numberAlgebra": "Number and Algebra",
+      "measures": "Measures, Shape and Space",
+      "data": "Data Handling",
+      "further": "Further Learning Unit",
+      "foundationKnowledge": "Foundation Knowledge",
+      "calculus": "Calculus",
+      "statistics": "Statistics",
+      "algebra": "Algebra"
+    },
+    "foundation": "Foundation",
+    "nonFoundation": "Non-foundation",
+    "mixed": "Mixed"
+  },
+  "options": {
+    "kind": "Question type",
+    "kinds": {
+      "mc": "MC",
+      "short": "Short",
+      "long": "Long",
+      "experiment": "Experiment",
+      "writing_task": "Writing"
+    },
+    "difficulty": "Difficulty",
+    "difficultyLevel": "Difficulty {level}",
+    "extension": "Include non-foundation topics",
+    "extensionPhysics": "Include extension (*) content"
+  },
+  "generate": {
+    "title": "Get a question",
+    "description": "We serve a checked question from the shared bank that you haven't seen. If none fits, we write a new one.",
+    "button": "Get a question",
+    "bankFirst": "Free when served from the bank.",
+    "tabs": {
+      "topic": "By topic",
+      "type": "By type",
+      "reference": "From a reference"
+    },
+    "typeHint": "Any topic: choose the question type and difficulty.",
+    "descriptionLocal": "We write a new DSE-style question for you, checked by code. It's saved in this browser.",
+    "localNote": "Questions are saved on this device."
+  },
+  "reference": {
+    "intro": "Photograph a worksheet or textbook question (or type it). We'll tell you what we understood, then write new questions like it.",
+    "addPhoto": "Add a photo",
+    "orType": "Or type the question (describe any figure in words)",
+    "typePlaceholder": "e.g. In the figure, ∠B = 90°, AB = 5 cm and BC = 12 cm. Find AC.",
+    "understand": "Read the question",
+    "understoodTitle": "Here's what I understood",
+    "understoodHint": "Check and fix anything before generating. Maths is written in LaTeX between $ signs.",
+    "questionText": "Question (Markdown + LaTeX)",
+    "preview": "Preview",
+    "topic": "Topic",
+    "noUnits": "No Learning Unit",
+    "changeUnits": "change",
+    "keyIdea": "Key idea",
+    "figureUnsupported": "This figure can't be drawn yet: {note}",
+    "figureProblems": "The figure may not match the numbers: {problems}",
+    "figureJson": "Figure data (advanced)",
+    "figureJsonHint": "The figure is drawn from this JSON. Leave it empty for no figure.",
+    "figureInvalid": "This isn't a valid figure.",
+    "figureInvalidJson": "This isn't valid JSON.",
+    "variation": "How different should the new questions be?",
+    "levels": {
+      "1": {
+        "name": "1 · Number swap",
+        "description": "Same wording and figure, new numbers."
+      },
+      "2": {
+        "name": "2 · New context",
+        "description": "Same maths and method in a new setting."
+      },
+      "3": {
+        "name": "3 · New structure",
+        "description": "Same idea, but a different unknown or an extra step."
+      }
+    },
+    "count": "How many",
+    "language": "Language",
+    "generate": "{count, plural, one {Generate # question} other {Generate # questions}}",
+    "privateNote": "Questions from your reference are private to you.",
+    "made": "{count, plural, one {# question ready} other {# questions ready}}",
+    "variant": "Question {n}",
+    "privateNoteLocal": "Questions from your reference are saved on this device.",
+    "typePlaceholders": {
+      "math_m1": "e.g. Let f(x) = x e^(1/(x−2)). (a) Find f′(x). (b) Someone claims the curve y = f(x) has only one horizontal tangent. Do you agree? Explain.",
+      "math_m2": "e.g. Let f(x) = 1/(3x² + 4). Find f′(x) from first principles."
+    }
+  },
+  "question": {
+    "back": "Practice",
+    "print": "Print",
+    "difficulty": "Difficulty {level}/5",
+    "private": "Private",
+    "yourAttempts": "Your marked attempts",
+    "tabs": {
+      "solution": "Solution",
+      "community": "Community answers"
+    },
+    "solutionAfter": "The solution and community answers unlock after you answer.",
+    "solutionAfterLocal": "The solution unlocks after you answer."
+  },
+  "mc": {
+    "correct": "Correct!",
+    "wrong": "Not quite — the answer is {key}.",
+    "why": "Why {choice} is tempting:"
+  },
+  "solution": {
+    "answers": "Answers",
+    "whole": "Answer",
+    "key": "Answer: {option}",
+    "scheme": "Marking scheme",
+    "part": "Part",
+    "mark": "Mark",
+    "criterion": "Awarded for",
+    "marks": "{n, plural, one {# mark} other {# marks}}",
+    "ecf": "e.c.f. allowed",
+    "worked": "Worked solution",
+    "analysis": "解題 — how to approach it",
+    "tips": "Tips and traps",
+    "codeChecks": "Checked by code",
+    "verified": "Verified by code",
+    "notVerified": "Not verified",
+    "codeChecksNote": "Each result is tested at random points (derivatives against finite differences, integrals against numerical integration). Proofs, explanations and verdicts are not code-verified."
+  },
+  "answer": {
+    "title": "Your answer",
+    "description": "Write your working on paper, then photograph it. We transcribe it to LaTeX exactly as written; you check it before marking.",
+    "addPhotos": "Add photos",
+    "upload": "{count, plural, =0 {Upload and transcribe} one {Upload # page and transcribe} other {Upload # pages and transcribe}}",
+    "typeInstead": "Type my working instead",
+    "transcribing": "Reading your handwriting…",
+    "save": "Save",
+    "saved": "Saved.",
+    "mark": "Mark my answer",
+    "markHint": "Marked like the DSE: method (M) and answer (A) marks.",
+    "marking": "Marking your answer…",
+    "seeMarks": "See your marks"
+  },
+  "transcript": {
+    "hint": "Check each line against your paper. Fix only reading mistakes — not your maths, or the marking won't reflect your work.",
+    "page": "Page {n}",
+    "edited": "edited",
+    "insertBelow": "Insert a line below",
+    "remove": "Remove line",
+    "lineLabel": "Line {n} (LaTeX)",
+    "addLine": "Add a line"
+  },
+  "result": {
+    "notFound": "This attempt wasn't found.",
+    "backToQuestion": "Back to the question",
+    "beta": "AI-marked, beta",
+    "mcInstant": "Marked instantly",
+    "score": "Score",
+    "similar": "Try a similar question",
+    "stillMarking": "Your answer is still being marked…",
+    "notMarked": "This attempt hasn't been marked yet.",
+    "continue": "Continue answering",
+    "yourWorking": "Your working",
+    "firstWrong": "First wrong step {parts}",
+    "edited": "edited",
+    "partLabel": "Part ({part})",
+    "wholeQuestion": "Whole question",
+    "partScore": "{got} / {max}",
+    "mark": "Mark",
+    "reason": "Why",
+    "awarded": "Awarded",
+    "notAwarded": "Not awarded",
+    "line": "Line {n}",
+    "ecfFrom": "e.c.f. from ({part})",
+    "note": "解題 note",
+    "solutionLocked": "The solution unlocks once your answer is marked.",
+    "tabs": {
+      "solution": "Solution",
+      "community": "Community answers"
+    }
+  },
+  "dispute": {
+    "button": "Dispute",
+    "disputed": "Disputed",
+    "title": "Dispute: {label}",
+    "description": "Tell us why you think this is marked wrongly. Disputes are reviewed to improve the marker; your score doesn't change now.",
+    "placeholder": "e.g. My line 4 uses the cosine rule correctly, so the M mark should be awarded.",
+    "submit": "Send",
+    "sent": "Thanks — your dispute was sent.",
+    "descriptionLocal": "Note why you think this is marked wrongly. In local mode disputes are saved on this device only; your score doesn't change.",
+    "sentLocal": "Saved on this device."
+  },
+  "recent": {
+    "title": "Recent attempts",
+    "empty": "No attempts yet. Get a question to start.",
+    "status": {
+      "answering": "Unfinished",
+      "transcribing": "Transcribing",
+      "review": "To check",
+      "marking": "Marking"
+    }
+  }
+}

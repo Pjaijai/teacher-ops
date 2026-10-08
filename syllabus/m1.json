@@ -1,0 +1,450 @@
+[
+  {
+    "id": "M1-1",
+    "subject": "math_m1",
+    "strand": "Foundation Knowledge",
+    "nameEn": "Binomial expansion",
+    "nameZh": "二項展式",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-1.1",
+        "textEn": "Expand (a+b)^n for positive integer n; use summation notation."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-2",
+    "subject": "math_m1",
+    "strand": "Foundation Knowledge",
+    "nameEn": "Exponential and logarithmic functions",
+    "nameZh": "指數函數和對數函數",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-2.1",
+        "textEn": "Know the definition of e and the exponential series."
+      },
+      {
+        "id": "M1-2.2",
+        "textEn": "Understand y=e^x and y=ln x."
+      },
+      {
+        "id": "M1-2.3",
+        "textEn": "Solve problems with exponential/log functions: compound interest, population growth, radioactive decay."
+      },
+      {
+        "id": "M1-2.4",
+        "textEn": "Reduce y=k·a^x and y=k·[f(x)]^n to linear relations and read constants from slope/intercepts of a plotted line."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-3",
+    "subject": "math_m1",
+    "strand": "Calculus",
+    "nameEn": "Derivative of a function",
+    "nameZh": "函數的導數",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-3.1",
+        "textEn": "Intuitive concept of the limit; limit theorems (sum, product, quotient, composite; no proofs)."
+      },
+      {
+        "id": "M1-3.2",
+        "textEn": "Find limits of algebraic, exponential and logarithmic functions."
+      },
+      {
+        "id": "M1-3.3",
+        "textEn": "Concept of the derivative from first principles; notations y', f'(x), dy/dx."
+      },
+      {
+        "id": "M1-3.4",
+        "textEn": "Derivative as the slope of the tangent at x=x0."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-4",
+    "subject": "math_m1",
+    "strand": "Calculus",
+    "nameEn": "Differentiation of a function",
+    "nameZh": "函數的求導法",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-4.1",
+        "textEn": "Sum, product, quotient and chain rules."
+      },
+      {
+        "id": "M1-4.2",
+        "textEn": "Derivatives of algebraic, exponential and logarithmic functions (incl. a^x, log_a x)."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-5",
+    "subject": "math_m1",
+    "strand": "Calculus",
+    "nameEn": "Second derivative",
+    "nameZh": "二階導數",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-5.1",
+        "textEn": "Concept and notation of the second derivative."
+      },
+      {
+        "id": "M1-5.2",
+        "textEn": "Find second derivatives; second derivative test and concavity."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-6",
+    "subject": "math_m1",
+    "strand": "Calculus",
+    "nameEn": "Applications of differentiation",
+    "nameZh": "求導法的應用",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-6.1",
+        "textEn": "Use differentiation for tangents, rates of change, and maximum/minimum problems (local and global extrema)."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-7",
+    "subject": "math_m1",
+    "strand": "Calculus",
+    "nameEn": "Indefinite integration and its applications",
+    "nameZh": "不定積分法及其應用",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-7.1",
+        "textEn": "Concept of indefinite integration as reverse of differentiation."
+      },
+      {
+        "id": "M1-7.2",
+        "textEn": "Basic properties and formulae (k, x^n, 1/x, e^x); constant of integration."
+      },
+      {
+        "id": "M1-7.3",
+        "textEn": "Integrate algebraic and exponential functions with the basic formulae."
+      },
+      {
+        "id": "M1-7.4",
+        "textEn": "Integration by substitution."
+      },
+      {
+        "id": "M1-7.5",
+        "textEn": "Use indefinite integration to solve problems."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-8",
+    "subject": "math_m1",
+    "strand": "Calculus",
+    "nameEn": "Definite integration and its applications",
+    "nameZh": "定積分法及其應用",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-8.1",
+        "textEn": "Concept of definite integral as a limit of sums of rectangle areas; dummy variables."
+      },
+      {
+        "id": "M1-8.2",
+        "textEn": "Fundamental Theorem of Calculus and properties of definite integrals."
+      },
+      {
+        "id": "M1-8.3",
+        "textEn": "Definite integrals of algebraic and exponential functions."
+      },
+      {
+        "id": "M1-8.4",
+        "textEn": "Definite integration by substitution."
+      },
+      {
+        "id": "M1-8.5",
+        "textEn": "Areas of plane figures by definite integration."
+      },
+      {
+        "id": "M1-8.6",
+        "textEn": "Solve problems using definite integration."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-9",
+    "subject": "math_m1",
+    "strand": "Calculus",
+    "nameEn": "Approximation of definite integrals using the trapezoidal rule",
+    "nameZh": "運用梯形法則計算定積分的近似值",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-9.1",
+        "textEn": "Apply the trapezoidal rule; decide over/under-estimate using the second derivative and concavity."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-10",
+    "subject": "math_m1",
+    "strand": "Statistics",
+    "nameEn": "Conditional probability and Bayes' theorem",
+    "nameZh": "條件概率和貝葉斯定理",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-10.1",
+        "textEn": "Concept of conditional probability."
+      },
+      {
+        "id": "M1-10.2",
+        "textEn": "Use Bayes' theorem on simple problems."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-11",
+    "subject": "math_m1",
+    "strand": "Statistics",
+    "nameEn": "Discrete random variables",
+    "nameZh": "離散隨機變量",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-11.1",
+        "textEn": "Concept of discrete random variables."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-12",
+    "subject": "math_m1",
+    "strand": "Statistics",
+    "nameEn": "Probability distribution, expectation and variance",
+    "nameZh": "概率分佈、期望值和方差",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-12.1",
+        "textEn": "Discrete probability distributions as tables, graphs and formulae."
+      },
+      {
+        "id": "M1-12.2",
+        "textEn": "Expectation E(X) and variance Var(X): E(g(X)), E(aX+b), Var(aX+b)=a²Var(X), Var(X)=E(X²)-[E(X)]²; simple problems."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-13",
+    "subject": "math_m1",
+    "strand": "Statistics",
+    "nameEn": "The binomial distribution",
+    "nameZh": "二項分佈",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-13.1",
+        "textEn": "Concept and properties of the binomial distribution (Bernoulli distribution introduced; mean and variance, no proofs)."
+      },
+      {
+        "id": "M1-13.2",
+        "textEn": "Compute binomial probabilities."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-14",
+    "subject": "math_m1",
+    "strand": "Statistics",
+    "nameEn": "The Poisson distribution",
+    "nameZh": "泊松分佈",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-14.1",
+        "textEn": "Concept and properties of the Poisson distribution (mean and variance, no proofs)."
+      },
+      {
+        "id": "M1-14.2",
+        "textEn": "Compute Poisson probabilities."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-15",
+    "subject": "math_m1",
+    "strand": "Statistics",
+    "nameEn": "Applications of the binomial and the Poisson distributions",
+    "nameZh": "二項分佈和泊松分佈的應用",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-15.1",
+        "textEn": "Use binomial and Poisson distributions to solve problems."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-16",
+    "subject": "math_m1",
+    "strand": "Statistics",
+    "nameEn": "Basic definition and properties of the normal distribution",
+    "nameZh": "正態分佈的基本定義及其性質",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-16.1",
+        "textEn": "Continuous random variables and distributions, via the normal distribution; the 12.2 formulae also apply."
+      },
+      {
+        "id": "M1-16.2",
+        "textEn": "Properties of the normal distribution (bell-shaped, symmetric, mean=median=mode, spread set by σ, total area 1)."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-17",
+    "subject": "math_m1",
+    "strand": "Statistics",
+    "nameEn": "Standardisation of a normal variable and use of the standard normal table",
+    "nameZh": "正態變量的標準化及標準正態分佈表的運用",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-17.1",
+        "textEn": "Standardise a normal variable and use the standard normal table."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-18",
+    "subject": "math_m1",
+    "strand": "Statistics",
+    "nameEn": "Applications of the normal distribution",
+    "nameZh": "正態分佈的應用",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-18.1",
+        "textEn": "Find P(X>x1), P(X<x2), P(x1<X<x2) given x1, x2, μ, σ."
+      },
+      {
+        "id": "M1-18.2",
+        "textEn": "Find x given a probability condition."
+      },
+      {
+        "id": "M1-18.3",
+        "textEn": "Use the normal distribution to solve problems."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-19",
+    "subject": "math_m1",
+    "strand": "Statistics",
+    "nameEn": "Sampling distribution and point estimates",
+    "nameZh": "抽樣分佈和點估計",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-19.1",
+        "textEn": "Sample statistics vs population parameters."
+      },
+      {
+        "id": "M1-19.2",
+        "textEn": "Sampling distribution of the sample mean: E(X̄)=μ, Var(X̄)=σ²/n; N(μ,σ²/n) when X is normal."
+      },
+      {
+        "id": "M1-19.3",
+        "textEn": "Central Limit Theorem."
+      },
+      {
+        "id": "M1-19.4",
+        "textEn": "Point estimates: sample mean, sample variance s² (n-1 divisor), unbiased estimator."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-20",
+    "subject": "math_m1",
+    "strand": "Statistics",
+    "nameEn": "Confidence interval for a population mean",
+    "nameZh": "總體平均值的置信區間",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-20.1",
+        "textEn": "Concept of confidence interval."
+      },
+      {
+        "id": "M1-20.2",
+        "textEn": "Find a 100(1-α)% CI for a population mean (known variance with normal population; large n with unknown variance using s)."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M1-21",
+    "subject": "math_m1",
+    "strand": "Further Learning Unit",
+    "nameEn": "Inquiry and investigation",
+    "nameZh": "探索與研究",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M1-21.1",
+        "textEn": "Discover and construct knowledge through learning activities; build inquiry, communication and reasoning skills."
+      }
+    ],
+    "prerequisites": []
+  }
+]

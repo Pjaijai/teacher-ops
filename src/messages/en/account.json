@@ -1,0 +1,47 @@
+{
+  "signIn": {
+    "title": "Sign in",
+    "subtitle": "Practise HKDSE writing and maths with AI feedback.",
+    "google": "Continue with Google",
+    "or": "or",
+    "email": "Email",
+    "sendCode": "Email me a code",
+    "code": "6-digit code",
+    "codeSent": "We sent a code to {email}.",
+    "verify": "Sign in",
+    "changeEmail": "Use a different email",
+    "failed": "That code didn't work. Try again."
+  },
+  "onboarding": {
+    "title": "Set up your profile",
+    "displayName": "Your name",
+    "form": "Form",
+    "subjects": "Subjects you're studying",
+    "examLanguage": "Exam language for Maths and Physics",
+    "examLanguageZh": "中文",
+    "examLanguageEn": "English",
+    "continue": "Continue"
+  },
+  "settings": {
+    "title": "Settings",
+    "profile": "Profile",
+    "nickname": "Public nickname",
+    "nicknameHelp": "Shown on answers you choose to make public. Never your real name.",
+    "uiLanguage": "App language",
+    "extensionTrack": "Include extension (*) questions",
+    "creditHistory": "Credit history",
+    "deleteTitle": "Delete account",
+    "deleteBody": "This permanently deletes your account, your work and your photos.",
+    "deleteConfirm": "Type DELETE to confirm",
+    "deleteButton": "Delete my account",
+    "saved": "Saved",
+    "localData": "Your data",
+    "localDataBody": "Everything you make is saved in this browser on this device. Export a backup to keep it or move it to another device.",
+    "export": "Export backup",
+    "import": "Import backup",
+    "imported": "Backup imported",
+    "deleteLocalTitle": "Delete all data on this device",
+    "deleteLocalBody": "This permanently deletes your questions, writing, answers, photos and progress from this browser.",
+    "deleteLocalButton": "Delete everything"
+  }
+}

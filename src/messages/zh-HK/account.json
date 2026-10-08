@@ -1,0 +1,47 @@
+{
+  "signIn": {
+    "title": "登入",
+    "subtitle": "以 AI 回饋練習文憑試寫作與數學。",
+    "google": "以 Google 繼續",
+    "or": "或",
+    "email": "電郵",
+    "sendCode": "以電郵傳送登入碼",
+    "code": "6 位數登入碼",
+    "codeSent": "登入碼已傳送至 {email}。",
+    "verify": "登入",
+    "changeEmail": "改用其他電郵",
+    "failed": "登入碼不正確，請再試。"
+  },
+  "onboarding": {
+    "title": "設定個人資料",
+    "displayName": "你的名字",
+    "form": "年級",
+    "subjects": "修讀科目",
+    "examLanguage": "數學及物理應考語言",
+    "examLanguageZh": "中文",
+    "examLanguageEn": "English",
+    "continue": "繼續"
+  },
+  "settings": {
+    "title": "設定",
+    "profile": "個人資料",
+    "nickname": "公開暱稱",
+    "nicknameHelp": "只會顯示於你選擇公開的答案，不會顯示真實姓名。",
+    "uiLanguage": "介面語言",
+    "extensionTrack": "包括延伸部分（*）題目",
+    "creditHistory": "點數紀錄",
+    "deleteTitle": "刪除帳戶",
+    "deleteBody": "此操作會永久刪除你的帳戶、作品及相片。",
+    "deleteConfirm": "輸入 DELETE 以確認",
+    "deleteButton": "刪除我的帳戶",
+    "saved": "已儲存",
+    "localData": "你的資料",
+    "localDataBody": "你的作品全部儲存在這部裝置的瀏覽器內。匯出備份可保存資料或轉移到其他裝置。",
+    "export": "匯出備份",
+    "import": "匯入備份",
+    "imported": "已匯入備份",
+    "deleteLocalTitle": "刪除此裝置上的所有資料",
+    "deleteLocalBody": "此操作會從此瀏覽器永久刪除你的題目、文章、答案、相片及學習紀錄。",
+    "deleteLocalButton": "全部刪除"
+  }
+}

@@ -44,3 +44,12 @@ next-env.d.ts
 
 # student work used for testing
 samples/
+
+# HKEAA material and data derived from it (copyright), plus local student data
+/paper/
+/corpus/
+/data/
+
+# Cloudflare build output
+.open-next/
+.wrangler/
