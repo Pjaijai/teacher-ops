@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hkdse-practice",
+  "main": "worker.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "hkdse-practice" }],
+  "r2_buckets": [
+    // Next.js incremental cache (OpenNext)
+    { "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "hkdse-practice-opennext-cache" }
+    // Cloud mode only — student photo uploads (keys u/<userId>/…, 180-day lifecycle rule):
+    // , { "binding": "UPLOADS", "bucket_name": "hkdse-practice-uploads" }
+  ],
+  // Cloud mode only (NEXT_PUBLIC_APP_MODE=cloud). Local mode (v1) needs neither:
+  // Railway Postgres (Singapore) through Hyperdrive: `wrangler hyperdrive create hkdse-db --connection-string=...`
+  // "hyperdrive": [{ "binding": "HYPERDRIVE", "id": "<HYPERDRIVE_ID>" }],
+  // Long AI jobs (see src/server/jobs/job-runner.ts and worker.ts)
+  // "workflows": [{ "binding": "JOB_WORKFLOW", "name": "hkdse-jobs", "class_name": "JobWorkflow" }],
+  "images": { "binding": "IMAGES" },
+  "observability": { "enabled": true },
+  // Secrets (wrangler secret put …): OPENROUTER_API_KEY. Cloud mode also: BETTER_AUTH_SECRET,
+  // GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, RESEND_API_KEY
+  "vars": {
+    "BETTER_AUTH_URL": "https://<your-domain>",
+    "EMAIL_FROM": "DSE Practice <no-reply@<your-domain>>",
+    "OPENROUTER_MODEL_TOP": "anthropic/claude-opus-5.5",
+    "OPENROUTER_MODEL_LIGHT": "anthropic/claude-sonnet-5.5",
+    "OPENROUTER_EMBED_MODEL": "qwen/qwen3-embedding-8b"
+  }
+}

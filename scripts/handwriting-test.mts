@@ -1,5 +1,6 @@
 /**
  * Day-one test: how well does the AI keep (and then catch) students' wrong characters?
+ * Runs the production path: exact transcription (top model) → Chinese feedback → located 錯別字.
  *
  * Layout:
  *   samples/<essay-name>/page1.jpg, page2.jpg, ...   (pages sorted by file name)
@@ -10,11 +11,11 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { askStructured, type ImageInput } from "../src/lib/ai";
-import {
-  ANALYZE_SYSTEM, AnalysisSchema, TRANSCRIBE_SYSTEM, TranscriptionSchema,
-  countUncertain, locateFeedback, stripMarkers,
-} from "../src/lib/essay";
+import { countUnsure, stripMarkers } from "../src/features/writing/lib/text-markers";
+import type { ImageInput } from "../src/server/ai/open-router";
+import { chineseFeedback } from "../src/server/services/writing/chinese-feedback";
+import { checkScript } from "../src/server/services/writing/script-check";
+import { transcribeWriting } from "../src/server/services/writing/transcribe-writing";
 
 try { process.loadEnvFile(".env.local"); } catch { /* rely on the environment */ }
 
@@ -25,6 +26,7 @@ const mediaTypes: Record<string, ImageInput["mediaType"]> = {
 
 type Pair = { wrong: string; correct: string };
 const key = (p: Pair) => `${p.wrong}→${p.correct}`;
+const noUsage = () => {};
 
 let totalExpected = 0, totalHit = 0, totalExtra = 0;
 
@@ -40,20 +42,23 @@ for (const name of fs.readdirSync(dir).sort()) {
   }));
 
   console.log(`\n=== ${name} (${pages.length} page${pages.length > 1 ? "s" : ""}) ===`);
-  const transcription = await askStructured({
-    name: "transcription", system: TRANSCRIBE_SYSTEM, images, schema: TranscriptionSchema,
-    text: `Transcribe this essay (${images.length} pages, in order) exactly as written.`,
+  const transcription = await transcribeWriting({ subject: "chi_writing", images, onUsage: noUsage });
+  const essay = stripMarkers(transcription.text);
+  const feedback = await chineseFeedback({
+    essay,
+    task: transcription.title ? `題目：${transcription.title}` : "（題目不詳）",
+    script: checkScript(essay.clean),
+    onUsage: noUsage,
   });
-  const { clean, malformed } = stripMarkers(transcription.text);
-  const analysis = await askStructured({
-    name: "essay_feedback", system: ANALYZE_SYSTEM, schema: AnalysisSchema,
-    text: `${transcription.title ? `題目：${transcription.title}\n\n` : ""}學生作文：\n${clean}`,
-  });
-  const items = locateFeedback(clean, analysis, malformed);
-  fs.writeFileSync(path.join(essayDir, "result.json"), JSON.stringify({ transcription, analysis, items }, null, 2));
+  fs.writeFileSync(path.join(essayDir, "result.json"), JSON.stringify({ transcription, feedback }, null, 2));
 
-  const found: Pair[] = items.flatMap((it) => (it.kind === "wrong" ? [{ wrong: it.malformed ? it.correct : it.wrong, correct: it.correct }] : []));
-  console.log(`Uncertain characters flagged: ${countUncertain(transcription.text)}; malformed: ${malformed.length}`);
+  // Malformed characters ([X!]) count as X→X.
+  const found: Pair[] = feedback.rows.flatMap((r) => {
+    if (r.kind !== "wrong_char") return [];
+    const p = r.payload as { wrong: string; correct: string };
+    return [{ wrong: p.wrong, correct: p.correct }];
+  });
+  console.log(`Unsure characters flagged: ${countUnsure(transcription.text)}; malformed: ${essay.malformed.length}`);
   console.log(`Found: ${found.map(key).join("  ") || "(none)"}`);
 
   const expectedFile = path.join(essayDir, "expected.json");

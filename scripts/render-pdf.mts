@@ -2,6 +2,7 @@
 // Usage: tsx scripts/render-pdf.mts <file.pdf> <outDir> [pages, e.g. "1-3,8"] [scale]
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { createCanvas } from "@napi-rs/canvas";
 import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 
@@ -14,7 +15,12 @@ function parsePages(spec: string | undefined, total: number) {
 }
 
 export async function renderPdf(file: string, outDir: string, pages?: string, scale = 2) {
-  const doc = await getDocument({ data: new Uint8Array(await readFile(file)), verbosity: 0 }).promise;
+  const doc = await getDocument({
+    data: new Uint8Array(await readFile(file)),
+    // Scanned papers store text as CCITT/JBIG2 image masks; pdfjs decodes those with WebAssembly.
+    wasmUrl: path.join(path.dirname(fileURLToPath(import.meta.resolve("pdfjs-dist/package.json"))), "wasm") + path.sep,
+    verbosity: 0,
+  }).promise;
   await mkdir(outDir, { recursive: true });
   const written: string[] = [];
   for (const n of parsePages(pages, doc.numPages)) {

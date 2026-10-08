@@ -1,91 +1,188 @@
-# Teacher Ops — spec
+# HKDSE practice app — spec
 
-First agreed on 2026-10-06 (demo). Extended the same day in a second design session, adding multi-subject support, scoring and the practice loop. Design details: [API](docs/design/api.md) · [Database](docs/design/database.md).
+**Version 2, agreed 2026-10-07** in a third design session. It replaces the teacher-only, local plan from 2026-10-06. The rubrics, syllabus, marking rules and scoring decisions from the earlier sessions still apply.
 
-## Goal
-A **score → feedback → practice → re-score loop** for HKDSE (F4–F6):
+Design documents:
+- [Database](docs/design/database.md)
+- [API](docs/design/api.md)
+- [Frontend](docs/design/frontend.md)
+- [Migration from the demo](docs/design/migration.md)
 
-| Subject | Scope | Build order |
-|---|---|---|
-| Chinese writing (中文寫作) | Paper 2 乙部 first, 甲部 later | 1 |
-| English writing | Paper 2 Part A + Part B | 2 |
-| Maths Compulsory Part | Paper 1 + Paper 2 (MC) | 3 |
-| M1 (Calculus & Statistics) | Full module | 4 |
-| M2 (Algebra & Calculus) | Full module | 5 |
+## Product
+- **Users are HKDSE students only** (S4–S6, mainly in Hong Kong). There is no teacher role and no classes. Each student has their own history and weakness profile.
+- **Free, with daily credits.** Every AI action costs credits (see [credits](#credits)). Every AI call is logged with its cost. Payments can raise the quota later without a redesign.
+- **The UI is bilingual: 繁體中文 and English.** Content language depends on the subject:
+  - Chinese writing feedback is always in 繁中.
+  - English writing feedback is always in English.
+  - Maths, M1, M2 and Physics follow the student's exam language, set in their profile.
+- **Copyright:** HKEAA past papers and exemplar scripts are used **internally only**, for retrieval, calibration and question patterns. Students see AI-generated questions and AI-written model passages, never reproduced exam text.
 
-## Phases
-- **Phase 1:** only the teacher uses it, locally (`npm run dev`), with no login. The teacher uploads work and prints feedback and practice. Student history is saved.
-- **Phase 2:** students use it directly (deployed, with accounts). This is **gated on passing the teacher-marked test set** (see Success criteria).
+## Releases
+Changed 2026-10-08: the first milestone has **no database and no sign-in**.
+
+| Release | Contents |
+|---|---|
+| **v1: local** | Frontend + AI, saved in the browser. **Chinese + English writing**, end to end. **Maths Compulsory Part** practice. Work, photos and the learner profile live in IndexedDB on the student's device, with backup export/import. The server is a stateless AI API (`/api/ai/*`) with a per-IP rate limit. No accounts, no credits, no shared bank or community answers. "Question bank" searches the student's own generated questions. DSE estimates are rubric-only (no exemplar anchors). |
+| **v1.5: cloud** | Accounts (Better Auth), Postgres + pgvector, daily credits, shared question bank, shared answers with voting, exemplar-anchored DSE estimates, cross-device history. The code is already built and switched off: set `NEXT_PUBLIC_APP_MODE=cloud`. |
+| **v2** | **M1 + M2**: curves and graphs, numeric verification of symbolic answers |
+| **v3** | **Physics**: circuit, ray, free-body and wave diagrams, plus the Physics archetypes and marking ([syllabus/physics.md](syllabus/physics.md)) |
+
+Sections below describe the full (cloud) product. In local mode, anything that needs an account or a database is hidden: credits, the shared bank, shared answers and the cloud-only parts of the profile.
+
+## Writing (Chinese, English) — v1
+1. **Question.** The student either generates a DSE-style task or enters their own (e.g. a prompt from their teacher). Tasks that can be generated:
+   - Chinese 乙部: a genre plus a title or stimulus-scenario prompt.
+   - Chinese 甲部: 2–3 generated materials plus a practical-writing task.
+   - English Part A: a guided task.
+   - English Part B: a chosen text type.
+
+   Generated tasks follow the distilled patterns and go into the shared question bank.
+2. **解題 (task analysis), before writing:** what the task asks, the text type, audience, purpose, tone and register, traps, and what to prepare.
+3. **Ask-AI helpers:**
+   - 寫作大綱 (outline): a paragraph plan.
+   - Vocabulary with synonyms.
+   - Sentence patterns with a short example.
+   - Idioms or 成語 with usage notes.
+
+   **Scaffolding only:** never full paragraphs or a full essay before the student submits.
+4. **Submission:** the student types, or uploads photos.
+   - Photos are transcribed exactly. The transcription keeps errors, marks `[X?]` unsure and `[X!]` malformed characters, and applies the student's ∨/⋀ insertions, which are highlighted as inserted.
+   - The student reviews the transcription next to the photo and **may edit anything**. Every change from the AI's reading is tracked: the original is kept, and edits are shown in the feedback.
+5. **Feedback:**
+   - A 解題 recap: did the essay meet the task?
+   - Strengths.
+   - Errors:
+     - Chinese: 錯別字, 病句, 佳句, and 繁簡混用 (feedback only; HKEAA accepts mixed scripts, see the rubric).
+     - English: errors tagged with the rubric's error taxonomy.
+   - Vocabulary and sentence-structure upgrades, each tied to the student's own sentence.
+6. **DSE estimate (optional, opt-in, labelled beta):**
+   - Marks for each criterion and an estimated level, following [rubrics/chinese-writing.md](rubrics/chinese-writing.md) and [rubrics/english-writing.md](rubrics/english-writing.md).
+   - It's calibrated against HKEAA exemplar anchors retrieved from the corpus.
+   - **Chinese 甲部 gets feedback only, with no estimate.**
+7. **Level sample:** an **upgraded rewrite of the student's own essay**. It keeps their ideas, examples and plan, and is shown side by side with notes on each change. The target is selectable and **defaults to one level above their estimate** (or Level 4 if they didn't ask for an estimate).
+8. **Profile update:** criterion scores and error-tag counts (EWMA, so recent work dominates) feed the dashboard's next steps.
+
+## Maths CP (v1), M1/M2 (v2), Physics (v3)
+1. **Generate a question:**
+   - **by topic** (Learning Unit, or `PHY-*` topic ID);
+   - **by question type** (MC, short, long, experiment for Physics; plus difficulty and `*` extension);
+   - **from a reference image** (a photo of a worksheet question → "here's what I understood" → variants).
+
+   It's served first from the **shared bank** (questions this student hasn't seen) before generating new ones.
+2. **Each question includes:**
+   - the question, with LaTeX formulas (KaTeX) and a JSON figure drawn by our renderers;
+   - the answer;
+   - a **marking scheme** in HKEAA M/A notation, with e.c.f. flags and accepted ranges;
+   - **解題 thinking**: how to read the question and which idea unlocks it;
+   - **tips** and common traps (for MC, the misconception behind each distractor).
+3. **Verification:**
+   - Every numeric answer is checked by code: mathjs, units and accepted ranges.
+   - M1/M2 symbolic answers are checked by random-point evaluation (derivatives against finite differences, integrals against numeric integration).
+   - Proofs, "show that" and explanation parts are marked "not code-verified".
+   - Only checked questions enter the shared bank.
+4. **Student answer:**
+   - **MC** is marked instantly, with no AI. The misconception behind the chosen distractor is shown.
+   - **Written work** is uploaded as photos, transcribed to LaTeX line by line, and the student checks it (edits tracked).
+   - It's then **marked against the scheme** using HKEAA conventions:
+     - M marks (method); A marks need the unit;
+     - e.c.f.: method marks follow an earlier error, answer marks only where the scheme says;
+     - "show that" earns method marks only;
+     - a wrong verdict scores 0 for the whole part;
+     - required keywords.
+   - The result is a **score per part with a reason for every mark awarded or lost**, the first wrong step highlighted, and a 解題 note.
+   - Labelled **"AI-marked, beta"**, with a **dispute** button. Disputes are stored as test data.
+5. **Profile update:** mastery per topic ID and misconception tags.
+
+## Question bank search (v1; topics grow with v2/v3)
+Students can **browse and search all checked questions in the shared bank** (generated questions only, never past papers):
+- **Filters:**
+  - subject;
+  - **topic**:
+    - writing genre and text type (記敘／議論／抒情…, letter / article / blog…), paper part (乙部／甲部, Part A/B);
+    - maths Learning Unit;
+    - M1/M2 unit;
+    - `PHY-*` topic;
+  - question type (MC / short / long / experiment / writing task);
+  - difficulty; extension `*`; language.
+- **Keyword search:** the query is embedded and ranked by pgvector similarity, which works for Chinese and English alike. A trigram match on the question text is used for exact phrases.
+- **Results** show the question preview (KaTeX and figures), topic chips, rating, and whether the student has already attempted it. Opening one starts the normal practice or writing flow.
+- **Hidden:** private questions (from a student's reference image or "my own question") and reported questions under review.
+- **Cost:** browsing and searching are free. Only doing the question costs credits, as usual.
+
+## Shared answers (v1)
+- **Visibility:** every writing submission and practice attempt has a visibility setting: **private (default) or public**. The owner can switch it at any time, and switching back to private hides it at once.
+- **What a public answer shows:**
+  - The **final text only**: the edited transcript or typed text, with the LaTeX rendered for maths. **Photos are never public**.
+  - The author's **nickname** (set in the profile, never their account name).
+  - The AI score or estimate, and the feedback, **if the author chooses to include them**.
+- **Where they appear:** in a "Community answers" tab on the question, **after the viewer has submitted their own attempt**, so they can't copy before trying. It's sorted by votes, then by recency.
+- **Voting:** other students can **upvote or downvote** (one vote each; changeable). Authors can't vote on their own answers.
+- **Reports:**
+  - Reasons: wrong, inappropriate, or contains personal info.
+  - **3 or more reports hide** the answer pending review.
+  - Text is checked automatically for phone numbers, emails, HKID-like patterns and school names when an answer is made public. Any match blocks publishing until removed.
+- **Private-origin questions:** answers to questions from a reference image or "my own question" can't be made public, because the question itself is private.
+- **Cost:** making an answer public and voting are free.
+
+## Credits
+- **Daily quota:** 100 credits, reset at 00:00 HKT.
+- **Costs:**
+
+  | Action | Credits |
+  |---|---|
+  | Generate a question from the bank | 0 |
+  | Generate a new question | 2 |
+  | 解題 | 1 |
+  | One helper (outline, vocab, sentences, idioms) | 2 |
+  | Transcribe a photo page | 3 |
+  | Feedback | 8 |
+  | DSE estimate | +5 |
+  | Level sample | 10 |
+  | Reference-image understanding | 2 |
+  | Mark written work (per question) | 5 |
+  | MC | 0 |
+- **Model routing** (`server/ai/models.ts`):
+  - Light tasks (helpers, 解題, question generation) use a cheaper model.
+  - Transcription, grading, marking and the level sample use the top model.
+
+  Both are OpenRouter model IDs from env vars.
 
 ## Stack
-- All TypeScript, Next.js App Router. AI calls and embeddings go through **OpenRouter** (`OPENROUTER_MODEL`; embeddings with a `qwen3-embedding` model).
-- **No database engine in Phase 1.** Data is plain JSON files (`data/`, `corpus/`). The schema is designed for Postgres + pgvector in Phase 2 but not implemented. All access goes through one store module.
-- **Git:** `paper/` (HKEAA material), `corpus/` (transcriptions derived from it), `data/` and `samples/` are git-ignored. The distilled `rubrics/`, `syllabus/` and build scripts are committed.
+- **Next.js 16 App Router** on **Cloudflare Workers** via OpenNext. Long jobs (grading, marking, level samples) run as **Cloudflare Workflows** and stream progress to the UI.
+- **Postgres + pgvector on Railway** (Singapore), reached through **Cloudflare Hyperdrive**. **Drizzle** is the ORM, with `drizzle-kit` migrations.
+- **Cloudflare R2** stores uploads (signed upload URLs).
+- **Better Auth:** Google and email one-time code. Codes are sent via Resend.
+- **Hono** API mounted at `/api/[[...route]]`, validated with zod, with a typed `hc` client. **TanStack Query** on the frontend.
+- **shadcn/ui** + Tailwind. **next-intl** (`zh-HK`, `en`). **KaTeX** for formulas. **Mafs** for function graphs. Our own JSON-driven SVG components for geometry, circuits, ray diagrams, free-body diagrams and waves.
+- **Kebab-case file names everywhere** (`question-card.tsx`, `grade-chinese.ts`).
+- **Offline scripts** (`scripts/`) render PDFs, build the corpus and run the accuracy tests. They write to Postgres; the deployed app only reads the corpus.
+- **Privacy (HK PDPO, minors):**
+  - Collect only email, display name, form, subjects, exam language, and an optional public nickname.
+  - Student work is private to the student (enforced in every query).
+  - Students can delete their account and all their data.
 
-## Knowledge base (distilled from `paper/` + public HKEAA/EDB documents)
-- `rubrics/chinese-writing.md` and `rubrics/english-writing.md`: official criteria and level descriptors, with concrete per-level markers distilled from the HKEAA level exemplars, each citing its exemplar. Marks for each criterion are our estimate (the exemplars give only an overall level). A subject teacher reviews them.
-- `syllabus/{math-compulsory,m1,m2}.md` + `.json`: Learning Units from the EDB *Curriculum and Assessment Guide*, used as topic IDs. Finer sub-skills are added later where diagnosis needs them.
-- `syllabus/<subject>-question-design.md`: question archetypes per unit, (a)/(b)/(c) scaffolding, marks and sections, **MC distractor patterns**, with citations (from the Level 5 Paper 1 scripts 2020–25 and MC Paper 2 2016–23).
-- `corpus/<subject>.json`: everything transcribed, chunked (paragraph or question), tagged and embedded. Exemplars are split into **anchor** and held-out **test** sets.
-
-## RAG
-Retrieval runs in memory over the JSON corpus: metadata filter, then cosine ranking. It serves three purposes:
-1. **Calibration:** anchor exemplars near the estimated level, used when scoring.
-2. **Improvement models:** higher-level passages for the student's weakest criteria.
-3. **Practice:** past questions by genre, or by Learning Unit and archetype.
+## Knowledge base
+Unchanged from v1 of the spec, now loaded into Postgres:
+- `rubrics/chinese-writing.md` and `rubrics/english-writing.md`.
+- `syllabus/*.md` + `.json`: maths Learning Units, `PHY-*` topics, question-design notes.
+- The corpus (exemplars and past questions): chunked, embedded, and split into anchor and test sets.
 
 The test split is never retrieved.
 
-## Writing (Chinese, English)
-1. Photos → exact transcription (`[X?]` unsure, `[X!]` malformed) → optional teacher check.
-2. **Scores for each criterion** plus an estimated overall level, each with a reason that cites the retrieved anchors. This is shown as an estimate, and the teacher can override it.
-3. Feedback:
-   - Chinese: 錯別字 (wrong characters), 病句 (problem sentences), 佳句 (good sentences), overall comment, and **繁簡混用 (mixed scripts)**.
-   - English: tagged errors, strengths, overall comment.
-   - Both: improvement-model passages.
-4. **Chinese script rule:** either Traditional or Simplified is allowed, but the essay must be consistent. The dominant script is found by counting characters that differ between the scripts (shared characters and HK variants such as 着/著 are neutral). Every minority-script character is flagged with its dominant-script form in a separate category, 「繁簡混用」, not counted as 錯別字. This is **feedback only**: the DSE estimate follows HKEAA, which accepts mixed scripts and counts only 繁簡同體 (one character blending both scripts) as 錯別字. If the split is close, flag against the majority and add a note. Feedback is always written in Traditional Chinese.
-5. Practice loop: **revise and resubmit** (a before/after comparison) → **targeted drills** on the weakest criterion or error tags, with a model passage → **new essay** from a retrieved past question. Phase 1 builds revise + drills first. Drills are printed, and completed drills come back as photos.
-
-## Maths (Compulsory Part, M1, M2)
-- The existing question generator gains `subject`, Learning Unit tags and generation from an archetype "blueprint" (with no reference screenshot needed).
-- The loop: diagnose weak units → generate or retrieve a worksheet → mark → update mastery.
-- Marking, **phase A:** final answers only (MC letters + numeric), typed or read from a photo of the answer grid. Misconceptions are inferred from the chosen distractor. **Phase B (later):** marking handwritten working against a DSE-style marking scheme (M/A marks).
-- Verification stays all TypeScript:
-  - Numeric answers: mathjs (existing).
-  - Symbolic answers (M1/M2): random-point evaluation. Derivatives are checked against finite differences and integrals against numeric integration.
-  - Statistics: exact formulas.
-  - Proofs and "show that" questions are flagged as **not code-verified**, for teacher review.
-- Figures: curves (sampled from expressions) and circles are added for M1/M2 and Compulsory Part.
-
-## Student record
-Each student has a class and class number. A record holds their submissions (AI and teacher values both kept; the teacher's value wins) and a derived profile:
-- Criterion scores (EWMA, so the last ~5 attempts dominate),
-- Decaying error-tag counts,
-- Mastery per Learning Unit,
-- Recommendations.
-
-Combining all students gives the class summary (for example, the most common 錯別字).
-
-## Success criteria (automated tests)
-| Piece | Bar | Test set |
+## Success criteria
+| Piece | Bar | Before |
 |---|---|---|
-| Writing level (Chinese, English) | ≥ 70% exact, ≥ 95% within ±1 | Held-out HKEAA exemplars; **Phase 2 gate: the teacher-marked set** (~10 Chinese + ~10 English essays) |
-| 錯別字 detection | ≥ 80% recall, few false alarms | `samples/` (`npm run test:handwriting`) |
-| 繁簡混用 | ≥ 95% | Synthetic mixed essays |
-| Maths MC/numeric | 100% pass the code check | Generated questions |
-| M1/M2 non-proof answers | 100% pass numeric verification | Generated questions |
-| Corpus transcription | ≤ 1% character error | 10% spot-check |
-
-## Material
-- **Already in `paper/`:**
-  - Chinese and English Paper 2 level exemplars, 2020–25.
-  - Level 5 Paper 1 scripts for Compulsory Part, M1 and M2, 2020–25.
-  - Compulsory Part Paper 2 (MC), 2016–23.
-- **Needed from the teacher:**
-  - Teacher-marked student essays.
-  - Review of the distilled rubrics.
-  - *Optional:* MC 2024–25 and Paper 1 marking schemes.
-- **Tooling:** poppler (`pdftoppm`) to render the scanned PDFs.
+| Writing level estimate | ≥ 70% exact, ≥ 95% within ±1 on held-out exemplars | Dropping "beta" |
+| 錯別字 detection | ≥ 80% recall, few false alarms | v1 launch |
+| Transcription | ≤ 1% character error on a spot-check | v1 launch |
+| Generated questions | 100% of numeric answers pass the code check; figures match the numbers | Entering the bank |
+| Written-work marking | Within ±1 mark of a human marker per question on a collected marked set | Dropping "beta" |
+| Disputes | Rate tracked per subject; reviewed weekly | Ongoing |
 
 ## Out of scope for now
-Chinese 甲部 scoring, marking handwritten maths working, 3D solids, Word export, Phase 2 accounts and deployment.
+- Teacher accounts and classes.
+- Payments (the credits are designed for them).
+- Chinese 甲部 DSE estimate.
+- 3D solids.
+- Word export.
+- Showing real past-paper questions (needs a licence).

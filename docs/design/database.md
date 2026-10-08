@@ -1,334 +1,240 @@
-# Database design
+# Database design (Drizzle + Postgres/pgvector)
 
-Status: **designed, not implemented.** Phase 1 stores these same shapes as JSON files (see [Phase 1 storage](#phase-1-storage-json-files)). The target engine for Phase 2 (students use the app, deployed) is **Postgres + pgvector**. All data access goes through one module (`src/lib/store/`), so moving from files to Postgres doesn't touch the features.
+Status: **designed, not implemented.** This replaces the teacher-only design from 2026-10-06.
+
+- **Engine:** Postgres + `pgvector` on Railway (Singapore). Workers reach it through Cloudflare Hyperdrive.
+- **ORM:** Drizzle with `postgres.js`. Migrations run with `drizzle-kit` from CI or a developer machine, never from the Worker.
 
 ## Conventions
-- IDs are text (`cuid`-style) so JSON files and SQL rows share them.
-- `subject` is one of `chi_writing`, `eng_writing`, `math_cp`, `math_m1`, `math_m2`.
-- Every AI-produced value that a teacher can change is stored twice: `ai_*` (what the model said) and `teacher_*` (the override, null if untouched). The effective value is `coalesce(teacher_*, ai_*)`. Keeping both gives us the teacher-marked test data for free.
-- Times are `timestamptz`.
+- **Schema files** are in `src/server/db/schema/`, one per area, with kebab-case names. Table names are snake_case plurals; TypeScript names are camelCase.
+- **IDs** are `text` primary keys with a prefix plus a cuid2 (`usr_…`, `q_…`, `sub_…`), so they're readable in logs and URLs.
+- **Timestamps:** every table has `createdAt`. Mutable tables also have `updatedAt`. All are `timestamptz`.
+- **Ownership:** every row of student data has `userId`. **Every service query filters by the session's `userId`.** The helpers in `server/db/scoped.ts` take the user as their first argument, so an unscoped query doesn't type-check.
+- **AI vs user values:** where the AI produces something the student can change, both are stored, e.g. `aiText` and `editedText`. The effective value is the edited one if present.
+- **Enums** are Postgres enums defined in `schema/enums.ts`.
+- **Vectors:** `vector(4096)` for `qwen/qwen3-embedding-8b`. The dimension is a constant in `schema/corpus.ts`, so changing models means a migration plus a re-embed.
 
-## Entity overview
-
-```
-classes ─< students ─< submissions ─< submission_pages
-                │            │ ├─ transcriptions (1:1)
-                │            │ ├─< writing_scores
-                │            │ ├─< feedback_items
-                │            │ └─< answer_results >─ questions
-                │            └─ parent_submission_id (revision chain)
-                ├─< criterion_stats    (derived)
-                ├─< error_tag_stats    (derived)
-                ├─< unit_mastery       (derived)
-                └─< recommendations
-
-tasks ─< submissions        worksheets ─< worksheet_questions >─ questions
-syllabus_units ─< archetypes ─< questions
-rubric_criteria
-corpus_documents ─< corpus_chunks (embedding)
-ai_runs
+## Enums (`schema/enums.ts`)
+```ts
+subject:          chi_writing | eng_writing | math_cp | math_m1 | math_m2 | physics
+locale:           zh-HK | en
+examLanguage:     zh | en
+questionKind:     writing_task | mc | short | long | experiment
+questionOrigin:   bank | reference_image | own_prompt
+questionStatus:   checking | active | reported | retired
+jobKind:          transcribe | feedback | dse_estimate | level_sample | mark_answer | generate_question | reference_understand
+jobStatus:        queued | running | succeeded | failed
+feedbackKind:     task_recap | strength | wrong_char | mixed_script | problem_sentence | good_sentence
+                | eng_error | vocab_upgrade | structure_upgrade | overall
+helperKind:       task_analysis | outline | vocabulary | sentence_patterns | idioms
 ```
 
 ## Tables
 
-### People
+### Auth (Better Auth, `schema/auth.ts`)
+- **`users`:** `id`, `email` (unique), `emailVerified`, `name`, `image`, `createdAt`, `updatedAt`.
+- **`sessions`, `accounts` (Google), `verifications` (email codes).** These are the standard Better Auth tables, generated with its Drizzle adapter.
 
-```sql
-create table classes (
-  id           text primary key,
-  name         text not null,              -- "5A"
-  school_year  text not null,              -- "2026-27"
-  unique (name, school_year)
-);
+### Profile and credits (`schema/profile.ts`)
+```
+profiles
+  userId        pk → users.id (cascade)
+  displayName   text
+  form          int  (4|5|6)
+  subjects      subject[]          -- drives navigation and the dashboard
+  examLanguage  examLanguage        -- maths/M1/M2/physics content language
+  uiLocale      locale
+  extensionTrack boolean default true   -- show * extension questions
 
-create table students (
-  id            text primary key,
-  class_id      text not null references classes(id),
-  class_no      int  not null,
-  display_name  text not null,
-  writing_script text check (writing_script in ('trad','simp')),  -- last detected dominant script
-  created_at    timestamptz not null default now(),
-  unique (class_id, class_no)
-);
+credit_ledger                        -- append-only; balance = quota − today's spend
+  id, userId → users, delta int (negative = spend), reason text,
+  jobId → jobs (nullable), questionId (nullable), createdAt
+  index (userId, createdAt)
+
+ai_runs                              -- one row per model call, for cost tracking
+  id, userId, jobId (nullable), purpose text, model text,
+  inputTokens int, outputTokens int, costUsd numeric(10,6), latencyMs int, createdAt
+```
+Today's balance is `DAILY_QUOTA + sum(delta)` over ledger rows since 00:00 HKT. The charge is taken **before** a job starts and refunded with a positive row if the job fails. This lives in `services/credits/charge-credits.ts`.
+
+### Reference data (`schema/reference.ts`) — loaded from `syllabus/*.json` and `rubrics/*` by a seed script
+```
+topics                      -- one tree for all subjects
+  id text pk                -- "CP-NF7", "M2-10", "PHY-II-6", "CHI-B-議論", "ENG-B-letter_to_editor"
+  subject, parentId → topics (nullable), kind text ('unit'|'subtopic'|'genre'|'text_type'|'part')
+  nameEn, nameZh, extension boolean, foundation boolean (CP only), sortOrder int
+  objectives jsonb
+
+archetypes
+  id text pk, topicId → topics, kind questionKind,
+  description text, scaffolding text, distractorPatterns jsonb, citations text[]   -- citations stay internal
+
+rubric_criteria
+  subject, part text, id text, nameEn, nameZh, scale jsonb, weight numeric
+  pk (subject, part, id)
+```
+Writing genres and text types live in `topics`, so **question-bank search uses one topic filter for every subject**.
+
+### Question bank (`schema/questions.ts`)
+```
+questions
+  id, subject, kind questionKind, origin questionOrigin, status questionStatus
+  ownerId → users (nullable; set for reference_image/own_prompt → private)
+  locale examLanguage | null (writing: by subject)
+  topicIds text[]  (gin index), archetypeId → archetypes (nullable)
+  part text (乙部/甲部/A/B/P1A/P1B/P2…), difficulty smallint (1–5), extension boolean
+  title text, stem text (Markdown + LaTeX), materials jsonb (writing: 甲部/Part A inputs)
+  figure jsonb (DiagramSpec), options jsonb (MC), correctOption text
+  distractorNotes jsonb ([{label, misconception, tag}])
+  answers jsonb ([{part, expression|check, value, unit, display, acceptRange}])
+  markingScheme jsonb ([{part, marks:[{type:'M'|'A', text, ecf?:string, keywords?:string[]}]}])
+  taskAnalysis jsonb (解題: how to think), tips jsonb
+  checkStatus text ('passed'|'needs_review'), checkProblems text[]
+  searchText text (stem + title, stripped)       -- trigram index (pg_trgm)
+  embedding vector(4096)                          -- hnsw cosine index; semantic search
+  ratingSum int, ratingCount int, reportCount int
+  generatedBy text (model), createdAt
+  index (subject, status), gin(topicIds), gin(searchText gin_trgm_ops), hnsw(embedding)
+
+question_views        -- "already seen/attempted" filter and bank serving
+  userId, questionId, firstSeenAt, attempted boolean     pk (userId, questionId)
+
+question_ratings
+  userId, questionId, value smallint (−1|1), reportReason text (nullable), createdAt
+  pk (userId, questionId)
+```
+- **Bank rules:** `status = 'active'` and `ownerId is null` make a question public, searchable and servable.
+- **Reports:** at 3 or more, the question becomes `reported` automatically and leaves the bank until reviewed.
+
+### Writing (`schema/writing.ts`)
+```
+writing_helpers          -- cached Ask-AI outputs per student per question
+  id, userId, questionId, kind helperKind, content jsonb, createdAt
+  unique (userId, questionId, kind)       -- re-asking returns the cached copy (free)
+
+writing_submissions
+  id, userId, questionId, status ('draft'|'transcribing'|'review'|'submitted'|'graded')
+  inputMode ('typed'|'photo'), wantsEstimate boolean
+  aiText text (with [X?]/[X!] markers + insertion marks), editedText text
+  edits jsonb ([{from, to, aiSpan, editedSpan, at}])  -- tracked changes vs AI reading
+  dominantScript ('trad'|'simp'|null), wordCount int
+  parentSubmissionId → writing_submissions (revisions)
+  createdAt, submittedAt
+
+submission_pages
+  submissionId, pageNo, r2Key, width, height     pk (submissionId, pageNo)
+
+writing_feedback
+  id, submissionId, kind feedbackKind, startPos int, endPos int,
+  payload jsonb, tags text[], criterion text
+
+writing_scores           -- only when wantsEstimate
+  submissionId, part, criterion, grade text, marks numeric, maxMarks numeric,
+  reason text, anchorChunkIds text[]           pk (submissionId, part, criterion)
+  + writing_estimates: submissionId pk, totalMarks, level smallint, levelReason text
+
+level_samples
+  id, submissionId, targetLevel smallint, text text,
+  changes jsonb ([{originalSpan, sampleSpan, note}]), createdAt
 ```
 
-Phase 2 adds `users` (teacher/student accounts) and `students.user_id`. That's out of scope here.
+### Practice: answers and marking (`schema/practice.ts`)
+```
+attempts
+  id, userId, questionId, status ('answering'|'transcribing'|'review'|'marking'|'marked')
+  mcChoice text (nullable), mcCorrect boolean (nullable)
+  aiTranscript jsonb ([{line, latex}]), editedTranscript jsonb, edits jsonb
+  score numeric, maxScore numeric, createdAt, markedAt
 
-### Reference data (built from the distilled `rubrics/*.md` and `syllabus/*.json`)
+attempt_pages
+  attemptId, pageNo, r2Key       pk (attemptId, pageNo)
 
-```sql
-create table syllabus_units (
-  id           text primary key,            -- "CP-NF7", "M1-3", "M2-10"
-  subject      text not null,
-  strand       text,                        -- "Number and Algebra", "Calculus", ...
-  name_en      text not null,
-  name_zh      text not null,
-  foundation   boolean,                     -- Compulsory Part only
-  objectives   jsonb not null,              -- [{id, text_en, text_zh}]
-  prerequisites text[] not null default '{}'
-);
+attempt_marks             -- one row per mark in the scheme
+  attemptId, part text, markIndex int, type ('M'|'A'), awarded boolean,
+  reason text, studentLine int (nullable), ecfFrom text (nullable)
+  pk (attemptId, part, markIndex)
+  + attempt_parts: attemptId, part, firstWrongLine int, note text (解題 for that part)
 
-create table archetypes (                   -- from syllabus/<subject>-question-design.md
-  id           text primary key,            -- "CP-NF7-sim-eq-ratio"
-  unit_id      text not null references syllabus_units(id),
-  answer_type  text not null check (answer_type in ('mc','long')),
-  description  text not null,
-  scaffolding  text,                        -- how (a)/(b)/(c) build up
-  typical_marks int,
-  distractor_patterns jsonb,                -- MC: [{mistake, how_it_produces_option}]
-  citations    text[] not null              -- ["CP 2023 P2 Q9", ...]
-);
-
-create table rubric_criteria (
-  subject      text not null,
-  part         text not null,               -- chi: "B" (乙部), later "A"; eng: "A","B"
-  id           text not null,               -- "content", "expression", ...
-  name_en      text not null,
-  name_zh      text,
-  scale        jsonb not null,              -- ordered grade labels / max mark
-  weight       numeric not null,
-  primary key (subject, part, id)
-);
+mark_disputes
+  id, attemptId, part, markIndex (nullable = whole part), studentReason text,
+  status ('open'|'upheld'|'rejected'), resolution text, createdAt
 ```
 
-### Tasks and submissions (the loop)
-
-```sql
-create table tasks (                        -- what a student is asked to do
-  id           text primary key,
-  subject      text not null,
-  kind         text not null check (kind in ('essay','revision','drill','worksheet')),
-  part         text,                        -- paper part for writing
-  title        text not null,
-  prompt       text,                        -- essay question / drill instructions
-  source_doc_id text references corpus_documents(id),  -- past question used, if any
-  worksheet_id text references worksheets(id),
-  target       jsonb,                       -- {criterion} | {error_tags[]} | {unit_ids[]}
-  created_at   timestamptz not null default now()
-);
-
-create table submissions (
-  id           text primary key,
-  student_id   text not null references students(id),
-  task_id      text references tasks(id),
-  subject      text not null,
-  parent_submission_id text references submissions(id),  -- revise-and-resubmit chain
-  round        int  not null default 1,
-  status       text not null check (status in
-                 ('uploaded','transcribed','verified','graded','finalized')),
-  submitted_at timestamptz not null default now(),
-  finalized_at timestamptz
-);
-
-create table submission_pages (
-  submission_id text not null references submissions(id) on delete cascade,
-  page_no      int  not null,
-  image_path   text not null,               -- object storage key in Phase 2
-  primary key (submission_id, page_no)
-);
-
-create table transcriptions (
-  submission_id text primary key references submissions(id) on delete cascade,
-  ai_text      text not null,               -- with [X?] / [X!] markers
-  teacher_text text,                        -- after the teacher check
-  dominant_script text check (dominant_script in ('trad','simp')),  -- Chinese only
-  title        text
-);
+### Shared answers (`schema/community.ts`)
 ```
+-- added columns
+profiles.nickname            text unique (nullable; required before the first publish)
+writing_submissions.visibility  ('private'|'public') default 'private'
+attempts.visibility             ('private'|'public') default 'private'
 
-### Writing results
+public_answers               -- one row per published answer; a snapshot so later edits don't leak
+  id, userId → users, questionId → questions,
+  sourceType ('writing'|'attempt'), sourceId text (sub_…|att_…)  unique
+  body text (final text / LaTeX transcript), includeScore boolean, includeFeedback boolean,
+  scoreSummary jsonb (nullable), feedbackSummary jsonb (nullable),
+  status ('published'|'hidden_by_owner'|'hidden_reported'|'removed'),
+  upvotes int, downvotes int, score int generated (upvotes − downvotes), reportCount int,
+  publishedAt, updatedAt
+  index (questionId, status, score desc, publishedAt desc)
 
-```sql
-create table writing_scores (
-  submission_id text not null references submissions(id) on delete cascade,
-  part         text not null,
-  criterion    text not null,               -- rubric_criteria.id, or 'overall_level'
-  ai_grade     text not null,               -- label on the criterion's scale, e.g. "上中", "5"
-  teacher_grade text,
-  reason       text not null,
-  evidence_chunk_ids text[] not null default '{}',  -- retrieved anchors that justified it
-  primary key (submission_id, part, criterion)
-);
+answer_votes
+  userId, answerId → public_answers (cascade), value smallint (−1|1), createdAt, updatedAt
+  pk (userId, answerId)                  -- one vote per student; changing it updates the row
 
-create table feedback_items (
-  id           text primary key,
-  submission_id text not null references submissions(id) on delete cascade,
-  kind         text not null check (kind in (
-                 'wrong_char','mixed_script','good_sentence','problem_sentence',
-                 'eng_error','model_passage','overall_comment')),
-  start_pos    int,                         -- offset in the effective transcription; null if unlocated
-  end_pos      int,
-  payload      jsonb not null,              -- kind-specific: {wrong, correct, explanation} etc.
-  tags         text[] not null default '{}',-- normalized error tags, e.g. "zh.char.己/已", "en.sva"
-  criterion    text,                        -- which rubric criterion it bears on
-  status       text not null default 'ai' check (status in ('ai','edited','removed','teacher_added'))
-);
-create index on feedback_items using gin (tags);
+answer_reports
+  id, answerId, reporterId, reason ('wrong'|'inappropriate'|'personal_info'|'other'), note text,
+  status ('open'|'actioned'|'dismissed'), createdAt
+  unique (answerId, reporterId)
 ```
+- **Snapshots:** publishing copies the final text into `public_answers.body`. Editing the source later doesn't change the public copy until the owner republishes.
+- **Counters:** `upvotes`/`downvotes` are updated in the same transaction as the vote row.
+- **Hiding:** a third open report sets `status = 'hidden_reported'`.
+- **Gate:** community answers are readable only by users with a submission or attempt on the same question (an `exists` check in the service).
+- **Account deletion:** cascades and removes the student's public answers and votes.
 
-### Maths
-
-```sql
-create table questions (                    -- both real DSE questions and generated ones
-  id           text primary key,
-  origin       text not null check (origin in ('corpus','generated')),
-  source_doc_id text references corpus_documents(id),  -- corpus origin
-  subject      text not null,
-  unit_ids     text[] not null,
-  archetype_id text references archetypes(id),
-  answer_type  text not null check (answer_type in ('mc','long')),
-  language     text not null check (language in ('en','zh')),
-  stem         text not null,
-  marks        int,
-  diagram      jsonb,                       -- DiagramSchema
-  options      jsonb,                       -- [{label, text}]
-  correct_option text,
-  distractor_notes jsonb,                   -- [{label, mistake, misconception_tag}]
-  variables    jsonb,
-  answers      jsonb not null,              -- [{part, expression|check, value, display}]
-  solution     jsonb not null,              -- string[]
-  check_status text not null check (check_status in ('passed','failed','needs_teacher')),
-  check_problems text[] not null default '{}',
-  created_at   timestamptz not null default now()
-);
-
-create table worksheets (
-  id           text primary key,
-  subject      text not null,
-  title        text not null,
-  language     text not null,
-  created_at   timestamptz not null default now()
-);
-
-create table worksheet_questions (
-  worksheet_id text not null references worksheets(id) on delete cascade,
-  position     int  not null,
-  question_id  text not null references questions(id),
-  primary key (worksheet_id, position)
-);
-
-create table answer_results (
-  submission_id text not null references submissions(id) on delete cascade,
-  question_id  text not null references questions(id),
-  part         text not null default '',
-  given        text,                        -- letter or numeric answer as entered/read
-  ai_correct   boolean not null,
-  teacher_correct boolean,
-  chosen_option text,
-  misconception_tag text,                   -- from the chosen distractor's note
-  primary key (submission_id, question_id, part)
-);
+### Learner profile (`schema/learner.ts`) — derived, rebuildable from submissions and attempts
 ```
-
-### Student profile (derived, recomputable)
-
-These are materialised from finalised submissions. They can always be rebuilt from `writing_scores`, `feedback_items` and `answer_results`, so they're a cache, not the source of truth. Scores use an exponentially weighted moving average (EWMA) with α ≈ 0.35, so the last ~5 attempts dominate.
-
-```sql
-create table criterion_stats (
-  student_id text not null references students(id),
-  subject    text not null,
-  part       text not null,
-  criterion  text not null,
-  ewma_score numeric not null,              -- grade mapped to 0..1
-  attempts   int not null,
-  last_at    timestamptz not null,
-  primary key (student_id, subject, part, criterion)
-);
-
-create table error_tag_stats (
-  student_id text not null references students(id),
-  subject    text not null,
-  tag        text not null,
-  weighted_count numeric not null,          -- decays per submission
-  total_count int not null,
-  last_at    timestamptz not null,
-  primary key (student_id, subject, tag)
-);
-
-create table unit_mastery (
-  student_id text not null references students(id),
-  unit_id    text not null references syllabus_units(id),
-  ewma_correct numeric not null,
-  attempts   int not null,
-  last_at    timestamptz not null,
-  primary key (student_id, unit_id)
-);
-
-create table recommendations (
-  id         text primary key,
-  student_id text not null references students(id),
-  subject    text not null,
-  kind       text not null check (kind in ('revise','drill','new_essay','worksheet')),
-  target     jsonb not null,                -- {criterion} | {tags} | {unit_ids}
-  rationale  text not null,
-  model_chunk_ids text[] not null default '{}',
-  status     text not null default 'open' check (status in ('open','assigned','done','dismissed')),
-  task_id    text references tasks(id),
-  created_at timestamptz not null default now()
-);
+criterion_stats   userId, subject, part, criterion, ewma numeric, attempts int, lastAt   pk(userId,subject,part,criterion)
+error_tag_stats   userId, subject, tag, weighted numeric, total int, lastAt                 pk(userId,subject,tag)
+topic_mastery     userId, topicId → topics, ewma numeric, attempts int, lastAt             pk(userId,topicId)
+next_steps        id, userId, subject, kind ('revise'|'helper'|'question'|'topic'), target jsonb,
+                  rationale text, status ('open'|'done'|'dismissed'), createdAt
 ```
+EWMA uses α = 0.35, so the last ~5 attempts dominate.
 
-### Corpus and retrieval (RAG)
-
-```sql
-create extension if not exists vector;
-
-create table corpus_documents (
-  id          text primary key,             -- "chi-2025-L5-1", "cp-2023-p2-q09"
-  subject     text not null,
-  kind        text not null check (kind in ('exemplar','past_question','reference_solution')),
-  year        int  not null,
-  paper       text,                         -- "P1","P2"
-  part        text,
-  question_no text,
-  level       text,                         -- exemplar level "5","4",...; null otherwise
-  genre       text,                         -- 議論/記敘/抒情, argumentative, ...
-  source_path text not null,                -- file in paper/ + page range
-  pages       int4range,
-  split       text not null default 'anchor' check (split in ('anchor','test')),  -- held-out test set
-  text        text not null
-);
-
-create table corpus_chunks (
-  id          text primary key,
-  document_id text not null references corpus_documents(id) on delete cascade,
-  seq         int  not null,                -- paragraph / question part order
-  text        text not null,
-  metadata    jsonb not null,               -- {level, genre, criterion_strengths[], unit_ids[], archetype_id}
-  embedding   vector not null               -- dimension fixed by corpus manifest's model
-);
-create index on corpus_chunks using hnsw (embedding vector_cosine_ops);
-create index on corpus_chunks using gin (metadata);
+### Jobs (`schema/jobs.ts`)
 ```
-
-Retrieval always filters on metadata first (subject, `split = 'anchor'`, level range, genre, unit), then ranks by cosine similarity. Chunks from the `test` split are never retrieved, so the accuracy tests stay honest.
-
-### Audit
-
-```sql
-create table ai_runs (
-  id          text primary key,
-  purpose     text not null,                -- "transcribe","grade","retrieve","generate",...
-  model       text not null,
-  submission_id text references submissions(id),
-  input_tokens int, output_tokens int, cost_usd numeric,
-  created_at  timestamptz not null default now()
-);
+jobs
+  id, userId, kind jobKind, status jobStatus, subjectRef text ('sub_…'|'att_…'|'q_…'),
+  progress jsonb ([{step, status, at}]), error text, creditsCharged int,
+  workflowInstanceId text, createdAt, finishedAt
+  index (userId, createdAt desc)
 ```
+`GET /api/jobs/:id/stream` reads this table, and Workflow steps update `progress`.
 
-## Phase 1 storage (JSON files)
+### Corpus (`schema/corpus.ts`) — internal only, never exposed to students
+```
+corpus_documents
+  id, subject, kind ('exemplar'|'past_question'|'reference_solution'), year, paper, part,
+  questionNo, level smallint, genre text, topicIds text[], sourcePath text,
+  split ('anchor'|'test'), text text
 
-The same shapes are grouped by owner so that one file is one unit of work:
+corpus_chunks
+  id, documentId → corpus_documents (cascade), seq int (−1 = whole doc),
+  text text, metadata jsonb, embedding vector(4096)
+  hnsw(embedding vector_cosine_ops), gin(metadata)
+```
+Retrieval filters on `split = 'anchor'` and the metadata first, then orders by `embedding <=> $query`.
 
-| Path | Contents (table equivalents) |
-|---|---|
-| `data/classes.json` | `classes`, `students` |
-| `data/students/<class>/<student-id>.json` | that student's `submissions` (with `transcription`, `writing_scores`, `feedback_items`, `answer_results` nested), `criterion_stats`, `error_tag_stats`, `unit_mastery`, `recommendations` |
-| `data/uploads/<submission-id>/page<N>.jpg` | `submission_pages` |
-| `data/tasks.json`, `data/worksheets.json` | `tasks`, `worksheets` + `worksheet_questions` |
-| `data/questions/<subject>.json` | generated `questions` |
-| `corpus/<subject>.json` | `corpus_documents` + `corpus_chunks` (embeddings inline) + manifest `{embeddingModel, dims, builtAt}` |
-| `syllabus/*.json`, `rubrics/*.json` | `syllabus_units`, `archetypes`, `rubric_criteria` |
+## Search queries (question bank)
+- **Filters:** `subject`, `topicIds && $topics`, `kind`, `difficulty`, `extension`, `locale`. Always add `status = 'active' and ownerId is null`.
+- **Keyword:**
+  - Embed the query (cached for 1 hour in KV), then order by `embedding <=> $q`.
+  - Union it with `searchText % $q` (trigram) to catch exact phrases.
+  - Merge with reciprocal-rank fusion and page with a cursor.
+- **"Already attempted":** a left join on `question_views` for the current user.
 
-`data/`, `corpus/` and `paper/` are git-ignored. Writes go to a temp file and are then renamed, so a crash can't leave a half-written student file.
+## Retention and privacy
+- **Photos in R2:** kept 180 days, then deleted, keeping the text.
+- **Account deletion:** cascades through every user table and deletes the user's R2 prefix `u/<userId>/`.
+- **Analytics:** `ai_runs` keeps `userId` for cost analysis; anonymise it after 1 year.

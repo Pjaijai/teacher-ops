@@ -1,0 +1,386 @@
+[
+  {
+    "id": "M2-1",
+    "subject": "math_m2",
+    "strand": "Foundation Knowledge",
+    "nameEn": "Odd and even functions",
+    "nameZh": "奇函數和偶函數",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-1.1",
+        "textEn": "Recognise odd and even functions and their graphs; |x| is even."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-2",
+    "subject": "math_m2",
+    "strand": "Foundation Knowledge",
+    "nameEn": "Mathematical induction",
+    "nameZh": "數學歸納法",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-2.1",
+        "textEn": "Principle of mathematical induction (first principle); prove propositions on finite sums."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-3",
+    "subject": "math_m2",
+    "strand": "Foundation Knowledge",
+    "nameEn": "The binomial theorem",
+    "nameZh": "二項式定理",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-3.1",
+        "textEn": "Expand binomials with positive integer indices; prove the binomial theorem; summation notation."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-4",
+    "subject": "math_m2",
+    "strand": "Foundation Knowledge",
+    "nameEn": "More about trigonometric functions",
+    "nameZh": "續三角函數",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-4.1",
+        "textEn": "Radian measure."
+      },
+      {
+        "id": "M2-4.2",
+        "textEn": "Cosecant, secant, cotangent; identities 1+tan²=sec², 1+cot²=cosec²; simplify with identities."
+      },
+      {
+        "id": "M2-4.3",
+        "textEn": "Compound angle, double angle, product-to-sum and sum-to-product formulae for sine, cosine, tangent."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-5",
+    "subject": "math_m2",
+    "strand": "Foundation Knowledge",
+    "nameEn": "Introduction to e",
+    "nameZh": "e 的簡介",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-5.1",
+        "textEn": "Definitions and notation of e and the natural logarithm (via lim(1+1/n)^n or the exponential series)."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-6",
+    "subject": "math_m2",
+    "strand": "Calculus",
+    "nameEn": "Limits",
+    "nameZh": "極限",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-6.1",
+        "textEn": "Intuitive concept of the limit of a function; limit theorems (no proofs)."
+      },
+      {
+        "id": "M2-6.2",
+        "textEn": "Find limits, including sinθ/θ→1, (e^x-1)/x→1, and limits of rational functions at infinity."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-7",
+    "subject": "math_m2",
+    "strand": "Calculus",
+    "nameEn": "Differentiation",
+    "nameZh": "求導法",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-7.1",
+        "textEn": "Concept of the derivative; derive elementary functions (C, x^n, √x, sin, cos, e^x, ln x) from first principles."
+      },
+      {
+        "id": "M2-7.2",
+        "textEn": "Sum, product, quotient and chain rules."
+      },
+      {
+        "id": "M2-7.3",
+        "textEn": "Derivatives of algebraic, trigonometric, exponential and logarithmic functions."
+      },
+      {
+        "id": "M2-7.4",
+        "textEn": "Implicit differentiation (incl. logarithmic differentiation)."
+      },
+      {
+        "id": "M2-7.5",
+        "textEn": "Second derivative; second derivative test and concavity."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-8",
+    "subject": "math_m2",
+    "strand": "Calculus",
+    "nameEn": "Applications of differentiation",
+    "nameZh": "求導法的應用",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-8.1",
+        "textEn": "Equations of tangents to a curve."
+      },
+      {
+        "id": "M2-8.2",
+        "textEn": "Maximum and minimum values (local and global)."
+      },
+      {
+        "id": "M2-8.3",
+        "textEn": "Sketch polynomial and rational function curves (symmetry, intercepts, extrema, inflexion, asymptotes incl. oblique via division)."
+      },
+      {
+        "id": "M2-8.4",
+        "textEn": "Rate of change and optimisation problems."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-9",
+    "subject": "math_m2",
+    "strand": "Calculus",
+    "nameEn": "Indefinite integration and its applications",
+    "nameZh": "不定積分法及其應用",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-9.1",
+        "textEn": "Concept of indefinite integration."
+      },
+      {
+        "id": "M2-9.2",
+        "textEn": "Properties and formulae for algebraic, trigonometric and exponential functions (incl. sin, cos, sec²)."
+      },
+      {
+        "id": "M2-9.3",
+        "textEn": "Applications in mathematical contexts (e.g. geometry)."
+      },
+      {
+        "id": "M2-9.4",
+        "textEn": "Integration by substitution."
+      },
+      {
+        "id": "M2-9.5",
+        "textEn": "Trigonometric substitutions for integrals involving a²-x², a²+x², x²+a² forms (as listed in the guide); inverse trig notation and principal values."
+      },
+      {
+        "id": "M2-9.6",
+        "textEn": "Integration by parts (at most twice per integral)."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-10",
+    "subject": "math_m2",
+    "strand": "Calculus",
+    "nameEn": "Definite integration",
+    "nameZh": "定積分法",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-10.1",
+        "textEn": "Definite integral as a limit of a sum; dummy variables."
+      },
+      {
+        "id": "M2-10.2",
+        "textEn": "Properties, including odd/even function symmetry results."
+      },
+      {
+        "id": "M2-10.3",
+        "textEn": "Definite integrals of algebraic, trigonometric, exponential functions; Fundamental Theorem of Calculus."
+      },
+      {
+        "id": "M2-10.4",
+        "textEn": "Definite integration by substitution."
+      },
+      {
+        "id": "M2-10.5",
+        "textEn": "Definite integration by parts (at most twice)."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-11",
+    "subject": "math_m2",
+    "strand": "Calculus",
+    "nameEn": "Applications of definite integration",
+    "nameZh": "定積分法的應用",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-11.1",
+        "textEn": "Area of a plane figure by definite integration."
+      },
+      {
+        "id": "M2-11.2",
+        "textEn": "Volume of a solid of revolution about a coordinate axis or a parallel line (disc method)."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-12",
+    "subject": "math_m2",
+    "strand": "Algebra",
+    "nameEn": "Determinants",
+    "nameZh": "行列式",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-12.1",
+        "textEn": "Determinants of order 2 and 3; notation |A|, det A."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-13",
+    "subject": "math_m2",
+    "strand": "Algebra",
+    "nameEn": "Matrices",
+    "nameZh": "矩陣",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-13.1",
+        "textEn": "Concept, operations (addition, scalar multiple, multiplication) and properties of matrices."
+      },
+      {
+        "id": "M2-13.2",
+        "textEn": "Inverses of square matrices of order 2 and 3, and their properties."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-14",
+    "subject": "math_m2",
+    "strand": "Algebra",
+    "nameEn": "Systems of linear equations",
+    "nameZh": "線性方程組",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-14.1",
+        "textEn": "Solve 2- and 3-variable linear systems by Cramer's rule, inverse matrices, Gaussian elimination; homogeneous systems have nontrivial solutions iff the coefficient matrix is singular."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-15",
+    "subject": "math_m2",
+    "strand": "Algebra",
+    "nameEn": "Introduction to vectors",
+    "nameZh": "向量的簡介",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-15.1",
+        "textEn": "Vectors vs scalars; magnitude, zero vector, unit vectors; notation."
+      },
+      {
+        "id": "M2-15.2",
+        "textEn": "Addition, subtraction, scalar multiplication and their properties."
+      },
+      {
+        "id": "M2-15.3",
+        "textEn": "Vectors in the rectangular coordinate system (R² and R³ formulae)."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-16",
+    "subject": "math_m2",
+    "strand": "Algebra",
+    "nameEn": "Scalar product and vector product",
+    "nameZh": "純量積與向量積",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-16.1",
+        "textEn": "Definition and properties of the scalar (dot) product."
+      },
+      {
+        "id": "M2-16.2",
+        "textEn": "Definition and properties of the vector (cross) product in R³."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-17",
+    "subject": "math_m2",
+    "strand": "Algebra",
+    "nameEn": "Applications of vectors",
+    "nameZh": "向量的應用",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-17.1",
+        "textEn": "Division of a line segment, parallelism, orthogonality, angle between vectors, projection of a vector, triangle area."
+      }
+    ],
+    "prerequisites": []
+  },
+  {
+    "id": "M2-18",
+    "subject": "math_m2",
+    "strand": "Further Learning Unit",
+    "nameEn": "Inquiry and investigation",
+    "nameZh": "探索與研究",
+    "foundation": null,
+    "extension": false,
+    "objectives": [
+      {
+        "id": "M2-18.1",
+        "textEn": "Discover and construct knowledge through learning activities; build inquiry, communication and reasoning skills."
+      }
+    ],
+    "prerequisites": []
+  }
+]

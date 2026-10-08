@@ -1,0 +1,54 @@
+{
+  "appName": "DSE 練習",
+  "nav": {
+    "dashboard": "總覽",
+    "writing": "寫作",
+    "practice": "練習",
+    "bank": "題庫",
+    "history": "紀錄",
+    "settings": "設定"
+  },
+  "credits": {
+    "label": "{balance} 點",
+    "tooltip": "今日尚餘 {balance}／{quota} 點，香港時間午夜重設。",
+    "cost": "{cost, plural, =0 {免費} other {# 點}}",
+    "outTitle": "今日點數已用完",
+    "outBody": "此操作需要 {cost} 點，你尚餘 {balance} 點。點數於香港時間午夜重設。",
+    "ok": "明白"
+  },
+  "subjects": {
+    "chi_writing": "中文寫作",
+    "eng_writing": "英文寫作",
+    "math_cp": "數學（必修部分）",
+    "math_m1": "M1 微積分與統計",
+    "math_m2": "M2 代數與微積分",
+    "physics": "物理"
+  },
+  "comingSoon": "即將推出",
+  "beta": "測試版",
+  "loading": "載入中…",
+  "error": "出現錯誤。",
+  "retry": "再試一次",
+  "save": "儲存",
+  "cancel": "取消",
+  "signOut": "登出",
+  "language": "語言",
+  "job": {
+    "running": "處理中…",
+    "failed": "未能完成：{error} 已退回點數。",
+    "steps": {
+      "load": "載入",
+      "transcribe": "辨認手寫字",
+      "feedback": "撰寫評語",
+      "estimate": "估計文憑試等級",
+      "sample": "撰寫示範文章",
+      "profile": "更新你的學習紀錄",
+      "generate": "出題",
+      "check": "核對答案",
+      "repair": "修正問題",
+      "save": "儲存",
+      "mark": "評分"
+    },
+    "failedLocal": "未能完成：{error}"
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "title": "練習",
+  "subtitle": "DSE 模式數學（必修部分）、M1、M2 及物理題目，附評分準則、多項選擇題即時回饋，以及 AI 批改你的書面答案。",
+  "subject": "科目",
+  "topics": {
+    "none": "找不到課題。",
+    "hint": "最多選擇 {max} 個學習單位。",
+    "strands": {
+      "numberAlgebra": "數與代數",
+      "measures": "度量、圖形與空間",
+      "data": "數據處理",
+      "further": "進階學習單位",
+      "foundationKnowledge": "基礎知識",
+      "calculus": "微積分",
+      "statistics": "統計",
+      "algebra": "代數"
+    },
+    "foundation": "基礎",
+    "nonFoundation": "非基礎",
+    "mixed": "混合"
+  },
+  "options": {
+    "kind": "題型",
+    "kinds": {
+      "mc": "多項選擇題",
+      "short": "短題目",
+      "long": "長題目",
+      "experiment": "實驗題",
+      "writing_task": "寫作"
+    },
+    "difficulty": "難度",
+    "difficultyLevel": "難度 {level}",
+    "extension": "包括非基礎課題",
+    "extensionPhysics": "包括延展部分（*）內容"
+  },
+  "generate": {
+    "title": "取得題目",
+    "description": "我們會先從共享題庫中提供你未做過、已核對的題目；如沒有合適的，便會出一道新題。",
+    "button": "取得題目",
+    "bankFirst": "從題庫提供的題目免費。",
+    "tabs": {
+      "topic": "按課題",
+      "type": "按題型",
+      "reference": "參考題目"
+    },
+    "typeHint": "不限課題：選擇題型和難度。",
+    "descriptionLocal": "我們會為你出一道新的 DSE 模擬題，並以程式核對答案。題目會儲存在這個瀏覽器。",
+    "localNote": "題目儲存在這部裝置上。"
+  },
+  "reference": {
+    "intro": "拍下工作紙或課本上的題目（或直接輸入）。我們會先說明理解了甚麼，再出類似的新題目。",
+    "addPhoto": "加入相片",
+    "orType": "或輸入題目（如有圖形，請用文字描述）",
+    "typePlaceholder": "例：圖中，∠B = 90°，AB = 5 cm，BC = 12 cm。求 AC。",
+    "understand": "閱讀題目",
+    "understoodTitle": "我的理解",
+    "understoodHint": "出題前請檢查並修正。數學式以 LaTeX 寫在 $ 符號之間。",
+    "questionText": "題目（Markdown + LaTeX）",
+    "preview": "預覽",
+    "topic": "課題",
+    "noUnits": "未有學習單位",
+    "changeUnits": "更改",
+    "keyIdea": "解題關鍵",
+    "figureUnsupported": "暫時未能繪畫此圖形：{note}",
+    "figureProblems": "圖形可能與數據不符：{problems}",
+    "figureJson": "圖形數據（進階）",
+    "figureJsonHint": "圖形由以下 JSON 繪畫。留空即不附圖形。",
+    "figureInvalid": "這不是有效的圖形。",
+    "figureInvalidJson": "這不是有效的 JSON。",
+    "variation": "新題目要有多大分別？",
+    "levels": {
+      "1": {
+        "name": "1 · 換數字",
+        "description": "題目字眼和圖形不變，只換數字。"
+      },
+      "2": {
+        "name": "2 · 換情境",
+        "description": "數學概念和解法不變，換一個新情境。"
+      },
+      "3": {
+        "name": "3 · 換結構",
+        "description": "概念相同，但求另一個未知數或多一個步驟。"
+      }
+    },
+    "count": "數量",
+    "language": "語言",
+    "generate": "出 {count} 道題目",
+    "privateNote": "由參考題目出的題目只有你看到。",
+    "made": "已出 {count} 道題目",
+    "variant": "第 {n} 題",
+    "privateNoteLocal": "由參考題目出的題目會儲存在這部裝置上。",
+    "typePlaceholders": {
+      "math_m1": "例：設 f(x) = x e^(1/(x−2))。(a) 求 f′(x)。(b) 有人聲稱曲線 y = f(x) 只有一條水平切線。你同意嗎？試解釋你的答案。",
+      "math_m2": "例：設 f(x) = 1/(3x² + 4)。由首原理求 f′(x)。"
+    }
+  },
+  "question": {
+    "back": "練習",
+    "print": "列印",
+    "difficulty": "難度 {level}/5",
+    "private": "私人",
+    "yourAttempts": "你已批改的作答",
+    "tabs": {
+      "solution": "題解",
+      "community": "同學答案"
+    },
+    "solutionAfter": "作答後便可查看題解和同學答案。",
+    "solutionAfterLocal": "作答後便可查看題解。"
+  },
+  "mc": {
+    "correct": "答對了！",
+    "wrong": "答錯了，答案是 {key}。",
+    "why": "為甚麼會選 {choice}："
+  },
+  "solution": {
+    "answers": "答案",
+    "whole": "答案",
+    "key": "答案：{option}",
+    "scheme": "評卷參考",
+    "part": "分題",
+    "mark": "分數",
+    "criterion": "給分準則",
+    "marks": "{n} 分",
+    "ecf": "可跟進錯誤（e.c.f.）",
+    "worked": "詳細題解",
+    "analysis": "解題思路",
+    "tips": "提示及常見陷阱",
+    "codeChecks": "程式驗證",
+    "verified": "已由程式驗證",
+    "notVerified": "未能驗證",
+    "codeChecksNote": "每個結果都在隨機點上測試（導數與數值差分比較，積分與數值積分比較）。證明、解釋及判斷部分不經程式驗證。"
+  },
+  "answer": {
+    "title": "你的答案",
+    "description": "先在紙上寫出步驟，再拍照上載。我們會按你所寫的原樣轉成 LaTeX，你檢查無誤後才批改。",
+    "addPhotos": "加入相片",
+    "upload": "上載 {count} 頁並轉錄",
+    "typeInstead": "改為輸入步驟",
+    "transcribing": "正在辨認你的筆跡……",
+    "save": "儲存",
+    "saved": "已儲存。",
+    "mark": "批改答案",
+    "markHint": "按 DSE 方式批改：方法分（M）及答案分（A）。",
+    "marking": "正在批改你的答案……",
+    "seeMarks": "查看得分"
+  },
+  "transcript": {
+    "hint": "逐行對照你的答卷。只修正辨認錯誤，不要修改你的數學，否則批改未能反映你的表現。",
+    "page": "第 {n} 頁",
+    "edited": "已修改",
+    "insertBelow": "在下方加一行",
+    "remove": "刪除此行",
+    "lineLabel": "第 {n} 行（LaTeX）",
+    "addLine": "加一行"
+  },
+  "result": {
+    "notFound": "找不到這次作答。",
+    "backToQuestion": "返回題目",
+    "beta": "AI 批改（測試版）",
+    "mcInstant": "即時批改",
+    "score": "得分",
+    "similar": "做一道類似的題目",
+    "stillMarking": "你的答案仍在批改中……",
+    "notMarked": "這次作答尚未批改。",
+    "continue": "繼續作答",
+    "yourWorking": "你的步驟",
+    "firstWrong": "第一個錯誤步驟 {parts}",
+    "edited": "已修改",
+    "partLabel": "({part}) 部",
+    "wholeQuestion": "全題",
+    "partScore": "{got} / {max}",
+    "mark": "分數",
+    "reason": "原因",
+    "awarded": "給分",
+    "notAwarded": "不給分",
+    "line": "第 {n} 行",
+    "ecfFrom": "跟進 ({part}) 部的錯誤",
+    "note": "解題提示",
+    "solutionLocked": "答案批改後便可查看題解。",
+    "tabs": {
+      "solution": "題解",
+      "community": "同學答案"
+    }
+  },
+  "dispute": {
+    "button": "申訴",
+    "disputed": "已申訴",
+    "title": "申訴：{label}",
+    "description": "請說明你認為批改有誤的原因。申訴會用作改善 AI 評卷，現時不會改動你的得分。",
+    "placeholder": "例：我第 4 行正確使用了餘弦定律，應獲 M 分。",
+    "submit": "提交",
+    "sent": "謝謝，已收到你的申訴。",
+    "descriptionLocal": "請記下你認為批改有誤的原因。本機模式下，申訴只會儲存在這部裝置上，不會改動你的得分。",
+    "sentLocal": "已儲存在這部裝置上。"
+  },
+  "recent": {
+    "title": "最近作答",
+    "empty": "尚未作答。取得一道題目開始練習吧。",
+    "status": {
+      "answering": "未完成",
+      "transcribing": "轉錄中",
+      "review": "待檢查",
+      "marking": "批改中"
+    }
+  }
+}

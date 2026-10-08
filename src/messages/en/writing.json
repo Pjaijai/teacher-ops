@@ -1,0 +1,305 @@
+{
+  "home": {
+    "title": "Writing",
+    "subtitle": "Pick a DSE-style task, plan with AI scaffolding, write it yourself, then get detailed feedback.",
+    "tabs": {
+      "generate": "Generate",
+      "bank": "Question bank",
+      "own": "My own question"
+    },
+    "localNote": "Your tasks and writing are saved on this device only (in this browser)."
+  },
+  "parts": {
+    "chi_writing": {
+      "A": "甲部 Practical writing",
+      "B": "乙部 Essay"
+    },
+    "eng_writing": {
+      "A": "Part A Guided task",
+      "B": "Part B Extended task"
+    }
+  },
+  "generate": {
+    "title": "Get a task",
+    "description": "We first serve a task from the shared bank that you haven't seen. If none fits, a new one is written for you.",
+    "subject": "Subject",
+    "part": "Paper part",
+    "genre": "Genre",
+    "textType": "Text type",
+    "any": "Any",
+    "forceNew": "Always write a brand-new task",
+    "submit": "Get a task",
+    "costNote": "Free from the bank; {cost} credits if a new task has to be written.",
+    "descriptionLocal": "The AI writes a new DSE-style task for you. It's saved on this device."
+  },
+  "bank": {
+    "title": "Browse the question bank",
+    "description": "Search every checked writing task by genre, text type, part or keyword. Browsing is free.",
+    "descriptionLocal": "Browse the writing tasks saved on this device."
+  },
+  "own": {
+    "title": "My own question",
+    "description": "Paste a prompt from your teacher or a past exercise. It stays private to you.",
+    "taskTitle": "Title (optional)",
+    "taskTitlePlaceholder": "e.g. A letter to the principal about the school canteen",
+    "prompt": "Task",
+    "promptPlaceholder": "Paste the full task here…",
+    "materials": "Materials (optional)",
+    "materialsPlaceholder": "Reading materials for 甲部 / Part A, if any…",
+    "privateNote": "Answers to your own questions can't be made public, because the question is private.",
+    "submit": "Use this question",
+    "descriptionLocal": "Paste a prompt from your teacher or a past exercise. It's saved on this device."
+  },
+  "recent": {
+    "title": "Recent writing",
+    "empty": "Nothing yet. Pick a task to start.",
+    "level": "Level {level}",
+    "revision": "revision"
+  },
+  "status": {
+    "draft": "Draft",
+    "transcribing": "Reading handwriting",
+    "transcribe_failed": "Reading failed",
+    "review": "Check text",
+    "grading": "Getting feedback",
+    "graded": "Feedback ready"
+  },
+  "nav": {
+    "back": "All writing",
+    "backToTask": "Back to the task",
+    "previousVersion": "Previous version",
+    "revision": "Revision {n}",
+    "showTask": "Task"
+  },
+  "task": {
+    "materials": "Materials",
+    "private": "Private",
+    "limit": {
+      "chars": "{n} characters",
+      "words": "about {n} words"
+    },
+    "mySubmissions": "My submissions",
+    "community": "Community answers"
+  },
+  "helpers": {
+    "title": "Ask AI before you write",
+    "scaffoldingOnly": "Scaffolding only — notes, words and patterns. Write the essay yourself.",
+    "ask": "Ask AI",
+    "failed": "The AI couldn't help just now. Your credits were refunded.",
+    "cachedNote": "Answers are saved for this task, so opening them again is free.",
+    "tabs": {
+      "zh": {
+        "task_analysis": "解題",
+        "outline": "寫作大綱",
+        "vocabulary": "詞彙",
+        "sentence_patterns": "句式",
+        "idioms": "成語"
+      },
+      "en": {
+        "task_analysis": "Task analysis",
+        "outline": "Outline",
+        "vocabulary": "Vocabulary",
+        "sentence_patterns": "Sentence patterns",
+        "idioms": "Idioms"
+      }
+    },
+    "about": {
+      "task_analysis": "What the task really asks: text type, audience, purpose, tone, traps and what to prepare.",
+      "outline": "A paragraph plan with brief point notes for each paragraph.",
+      "vocabulary": "Topic vocabulary grouped by theme, with synonyms and usage notes.",
+      "sentence_patterns": "Sentence patterns that suit this task, each with one short example.",
+      "idioms": "Idioms or 成語 that fit the topic, with meaning, usage and a short example."
+    },
+    "fields": {
+      "asks": "What the task asks",
+      "textType": "Text type",
+      "audience": "Audience",
+      "purpose": "Purpose",
+      "toneRegister": "Tone and register",
+      "keyRequirements": "Must cover",
+      "traps": "Traps",
+      "prepare": "Prepare before writing",
+      "centralIdea": "Central idea",
+      "tips": "To lift it a level"
+    },
+    "failedLocal": "The AI couldn't help just now. Please try again.",
+    "cachedNoteLocal": "Answers are saved on this device for this task, so opening them again is instant."
+  },
+  "editor": {
+    "title": "Write your answer",
+    "reviseTitle": "Revise and resubmit",
+    "description": "Type it here, or upload photos of your handwriting.",
+    "typed": "Type",
+    "photo": "Photos",
+    "placeholder": "Start writing…",
+    "count": {
+      "chars": "{n} characters",
+      "words": "{n} words"
+    },
+    "autosaved": "Draft saved in this browser",
+    "continue": "Continue",
+    "photoHelp": "Take clear, flat photos in page order. We copy your handwriting exactly — including mistakes — so the feedback is fair.",
+    "addPhotos": "Add photos",
+    "transcribe": "Upload and read",
+    "failed": "That didn't work. Please try again."
+  },
+  "review": {
+    "photos": "Your pages",
+    "page": "Page {n}",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "titlePhoto": "Check the transcript",
+    "titleTyped": "Check your text",
+    "descriptionPhoto": "Compare with your pages and fix anything we misread. Every change is tracked and shown with your feedback.",
+    "descriptionTyped": "Make any last changes before you submit.",
+    "legend": {
+      "unsure": "Unsure reading",
+      "insertion": "Inserted (∨)",
+      "malformed": "Malformed character",
+      "wrong_char": "Malformed character",
+      "edit": "Your change"
+    },
+    "preview": "Preview",
+    "edit": "Edit",
+    "count": {
+      "chars": "{n} characters",
+      "words": "{n} words"
+    },
+    "markerHelp": "[X?] = we weren't sure; [X!] = the character looks malformed; {+…+} = words you inserted. Fix or keep them — the brackets are removed when you submit.",
+    "save": "Save changes",
+    "saved": "Saved",
+    "edits": "Your changes to our reading ({n})",
+    "submitTitle": "Submit for feedback",
+    "submitDescription": "Feedback covers whether you met the task, strengths, errors and upgrades tied to your own sentences.",
+    "estimate": "Add a DSE estimate",
+    "estimateHelp": "Marks per criterion and an estimated level, calibrated on HKEAA exemplars. It's an estimate, not an official grade.",
+    "noEstimatePartA": "甲部 gets feedback only — DSE estimates aren't available for practical writing yet.",
+    "submit": "Get feedback"
+  },
+  "progress": {
+    "transcribing": "Reading your handwriting…",
+    "transcribingHelp": "This usually takes under a minute. You can leave this page; we'll keep working.",
+    "grading": "Writing your feedback…",
+    "gradingHelp": "This usually takes one to two minutes.",
+    "refresh": "Refresh",
+    "transcribeFailed": "We couldn't read your pages",
+    "transcribeFailedHelp": "Your credits were refunded. You can try again, or type your answer instead.",
+    "retry": "Try again",
+    "transcribingHelpLocal": "This usually takes under a minute. Keep this tab open until it finishes.",
+    "gradingHelpLocal": "This usually takes one to two minutes. Keep this tab open until it finishes.",
+    "transcribeFailedHelpLocal": "Reading failed or was interrupted. You can try again, or type your answer instead."
+  },
+  "feedback": {
+    "yourEssay": "Your writing",
+    "layers": {
+      "wrongChars": "錯別字",
+      "errors": "Errors",
+      "problem": "病句",
+      "good": "佳句",
+      "sentences": "Sentences",
+      "upgrades": "Upgrades",
+      "script": "繁簡混用",
+      "edits": "Your changes"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "errors": "Errors",
+      "upgrades": "Upgrades",
+      "edits": "Changes"
+    },
+    "recap": "Task recap",
+    "verdict": {
+      "met": "task met",
+      "partly": "partly met",
+      "not_met": "not met"
+    },
+    "strengths": "Strengths",
+    "overall": "Overall",
+    "groups": {
+      "wrongChars": "錯別字 Wrong characters ({n})",
+      "problem": "病句 Problem sentences ({n})",
+      "script": "繁簡混用 Mixed script ({n}) — you mostly write {script}",
+      "scriptNote": "HKEAA accepts mixed scripts, so this doesn't affect marks. Writing in one script is still good practice.",
+      "good": "佳句 Good sentences ({n})",
+      "vocab": "Vocabulary upgrades",
+      "structure": "Sentence-structure upgrades",
+      "none": "None found — well done."
+    },
+    "script": {
+      "trad": "traditional",
+      "simp": "simplified"
+    },
+    "malformed": "malformed",
+    "notLocated": "Couldn't find this exact text in your writing.",
+    "editsNote": "These are the changes you made to our reading of your handwriting.",
+    "next": {
+      "title": "What next?",
+      "sample": "Level sample",
+      "sampleHelp": "See your own essay rewritten at a higher level — same ideas and plan — with a note on every change.",
+      "revise": "Revise and resubmit"
+    }
+  },
+  "estimate": {
+    "title": "DSE estimate",
+    "disclaimer": "An AI estimate calibrated on HKEAA exemplars. Your teacher's grade always takes priority.",
+    "level": "Estimated level",
+    "total": "Total",
+    "criteria": {
+      "content": "Content",
+      "expression": "Expression",
+      "structure": "Structure",
+      "presentation": "Punctuation & handwriting",
+      "wrong_chars": "Wrong characters",
+      "language": "Language",
+      "organisation": "Organisation"
+    }
+  },
+  "sample": {
+    "title": "Level sample",
+    "target": "Level {level}",
+    "description": "Your essay upgraded, keeping your ideas, examples and plan. Hover or tap a highlight to see why it changed.",
+    "yours": "Your essay",
+    "upgraded": "Level {level} version",
+    "changes": "Changes ({n})",
+    "targetLabel": "Target level",
+    "levelOption": "Level {level}",
+    "generate": "Generate sample",
+    "defaultFromEstimate": "Suggested: Level {level}, one above your estimate.",
+    "defaultNoEstimate": "Suggested: Level 4 (you didn't ask for an estimate)."
+  },
+  "tags": {
+    "sva": "Subject–verb agreement",
+    "verb_form": "Verb form",
+    "tense_consistency": "Tense consistency",
+    "tense_choice": "Tense choice",
+    "passive": "Passive voice",
+    "missing_be": "Missing \"be\"",
+    "double_verb": "Two main verbs",
+    "article": "Articles",
+    "count_noun": "Countable / uncountable nouns",
+    "relative_clause": "Relative clauses",
+    "pronoun_case": "Pronoun case",
+    "preposition_pattern": "Prepositions and verb patterns",
+    "word_form": "Word form",
+    "word_choice": "Word choice",
+    "misused_idiom": "Misused idiom",
+    "l1_transfer": "Chinese sentence patterns",
+    "run_on": "Run-on sentences",
+    "fragment": "Sentence fragments",
+    "double_subject": "Double subject",
+    "comparative": "Comparatives",
+    "dangling_modifier": "Dangling modifier",
+    "spelling": "Spelling",
+    "register": "Register and tone",
+    "convention": "Text-type conventions",
+    "template_linkers": "Template linkers",
+    "task_copy": "Copied from the task"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "jobFailed": "That didn't work: {error} Your credits were refunded.",
+    "taskNotFound": "This task doesn't exist or isn't available to you.",
+    "submissionNotFound": "This submission doesn't exist.",
+    "jobFailedLocal": "That didn't work: {error} Please try again."
+  }
+}

@@ -1,100 +1,105 @@
-# API design
+# API design (Hono on Cloudflare Workers)
 
-Next.js route handlers under `src/app/api`. These follow the existing conventions:
+Status: **designed, not implemented.** This replaces the teacher-only route list from 2026-10-06.
 
-- JSON in, JSON out. Errors come back through `jsonRoute` as `{ error }` with a non-2xx status.
-- Request bodies are validated with zod. Shapes reference the tables in [database.md](database.md).
-- AI steps run synchronously in Phase 1 (one teacher, local). Phase 2 moves grading and corpus work onto a job queue that returns `202 { jobId }`, polled through `GET /api/jobs/:id`.
-- No auth in Phase 1. Phase 2 adds teacher/student roles, and every `/students/:id/*` route checks access.
+## Shape
+- One Hono app is mounted in Next.js at `src/app/api/[[...route]]/route.ts`. It exports `GET`, `POST`, `PATCH` and `DELETE` = `handle(app)`. Better Auth is mounted at `/api/auth/*` inside the same Hono app.
+- **Routers** are in `src/server/api/routes/<area>.ts`, and each exports a `Hono` sub-app. `src/server/api/app.ts` chains them and exports **`type AppType`**.
+- **Typed client:** the frontend uses `hc<AppType>("/api")` (`src/lib/api-client.ts`). Each feature wraps calls in TanStack Query hooks (`features/<area>/api/use-*.ts`).
+- **Validation:** every input uses `zValidator` with zod schemas from `src/lib/schemas/`, shared with the frontend.
+- **Middleware**, in `src/server/api/middleware/`, in this order:
+  1. `with-db.ts` creates the Drizzle client from Hyperdrive for each request.
+  2. `with-session.ts` sets the Better Auth session. It returns 401 if there's none, except on public routes.
+  3. `with-rate-limit.ts` is a per-user burst limit (Workers Rate Limiting binding).
+- **Credits:** routes that start AI work call `chargeCredits(user, action)` **before** starting. An insufficient balance returns `402 {error:"credits", balance, cost}`. A failed job refunds.
+- **Long work** (transcribe, feedback, estimate, level sample, mark answer, generate new question) returns `202 { jobId }`. The client follows `GET /api/jobs/:id/stream` (Server-Sent Events) until the job ends, then refetches the resource.
+- **Errors:** responses are `{ error: code, message }` with an HTTP status. Codes include `unauthorized`, `forbidden`, `not_found`, `credits`, `validation`, `rate_limited` and `ai_failed`.
+- **Access:** every handler passes `c.var.user.id` to services. Services never accept a user ID from the request body.
 
-Subjects: `chi_writing | eng_writing | math_cp | math_m1 | math_m2`.
+## Routes
 
-## Existing routes (kept)
+### Session and profile — `routes/me.ts`
+| Method | Path | Body / query | Returns |
+|---|---|---|---|
+| GET | `/me` | | `{ user, profile, credits: {balance, quota, resetsAt} }` |
+| PATCH | `/me/profile` | `{ displayName?, nickname?, form?, subjects?, examLanguage?, uiLocale?, extensionTrack? }` | `Profile` (nickname must be unique) |
+| GET | `/me/credits/history` | `?cursor` | ledger page |
+| DELETE | `/me` | `{ confirm: "DELETE" }` | 204: deletes the account, data and R2 prefix |
 
-| Route | Change |
+### Reference — `routes/reference.ts` (cacheable)
+| GET | `/topics?subject=` | topic tree (units, subtopics, genres, text types, parts) |
+|---|---|---|
+| GET | `/rubrics/:subject` | criteria and level descriptors (public text only) |
+
+### Question bank and search — `routes/questions.ts`
+| Method | Path | Body / query | Returns |
+|---|---|---|---|
+| GET | `/questions/search` | `?subject&topic[]&kind&part&difficulty&extension&locale&q&unattempted&sort=relevance\|rating\|new&cursor` | `{ items: QuestionPreview[], nextCursor }`. Free. Public bank only. |
+| GET | `/questions/:id` | | `Question` for the student view: **no answers or scheme until submitted** (MC options are shown) |
+| GET | `/questions/:id/solution` | | answers, marking scheme, 解題 thinking, tips. Allowed after an attempt or submission, or with `?reveal=1` (logged; reveals before an attempt can't be made public later) |
+| POST | `/questions/next` | `{ subject, topicIds?, kind, part?, difficulty?, extension? }` | serves an unseen active bank question, 0 credits; or `202 {jobId}` to generate one (2 credits) |
+| POST | `/questions/from-reference` | `{ uploadKeys: string[], subject }` | `202 {jobId}` → understanding (2 credits) |
+| POST | `/questions/from-reference/:jobId/generate` | `{ understanding (edited), level, kind, count, language }` | `202 {jobId}`; questions are private (`ownerId` = user) |
+| POST | `/questions/own-prompt` | `{ subject, part, text, materials? }` | private writing-task question |
+| POST | `/questions/:id/rating` | `{ value: 1\|-1 }` or `{ report: reason }` | updated counts |
+
+### Writing — `routes/writing.ts`
+| Method | Path | Body | Returns |
+|---|---|---|---|
+| POST | `/writing/:questionId/helpers/:kind` | | `kind` ∈ task_analysis, outline, vocabulary, sentence_patterns, idioms. Cached per user and question; free when cached (1–2 credits otherwise). Scaffolding only. |
+| POST | `/writing/submissions` | `{ questionId, inputMode, text?, uploadKeys?, wantsEstimate, parentSubmissionId? }` | `Submission`; photo mode → `202 {jobId}` (transcribe, 3 credits per page) |
+| GET | `/writing/submissions/:id` | | submission + pages (signed GET URLs) + feedback + scores + samples |
+| PATCH | `/writing/submissions/:id/text` | `{ editedText }` | the server diffs against `aiText` and stores `edits[]` |
+| POST | `/writing/submissions/:id/submit` | `{ wantsEstimate }` | `202 {jobId}`: feedback (8 credits) plus the estimate (+5) |
+| POST | `/writing/submissions/:id/sample` | `{ targetLevel? }` (default = estimate + 1, or 4) | `202 {jobId}` (10 credits) |
+| GET | `/writing/submissions` | `?questionId&cursor` | the student's history |
+
+### Practice (maths, M1/M2, Physics) — `routes/practice.ts`
+| Method | Path | Body | Returns |
+|---|---|---|---|
+| POST | `/practice/attempts` | `{ questionId }` | `Attempt` (status answering) |
+| POST | `/practice/attempts/:id/mc` | `{ choice }` | instant `{ correct, correctOption, misconception, solution }`, 0 credits |
+| POST | `/practice/attempts/:id/pages` | `{ uploadKeys }` | `202 {jobId}` → LaTeX transcript (3 credits per page) |
+| PATCH | `/practice/attempts/:id/transcript` | `{ lines: [{latex}] }` | stores the edits |
+| POST | `/practice/attempts/:id/mark` | | `202 {jobId}` (5 credits per question) |
+| GET | `/practice/attempts/:id` | | attempt + marks (with reasons) + parts (first wrong line, 解題 note) |
+| POST | `/practice/attempts/:id/disputes` | `{ part, markIndex?, reason }` | `Dispute` |
+
+### Shared answers — `routes/community.ts`
+| Method | Path | Body / query | Returns |
+|---|---|---|---|
+| POST | `/community/answers` | `{ sourceType, sourceId, includeScore, includeFeedback }` | publishes a snapshot (personal-info check; nickname required) |
+| PATCH | `/community/answers/:id` | `{ visibility: "private" }` or `{ republish: true, includeScore?, includeFeedback? }` | hide, or refresh the snapshot |
+| GET | `/questions/:id/answers` | `?sort=top\|new&cursor` | **403 until the viewer has their own attempt or submission** on the question; nicknames only |
+| PUT | `/community/answers/:id/vote` | `{ value: 1\|-1\|0 }` | 0 removes the vote; own answers are rejected |
+| POST | `/community/answers/:id/report` | `{ reason, note? }` | the third report hides the answer |
+
+### Uploads — `routes/uploads.ts`
+| POST | `/uploads` | `{ files: [{contentType, size}] }` (images ≤ 10 MB, max 8) | `[{ key: "u/<userId>/<uuid>.jpg", putUrl }]`: presigned R2 PUT URLs, 10-minute expiry |
+|---|---|---|---|
+
+### Jobs — `routes/jobs.ts`
+| GET | `/jobs/:id` | job row (owner only) |
+|---|---|---|
+| GET | `/jobs/:id/stream` | SSE: `progress` events `{step, status}`, then `done {resourceRef}` or `error` |
+
+### Dashboard — `routes/dashboard.ts`
+| GET | `/dashboard?subject=` | `{ criterionStats, errorTags, topicMastery, nextSteps, recent }` |
+|---|---|---|
+| PATCH | `/dashboard/next-steps/:id` | `{ status }` |
+
+## Workflows (`src/server/jobs/`)
+Each long job is a Cloudflare Workflow whose steps can be retried. Each step writes `jobs.progress`.
+
+| Workflow | Steps |
 |---|---|
-| `POST /api/questions/understand` | Adds `subject` (math_*) and returns suggested `unitIds` + `archetypeId`. |
-| `POST /api/questions/generate` | Adds `subject`, `unitIds`, optional `archetypeId` (generate from a blueprint with no reference screenshot), and saves results to `questions`. |
-| `POST /api/essay/transcribe` | Becomes an alias of `POST /api/submissions/:id/transcribe` for one-off use without a student. |
-| `POST /api/essay/analyze` | Becomes an alias of grading in feedback-only mode. |
+| `transcribe-workflow` | load pages from R2 → transcribe (top model) → store `aiText` / transcript → status `review` |
+| `writing-feedback-workflow` | 繁簡 check (code) → feedback (top model) → [estimate: retrieve anchors → score → caps (code)] → locate spans → update profile |
+| `level-sample-workflow` | load essay + feedback → rewrite at the target level → align changes |
+| `mark-answer-workflow` | load scheme → mark (top model) → code-check numbers → store marks → update mastery |
+| `generate-question-workflow` | pick archetype → generate (light model) → code checks → one repair round → embed → insert into the bank (`active` only if checks pass) |
 
-## Classes and students
+Workflows are bound in `wrangler.jsonc`, and their classes are exported from the OpenNext worker entry (`worker.ts`).
 
-| Method & path | Body / query | Returns |
-|---|---|---|
-| `GET /api/classes` | | `Class[]` with student counts |
-| `POST /api/classes` | `{ name, schoolYear }` | `Class` |
-| `GET /api/classes/:classId/students` | | `Student[]` |
-| `POST /api/classes/:classId/students` | `{ classNo, displayName }` or `{ roster: [...] }` | `Student[]` |
-| `PATCH /api/students/:id` | `{ displayName?, classNo? }` | `Student` |
-| `GET /api/students/:id/profile?subject=` | | `{ criterionStats, errorTagStats, unitMastery, recommendations, history: SubmissionSummary[] }` |
-| `GET /api/classes/:classId/summary?subject=` | | Class-level stats: common error tags (e.g. top 錯別字), criterion averages, weakest units |
-
-## Submissions (writing and maths)
-
-A submission is one piece of student work for one task. Writing goes through `uploaded → transcribed → verified → graded → finalized`. Maths worksheet results skip transcription.
-
-| Method & path | Body | Returns |
-|---|---|---|
-| `POST /api/submissions` | `{ studentId, subject, taskId?, parentSubmissionId?, pages: ImageInput[] }` | `Submission` (status `uploaded`; round = parent's round + 1) |
-| `GET /api/submissions/:id` | | Full submission: pages, transcription, scores, feedback, results |
-| `POST /api/submissions/:id/transcribe` | | `Transcription` (`ai_text` with `[X?]`/`[X!]` markers, detected `dominantScript`) |
-| `PUT /api/submissions/:id/transcription` | `{ text }` | Saves `teacher_text`; status → `verified` |
-| `POST /api/submissions/:id/grade` | `{ part?, mode?: 'full' \| 'feedback_only' }` | `{ scores: WritingScore[], items: FeedbackItem[], evidence: Chunk[] }`; status → `graded` |
-| `PATCH /api/submissions/:id/scores` | `{ part, criterion, teacherGrade }[]` | Updated scores |
-| `POST /api/submissions/:id/feedback` | `{ kind, startPos, endPos, payload }` | New item (`teacher_added`) |
-| `PATCH /api/submissions/:id/feedback/:itemId` | `{ payload?, status? }` | Updated item (`edited` / `removed`) |
-| `POST /api/submissions/:id/finalize` | | Recomputes the student's derived stats and creates `recommendations`; status → `finalized` |
-| `GET /api/submissions/:id/compare` | | Before/after with the parent submission: score change per criterion, resolved and remaining error tags |
-
-### What `grade` does (writing)
-1. Load the effective transcription. For Chinese, run the deterministic 繁簡 check against the dominant script → `mixed_script` items.
-2. AI pass: 錯別字, 病句, 佳句 (Chinese) or error tagging (English).
-3. **Retrieve calibration anchors**: chunks from `split = 'anchor'` exemplars of the same subject and part, at levels around a first-pass estimate, plus the same genre when available.
-4. Score each rubric criterion against the rubric and the anchors, giving a grade, a reason and `evidence_chunk_ids`, then an overall level.
-5. **Retrieve improvement models** for the 1–2 weakest criteria: higher-level passages on similar content, saved as `model_passage` items.
-6. Map quotes back onto positions (`locateFeedback`), then save.
-
-## Practice
-
-| Method & path | Body | Returns |
-|---|---|---|
-| `GET /api/students/:id/recommendations?subject=` | | `Recommendation[]` (open first) |
-| `POST /api/recommendations/:id/assign` | `{ format?: 'print' }` | Creates the `Task` (revision prompt, drill sheet or worksheet), status → `assigned` |
-| `POST /api/practice/drills` | `{ studentId?, subject, target: { criterion } \| { tags } , count? }` | Drill `Task` with items + a model passage for each drill |
-| `POST /api/practice/prompts` | `{ subject, part, genre?, excludeUsedBy?: studentId }` | Past questions (from the corpus) for a new essay |
-| `POST /api/worksheets` | `{ subject, title, language, questionIds }` or `{ subject, unitIds, count, answerType, language, studentId? }` (auto-select + generate for weak units) | `Worksheet` |
-| `GET /api/worksheets/:id` | `?view=paper\|key` | Printable worksheet or answer key data |
-| `POST /api/worksheets/:id/results` | `{ studentId, answers: { questionId, part, given }[] }` | Creates a submission with `answer_results` (auto-marked, misconception tags from the chosen distractor) |
-| `POST /api/worksheets/:id/results/scan` | `{ studentId, pages: ImageInput[] }` | Same, with answers read from a photo of the answer grid (the teacher confirms before finalising) |
-
-## Reference data and retrieval
-
-| Method & path | Returns |
-|---|---|
-| `GET /api/syllabus/:subject` | `SyllabusUnit[]` with `archetypes` |
-| `GET /api/rubrics/:subject` | `RubricCriterion[]` + level descriptors |
-| `POST /api/retrieve` | `{ subject, purpose: 'calibration'\|'improvement'\|'practice', query, filters? }` → ranked `Chunk[]` with scores. Used internally and for debugging retrieval in the UI. |
-
-Corpus building is **not** an API. It's an offline script (`npm run corpus:build -- <subject>`): render PDF pages → transcribe → split into chunks → tag → embed → write `corpus/<subject>.json`. Accuracy tests are scripts too (`npm run test:scoring`, `test:handwriting`, `test:checks`).
-
-## Shared types (sketch)
-
-```ts
-type Subject = "chi_writing" | "eng_writing" | "math_cp" | "math_m1" | "math_m2";
-
-type WritingScore = { part: string; criterion: string; aiGrade: string; teacherGrade: string | null; reason: string; evidenceChunkIds: string[] };
-
-type FeedbackItem = {
-  id: string;
-  kind: "wrong_char" | "mixed_script" | "good_sentence" | "problem_sentence" | "eng_error" | "model_passage" | "overall_comment";
-  startPos: number | null; endPos: number | null;
-  payload: Record<string, unknown>;
-  tags: string[]; criterion: string | null;
-  status: "ai" | "edited" | "removed" | "teacher_added";
-};
-
-type Chunk = { id: string; documentId: string; text: string; score: number; metadata: { level?: string; genre?: string; unitIds?: string[]; year: number } };
-
-type Recommendation = { id: string; kind: "revise" | "drill" | "new_essay" | "worksheet"; target: unknown; rationale: string; modelChunkIds: string[]; status: string };
-```
+## Service mapping
+Routes stay thin: they validate, call a service, and return. The services live in `src/server/services/**` and are the only code that touches Drizzle or the AI client. See [frontend.md](frontend.md) for the full file tree.

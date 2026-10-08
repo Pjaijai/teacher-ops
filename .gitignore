@@ -49,3 +49,7 @@ samples/
 /paper/
 /corpus/
 /data/
+
+# Cloudflare build output
+.open-next/
+.wrangler/
