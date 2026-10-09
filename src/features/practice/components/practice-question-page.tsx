@@ -15,6 +15,7 @@ import { CommunityAnswers } from "@/features/community/components/community-answ
 import { ApiClientError } from "@/lib/api-client";
 import { isLocalMode } from "@/lib/app-mode";
 import { Link } from "@/lib/i18n/routing";
+import { BackToPaper } from "@/features/papers/components/back-to-paper";
 import { useAnswerMc, useCreateAttempt, type McResponse } from "../api/use-attempt";
 import { usePracticeQuestion } from "../api/use-practice-question";
 import { McOptions } from "./mc-options";
@@ -94,6 +95,7 @@ export function PracticeQuestionPage({ questionId }: { questionId: string }) {
             <ArrowLeft className="size-4" /> {t("back")}
           </Link>
         </Button>
+        <BackToPaper questionId={questionId} />
       </div>
 
       <Card className="print:border-0 print:shadow-none">

@@ -2,7 +2,9 @@
 
 import { createId } from "@paralleldrive/cuid2";
 import { openDB, type DBSchema, type IDBPDatabase } from "idb";
+import { toast } from "sonner";
 import type { QuestionLite } from "@/lib/schemas/ai";
+import type { ChatMessage, PaperSpec } from "@/lib/schemas/paper";
 import type { TrackedEdit } from "@/lib/schemas/writing";
 import type { Subject } from "@/lib/subjects";
 
@@ -15,7 +17,7 @@ export type LocalQuestion = QuestionLite & {
   id: string;
   difficulty: number;
   extension: boolean;
-  origin: "bank" | "reference_image" | "own_prompt";
+  origin: "bank" | "reference_image" | "own_prompt" | "paper";
   checkProblems: string[];
   rating: 1 | -1 | 0;
   createdAt: string;
@@ -89,6 +91,40 @@ export type LocalProfile = {
   onboarded: boolean;
 };
 
+export type PaperSlotRow = {
+  n: number;
+  section: "A" | "B";
+  strand: "I" | "II" | "III" | "IV" | "V";
+  topicIds: string[];
+  kind: "mc" | "short" | "long" | "experiment";
+  difficulty: number;
+  marks: number;
+  instructions: string;
+  questionId: string | null;
+  /** Earlier versions, newest last (for "Undo" after a regenerate). */
+  previousQuestionIds: string[];
+  error: string | null;
+  /** Edited by hand since the answer was last written. */
+  answerStale: boolean;
+  mcChoice: "A" | "B" | "C" | "D" | null;
+  flagged: boolean;
+  /** 1B, after the student skipped marking it: left out of the score. */
+  skipped: boolean;
+};
+
+export type LocalPaper = {
+  id: string;
+  subject: "physics";
+  /** planning → generating → review → sitting → submitted */
+  status: "planning" | "generating" | "review" | "sitting" | "submitted";
+  spec: PaperSpec;
+  chat: ChatMessage[];
+  slots: PaperSlotRow[];
+  startedAt: string | null;
+  submittedAt: string | null;
+  createdAt: string;
+};
+
 export type StatRow = { key: string; subject: Subject; ewma: number; attempts: number; lastAt: string };
 export type TagRow = { key: string; subject: Subject; tag: string; weighted: number; total: number; lastAt: string };
 
@@ -102,13 +138,16 @@ interface LocalSchema extends DBSchema {
   stats: { key: string; value: StatRow };
   tags: { key: string; value: TagRow };
   kv: { key: string; value: unknown };
+  papers: { key: string; value: LocalPaper; indexes: { createdAt: string } };
 }
 
 let dbPromise: Promise<IDBPDatabase<LocalSchema>> | null = null;
 
 export function localDb() {
-  dbPromise ??= openDB<LocalSchema>("dse-practice", 1, {
-    upgrade(db) {
+  dbPromise ??= openDB<LocalSchema>("dse-practice", 2, {
+    upgrade(db, oldVersion) {
+      if (oldVersion < 2) db.createObjectStore("papers", { keyPath: "id" }).createIndex("createdAt", "createdAt");
+      if (oldVersion >= 1) return;
       db.createObjectStore("questions", { keyPath: "id" }).createIndex("createdAt", "createdAt");
       const subs = db.createObjectStore("submissions", { keyPath: "id" });
       subs.createIndex("questionId", "questionId");
@@ -121,6 +160,16 @@ export function localDb() {
       db.createObjectStore("stats", { keyPath: "key" });
       db.createObjectStore("tags", { keyPath: "key" });
       db.createObjectStore("kv");
+    },
+    // Another tab opened a newer version: let go so its upgrade can run, and reopen on next use.
+    blocking() {
+      void dbPromise?.then((db) => db.close());
+      dbPromise = null;
+    },
+    // An older tab still holds the database open (it predates `blocking` above): ask the student to close it.
+    blocked() {
+      console.warn("dse-practice: database upgrade is waiting for other tabs of this app to close or reload.");
+      toast.warning("This app was updated. Close or reload its other open tabs to continue.", { duration: Infinity, id: "db-blocked" });
     },
   });
   return dbPromise;
@@ -175,6 +224,26 @@ export async function updateQuestion(id: string, patch: Partial<LocalQuestion>) 
   const next = { ...q, ...patch };
   await db.put("questions", next);
   return next;
+}
+
+// --- Exam papers ---------------------------------------------------------------------------
+
+export async function putPaper(p: LocalPaper) {
+  await (await localDb()).put("papers", p);
+  return p;
+}
+
+export async function getPaper(id: string) {
+  return (await localDb()).get("papers", id);
+}
+
+export async function listPapers() {
+  const all = await (await localDb()).getAllFromIndex("papers", "createdAt");
+  return all.reverse();
+}
+
+export async function deletePaper(id: string) {
+  await (await localDb()).delete("papers", id);
 }
 
 // --- Submissions and attempts --------------------------------------------------------------

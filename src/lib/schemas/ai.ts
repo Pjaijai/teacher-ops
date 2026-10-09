@@ -24,6 +24,16 @@ export type QuestionLite = z.infer<typeof QuestionLiteSchema>;
 
 export const AiGenerateSchema = NextQuestionSchema.extend({ language: ExamLanguageSchema });
 
+/** Voice input: one spoken phrase as 16 kHz mono WAV (base64), transcribed and streamed back. */
+export const AiSpeechSchema = z.object({
+  audio: z.string().min(100).max(3_000_000),
+  /** Short context, e.g. what the student is doing, to steer vocabulary. */
+  hint: z.string().max(300).optional(),
+});
+
+/** Exam paper review: re-answer a hand-edited Physics question. */
+export const AiPhysicsAnswerSchema = z.object({ question: QuestionLiteSchema });
+
 export const AiWritingHelperSchema = z.object({ question: QuestionLiteSchema, kind: HelperKindSchema });
 export const AiWritingTranscribeSchema = z.object({
   subject: z.enum(["chi_writing", "eng_writing"]),

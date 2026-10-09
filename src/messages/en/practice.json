@@ -17,7 +17,8 @@
     },
     "foundation": "Foundation",
     "nonFoundation": "Non-foundation",
-    "mixed": "Mixed"
+    "mixed": "Mixed",
+    "subtopicsHint": "Optional: pick subtopics to narrow a topic. None picked = the whole topic."
   },
   "options": {
     "kind": "Question type",
@@ -40,13 +41,17 @@
     "bankFirst": "Free when served from the bank.",
     "tabs": {
       "topic": "By topic",
-      "type": "By type",
-      "reference": "From a reference",
-      "solve": "Solve my question"
+      "reference": "New questions from a reference",
+      "solve": "Solve my question",
+      "paper": "Exam paper"
     },
-    "typeHint": "Any topic: choose the question type and difficulty.",
     "descriptionLocal": "We write a new DSE-style question for you, checked by code. It's saved in this browser.",
-    "localNote": "Questions are saved on this device."
+    "localNote": "Questions are saved on this device.",
+    "instructions": "Instructions (optional)",
+    "instructionsPlaceholder": "e.g. Use a lift context; include a v–t graph; focus on finding tension.",
+    "instructionsHint": "Tells the AI what kind of question to write. With a knowledge point, instructions or subtopics we always write a new question.",
+    "knowledgePoint": "Knowledge point (optional)",
+    "knowledgePointPlaceholder": "e.g. Newton's third law: action–reaction pairs act on different bodies"
   },
   "reference": {
     "intro": "Photograph a worksheet or textbook question (or type it). We'll tell you what we understood, then write new questions like it.",
@@ -93,7 +98,9 @@
     "typePlaceholders": {
       "math_m1": "e.g. Let f(x) = x e^(1/(x−2)). (a) Find f′(x). (b) Someone claims the curve y = f(x) has only one horizontal tangent. Do you agree? Explain.",
       "math_m2": "e.g. Let f(x) = 1/(3x² + 4). Find f′(x) from first principles."
-    }
+    },
+    "instructions": "Instructions (optional)",
+    "instructionsPlaceholder": "e.g. make it harder; use a lift context; ask for a graph"
   },
   "question": {
     "back": "Practice",
@@ -215,5 +222,156 @@
     "button": "Solve and mark",
     "note": "Saved on this device under My questions. Answers are checked by code where possible.",
     "pagesNote": "{count} photos will be read as one question, in this order — use the arrows to reorder pages."
+  },
+  "paper": {
+    "intro": "Build a mock HKDSE Physics Paper 1. Chat with the AI about what you want (full paper, 1A or 1B, topics, difficulty), check and edit every question, then sit it against the clock or print it.",
+    "new": "New exam paper",
+    "mine": "My papers",
+    "delete": "Delete paper",
+    "notFound": "This paper isn't saved on this device.",
+    "back": "Practice",
+    "backToPaper": "Back to paper",
+    "presets": {
+      "full": "Paper 1 (1A + 1B)",
+      "1A": "Paper 1A — multiple choice",
+      "1B": "Paper 1B — structured questions"
+    },
+    "presetsShort": {
+      "full": "Full",
+      "1A": "1A only",
+      "1B": "1B only"
+    },
+    "status": {
+      "planning": "Setting up",
+      "generating": "Generating",
+      "review": "Ready to check",
+      "sitting": "In progress",
+      "submitted": "Handed in"
+    },
+    "sectionA": "Section A",
+    "sectionB": "Section B",
+    "marks": "{count, plural, one {# mark} other {# marks}}",
+    "generate": "Generate paper ({count} questions)",
+    "print": "Print paper",
+    "printScheme": "Print marking scheme",
+    "printSchemeToggle": "Marking scheme",
+    "printTitle": "HKDSE Physics — Mock Paper",
+    "schemeTitle": "Marking scheme",
+    "printTime": "Time allowed: {minutes} minutes",
+    "answerSheet": "Section A answer sheet",
+    "key": "Answer",
+    "chat": {
+      "title": "Set up your paper",
+      "greeting": "Hi! Let's build your mock paper. Do you want the full Paper 1, only 1A (multiple choice) or only 1B (structured questions)? And should it cover the whole syllabus or just some topics?",
+      "placeholder": "e.g. 1B only, just mechanics and electricity, a bit hard",
+      "send": "Send",
+      "notReady": "You can generate any time — or finish the chat first so the AI confirms the details.",
+      "listening": "Listening… speak now",
+      "micStart": "Speak instead of typing",
+      "micStop": "Stop recording",
+      "micBlocked": "Microphone access is blocked. Allow it in the browser's site settings to use voice input.",
+      "micError": "Voice input didn't work. Try again, or type your message.",
+      "transcribing": "Writing down what you said…",
+      "noMic": "No microphone was found."
+    },
+    "spec": {
+      "title": "Paper settings",
+      "preset": "Paper",
+      "count": "{count} questions",
+      "topics": "Topics",
+      "allTopics": "Whole compulsory syllabus (no electives)",
+      "pickTopics": "Choose topics / subtopics",
+      "remove": "Remove",
+      "difficulty": "Difficulty",
+      "extension": "Include extension (*) content",
+      "language": "Language",
+      "minutes": "Time (minutes)",
+      "focus": "Knowledge points to stress (one per line)",
+      "focusPlaceholder": "e.g. lens formula",
+      "notes": "Instructions for every question",
+      "notesPlaceholder": "e.g. use Hong Kong contexts",
+      "mcCount": "Number of MC questions",
+      "bCount": "Number of structured questions",
+      "bCountAuto": "Auto (≈84 marks)"
+    },
+    "generating": {
+      "title": "Writing your paper: {done} / {total}",
+      "hint": "Each question is written and checked by code. You can leave this page open — reloading continues where it stopped.",
+      "failed": "{count, plural, one {# question failed} other {# questions failed}}",
+      "retry": "Retry failed",
+      "continue": "Continue without them"
+    },
+    "review": {
+      "title": "Check your paper",
+      "hint": "Open any question to preview it, edit it, regenerate it with your own instruction, or have the AI redo its answer after an edit.",
+      "start": "Start ({minutes} min)",
+      "fillMissing": "Generate {count} missing",
+      "staleCount": "{count, plural, one {# edited question needs a new answer} other {# edited questions need new answers}}",
+      "staleConfirm": "{count, plural, one {# edited question still has its old answer.} other {# edited questions still have their old answers.}} Start anyway?",
+      "failed": "Generation failed",
+      "empty": "Not generated yet",
+      "check": "check",
+      "stale": "answer out of date",
+      "staleBanner": "You edited this question, so its answer and marking scheme are out of date.",
+      "reanswer": "AI: redo answer",
+      "edit": "Edit",
+      "regenerate": "Regenerate",
+      "undo": "Undo",
+      "showAnswer": "Show answer",
+      "hideAnswer": "Hide answer",
+      "regenPlaceholder": "Optional: what to change, e.g. harder, use a lift context",
+      "regenGo": "Regenerate"
+    },
+    "edit": {
+      "title": "Edit question {n}",
+      "hint": "Change the question itself. Afterwards, let the AI redo the answer and marking scheme to match.",
+      "stem": "Question (Markdown + LaTeX in $…$)",
+      "options": "Options",
+      "key": "Correct option",
+      "keyHint": "The AI re-checks the key when it redoes the answer.",
+      "removeFigure": "Remove the figure",
+      "preview": "Preview",
+      "cancel": "Cancel",
+      "save": "Save edit",
+      "incomplete": "Fill in the question and all four options."
+    },
+    "sitting": {
+      "answered": "{done} / {total} answered",
+      "handIn": "Hand in",
+      "navigator": "Questions",
+      "question": "Question {n}",
+      "flag": "Flag",
+      "unflag": "Unflag",
+      "writeOnPaper": "Write your answer on paper. After handing in, you'll photograph it and the AI will mark it.",
+      "prev": "Previous",
+      "next": "Next",
+      "confirm": "Hand in your paper now?",
+      "confirmBlank": "{count, plural, one {# MC question is} other {# MC questions are}} unanswered. Hand in anyway?"
+    },
+    "results": {
+      "title": "Results",
+      "levelNote": "The level is a rough estimate from typical cut-offs, not an official HKEAA grade.",
+      "total": "Score (marked so far)",
+      "level": "Estimated level",
+      "levelValue": "Level {level}",
+      "markedOf": "{marked} of {total} marked",
+      "unmarked": "{count, plural, one {# question isn't marked yet, so it isn't counted.} other {# questions aren't marked yet, so they aren't counted.}}",
+      "bTitle": "Section B — mark your answers",
+      "bHint": "For each question, upload photos of your written answer. The AI marks it with the marking scheme.",
+      "skipped": "skipped",
+      "inProgress": "in progress",
+      "viewMarking": "View marking",
+      "uploadMark": "Upload & mark",
+      "skip": "Skip",
+      "unskip": "Count it",
+      "aTitle": "Section A — your answers"
+    },
+    "strands": {
+      "heat": "Heat and Gases",
+      "force": "Force and Motion",
+      "waves": "Wave Motion",
+      "electricity": "Electricity and Magnetism",
+      "nuclear": "Radioactivity and Nuclear"
+    }
   }
 }

@@ -72,6 +72,10 @@ export type NextQuestionRequest = {
   extension: boolean;
   language: "zh" | "en";
   forceNew?: boolean;
+  /** Physics: the student's own steer for the new question. */
+  instructions?: string;
+  /** Physics: a specific knowledge point to test. */
+  knowledgePoint?: string;
 };
 
 /**

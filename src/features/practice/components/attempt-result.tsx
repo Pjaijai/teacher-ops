@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CreditCost } from "@/features/account/components/credits-badge";
 import { CommunityAnswers } from "@/features/community/components/community-answers";
+import { BackToPaper } from "@/features/papers/components/back-to-paper";
 import { PublishButton } from "@/features/community/components/publish-dialog";
 import { JobProgress } from "@/features/jobs/components/job-progress";
 import { isLocalMode } from "@/lib/app-mode";
@@ -46,6 +47,7 @@ export function AttemptResult({ attemptId }: { attemptId: string }) {
             <ArrowLeft className="size-4" /> {t("backToQuestion")}
           </Link>
         </Button>
+        <BackToPaper questionId={question.id} />
       </div>
 
       <ScoreHeader detail={detail} />

@@ -9,16 +9,21 @@ import { cn } from "@/lib/utils";
 type Option = { label: "A" | "B" | "C" | "D"; text: string };
 export type McOutcome = { choice: string; correct: boolean; correctOption: string | null; misconception: string | null };
 
-/** Four options; after answering, the key is green, a wrong choice red, and the misconception behind it shown. */
+/**
+ * Four options; after answering, the key is green, a wrong choice red, and the misconception behind it shown.
+ * `selected` (exam paper sitting): a choice that can still be changed and isn't marked yet.
+ */
 export function McOptions({
   options,
   outcome,
   disabled,
+  selected = null,
   onChoose,
 }: {
   options: Option[];
   outcome: McOutcome | null;
   disabled?: boolean;
+  selected?: string | null;
   onChoose: (label: Option["label"]) => void;
 }) {
   const t = useTranslations("practice.mc");
@@ -28,17 +33,19 @@ export function McOptions({
         {options.map((o) => {
           const isKey = outcome?.correctOption === o.label;
           const isChoice = outcome?.choice === o.label;
+          const isPicked = !outcome && selected === o.label;
           return (
             <button
               key={o.label}
               type="button"
               role="radio"
-              aria-checked={isChoice}
+              aria-checked={isChoice || isPicked}
               disabled={disabled || outcome !== null}
               onClick={() => onChoose(o.label)}
               className={cn(
                 "flex items-start gap-3 rounded-lg border p-3 text-left transition-colors print:break-inside-avoid",
                 !outcome && "hover:border-primary hover:bg-primary/5",
+                isPicked && "border-primary bg-primary/10",
                 outcome && isKey && "border-mark-good bg-mark-good-bg",
                 outcome && isChoice && !isKey && "border-mark-wrong bg-mark-wrong-bg",
                 outcome && !isKey && !isChoice && "opacity-60",
@@ -47,6 +54,7 @@ export function McOptions({
               <span
                 className={cn(
                   "flex size-7 shrink-0 items-center justify-center rounded-full border text-sm font-semibold",
+                  isPicked && "border-primary bg-primary text-primary-foreground",
                   outcome && isKey && "border-mark-good bg-mark-good text-white",
                   outcome && isChoice && !isKey && "border-mark-wrong bg-mark-wrong text-white",
                 )}

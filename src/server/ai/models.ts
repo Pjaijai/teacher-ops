@@ -19,3 +19,8 @@ export function modelFor(tier: ModelTier): string {
 export function embedModel() {
   return setting("OPENROUTER_EMBED_MODEL") ?? "qwen/qwen3-embedding-8b";
 }
+
+/** Speech to text (voice input): an audio-capable model, fast with minimal reasoning. */
+export function audioModel() {
+  return setting("OPENROUTER_MODEL_AUDIO") ?? "google/gemini-3.8-flash";
+}

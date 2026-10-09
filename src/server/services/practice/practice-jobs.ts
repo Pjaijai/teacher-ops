@@ -14,6 +14,7 @@ import { checkDraft, draftMathQuestion, repairMathQuestion, toMathKind, toNewQue
 import { markMathAnswer } from "./mark-answer";
 import { understandReference } from "./reference-understand";
 import { generateCheckedPhysicsQuestion, toNewPhysicsQuestion, toPhysicsKind, understandPhysicsReference, type PhysicsGenerateRequest } from "./generate-physics-question";
+import { studentRequestBlock } from "@/server/ai/prompts/physics-generate";
 import { physicsReferenceExtra } from "@/server/ai/prompts/physics-reference";
 import { transcribeMath } from "./transcribe-math";
 
@@ -60,6 +61,7 @@ registerJob("reference_generate", async (ctx) => {
         extension: true,
         language: input.language,
         extra: physicsReferenceExtra(u, input.variation as VariationLevel, i, titles),
+        instructions: input.instructions,
       };
       try {
         const { question, problems } = await generateCheckedPhysicsQuestion(preq, ctx.onUsage, ctx.step);
@@ -80,7 +82,7 @@ registerJob("reference_generate", async (ctx) => {
       difficulty: 3,
       extension: true,
       language: input.language,
-      extra: referenceExtra(u, input.variation as VariationLevel, i, titles),
+      extra: `${referenceExtra(u, input.variation as VariationLevel, i, titles)}\n${studentRequestBlock(input.instructions)}`,
     };
     try {
       const draft = await ctx.step("generate", () => draftMathQuestion(req, ctx.onUsage));

@@ -62,7 +62,7 @@ async function loadAttempt(id: string) {
   return recover(a);
 }
 
-function toPublic(q: LocalQuestion): QuestionPublic {
+export function toPublic(q: LocalQuestion): QuestionPublic {
   const c = q.content;
   return {
     id: q.id,
@@ -81,7 +81,7 @@ function toPublic(q: LocalQuestion): QuestionPublic {
 }
 
 /** The solution, plus (M1/M2) each symbolic answer re-verified by code. */
-function toSolution(q: LocalQuestion): QuestionSolution & { codeChecks: CodeCheck[] } {
+export function toSolution(q: LocalQuestion): QuestionSolution & { codeChecks: CodeCheck[] } {
   const c = q.content;
   return {
     codeChecks: codeChecksFor(c),
@@ -95,7 +95,7 @@ function toSolution(q: LocalQuestion): QuestionSolution & { codeChecks: CodeChec
   };
 }
 
-const toLite = (q: LocalQuestion): QuestionLite => ({
+export const toLite = (q: LocalQuestion): QuestionLite => ({
   subject: q.subject,
   kind: q.kind,
   title: q.title,
@@ -120,11 +120,13 @@ export async function localNextQuestion(req: {
   difficulty: number;
   extension: boolean;
   language?: "zh" | "en";
+  instructions?: string;
+  knowledgePoint?: string;
 }) {
   const language = req.language ?? (await getProfile()).examLanguage;
   const jobId = startAiJob<{ question: GeneratedQuestion }>({
     path: "questions/generate",
-    body: { subject: req.subject, kind: req.kind, topicIds: req.topicIds, difficulty: req.difficulty, extension: req.extension, language, forceNew: true },
+    body: { subject: req.subject, kind: req.kind, topicIds: req.topicIds, difficulty: req.difficulty, extension: req.extension, language, forceNew: true, instructions: req.instructions, knowledgePoint: req.knowledgePoint },
     kind: "generate_question",
     resourceRef: req.subject,
     onResult: async ({ question }) => {
@@ -351,7 +353,7 @@ export async function localReferenceUnderstand({ subject, files, text }: { subje
 }
 
 export async function localReferenceGenerate(
-  body: { subject: Subject; understanding: Understanding; variation: 1 | 2 | 3; kind: PracticeKind; count: number; language: "zh" | "en" },
+  body: { subject: Subject; understanding: Understanding; variation: 1 | 2 | 3; kind: PracticeKind; count: number; language: "zh" | "en"; instructions?: string },
   onSettled: () => void,
 ) {
   const jobId = startAiJob<{ questions: GeneratedQuestion[]; failed: number }>({

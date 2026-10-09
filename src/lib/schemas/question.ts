@@ -132,5 +132,9 @@ export const NextQuestionSchema = z.object({
   language: ExamLanguageSchema.optional(),
   /** Writing tasks: genre or text type topic id, e.g. CHI-B-argumentative */
   forceNew: z.boolean().default(false),
+  /** Student's own steer for a newly written question, e.g. "use a lift context". Always generates (skips the bank). */
+  instructions: z.string().trim().max(500).optional(),
+  /** A specific knowledge point to test, e.g. "action–reaction pairs". Always generates (skips the bank). */
+  knowledgePoint: z.string().trim().max(200).optional(),
 });
 export type NextQuestionInput = z.infer<typeof NextQuestionSchema>;

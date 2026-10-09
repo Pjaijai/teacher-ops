@@ -39,6 +39,7 @@ export function ReferencePanel({ subject, language }: { subject: Subject; langua
   const [count, setCount] = useState(1);
   const [kind, setKind] = useState<PracticeKind>("short");
   const [lang, setLang] = useState<"zh" | "en">(language);
+  const [instructions, setInstructions] = useState("");
   const [understandJob, setUnderstandJob] = useState<string | null>(null);
   const [generateJob, setGenerateJob] = useState<string | null>(null);
   const [made, setMade] = useState<string[]>([]);
@@ -84,7 +85,15 @@ export function ReferencePanel({ subject, language }: { subject: Subject; langua
     try {
       setMade([]);
       const { figureProblems: _ignored, ...u } = understanding;
-      const res = await generate.mutateAsync({ subject, understanding: u, variation, kind, count, language: lang });
+      const res = await generate.mutateAsync({
+        subject,
+        understanding: u,
+        variation,
+        kind,
+        count,
+        language: lang,
+        instructions: instructions.trim() || undefined,
+      });
       setGenerateJob(res.jobId);
     } catch (e) {
       onError(e);
@@ -171,6 +180,17 @@ export function ReferencePanel({ subject, language }: { subject: Subject; langua
                 </ToggleGroup>
               </div>
             </div>
+          </div>
+          <div className="grid gap-1.5">
+            <Label htmlFor="ref-instructions">{t("instructions")}</Label>
+            <Textarea
+              id="ref-instructions"
+              rows={2}
+              maxLength={500}
+              value={instructions}
+              onChange={(e) => setInstructions(e.target.value)}
+              placeholder={t("instructionsPlaceholder")}
+            />
           </div>
           <div className="flex flex-wrap items-center gap-3">
             <Button onClick={startGenerate} disabled={generating || !understanding.questionText.trim()}>
