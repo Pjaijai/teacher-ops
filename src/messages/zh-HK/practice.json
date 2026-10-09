@@ -17,7 +17,8 @@
     },
     "foundation": "基礎",
     "nonFoundation": "非基礎",
-    "mixed": "混合"
+    "mixed": "混合",
+    "subtopicsHint": "可選：選擇子課題以收窄範圍。不選即涵蓋整個課題。"
   },
   "options": {
     "kind": "題型",
@@ -42,11 +43,17 @@
       "topic": "按課題",
       "type": "按題型",
       "reference": "參考題目",
-      "solve": "解答我的題目"
+      "solve": "解答我的題目",
+      "paper": "模擬試卷"
     },
     "typeHint": "不限課題：選擇題型和難度。",
     "descriptionLocal": "我們會為你出一道新的 DSE 模擬題，並以程式核對答案。題目會儲存在這個瀏覽器。",
-    "localNote": "題目儲存在這部裝置上。"
+    "localNote": "題目儲存在這部裝置上。",
+    "instructions": "出題指示（可選）",
+    "instructionsPlaceholder": "例如：用升降機情境；附 v–t 線圖；集中求張力。",
+    "instructionsHint": "告訴 AI 要出怎樣的題目。有知識點、指示或子課題時，一定會出新題。",
+    "knowledgePoint": "知識點（可選）",
+    "knowledgePointPlaceholder": "例如：牛頓第三定律：作用力與反作用力作用於不同物體"
   },
   "reference": {
     "intro": "拍下工作紙或課本上的題目（或直接輸入）。我們會先說明理解了甚麼，再出類似的新題目。",
@@ -215,5 +222,146 @@
     "button": "解答及評分",
     "note": "題目會儲存在此裝置的「我的題目」。答案會盡量由程式核對。",
     "pagesNote": "這 {count} 張相片會按此次序當作同一題目閱讀，可用箭咀調整頁序。"
+  },
+  "paper": {
+    "intro": "製作一份 HKDSE 物理模擬卷一。先和 AI 傾一傾你想要的試卷（全卷、卷一甲或卷一乙、課題、深淺），逐題檢查和修改，然後計時作答或列印出來。",
+    "new": "新模擬卷",
+    "mine": "我的試卷",
+    "delete": "刪除試卷",
+    "notFound": "這部裝置上找不到這份試卷。",
+    "back": "練習",
+    "backToPaper": "返回試卷",
+    "presets": {
+      "full": "卷一（甲部 + 乙部）",
+      "1A": "卷一甲部 — 多項選擇題",
+      "1B": "卷一乙部 — 結構式題目"
+    },
+    "presetsShort": {
+      "full": "全卷",
+      "1A": "只做甲部",
+      "1B": "只做乙部"
+    },
+    "status": {
+      "planning": "設定中",
+      "generating": "出題中",
+      "review": "待檢查",
+      "sitting": "作答中",
+      "submitted": "已交卷"
+    },
+    "sectionA": "甲部",
+    "sectionB": "乙部",
+    "marks": "{count} 分",
+    "generate": "出卷（{count} 題）",
+    "print": "列印試卷",
+    "printScheme": "列印評卷參考",
+    "printSchemeToggle": "評卷參考",
+    "printTitle": "HKDSE 物理 — 模擬試卷",
+    "schemeTitle": "評卷參考",
+    "printTime": "考試時間：{minutes} 分鐘",
+    "answerSheet": "甲部答題紙",
+    "key": "答案",
+    "chat": {
+      "title": "設定你的試卷",
+      "greeting": "你好！我們一起準備模擬卷。你想做完整卷一、只做甲部（多項選擇題），還是只做乙部（結構式題目）？要涵蓋整個課程，還是只考某些課題？",
+      "placeholder": "例如：只做乙部，力學和電學，難一點",
+      "send": "傳送",
+      "notReady": "你隨時可以出卷，也可以先和 AI 確認好細節。"
+    },
+    "spec": {
+      "title": "試卷設定",
+      "preset": "試卷",
+      "count": "{count} 題",
+      "topics": "課題",
+      "allTopics": "整個必修部分（不含選修）",
+      "pickTopics": "選擇課題／子課題",
+      "remove": "移除",
+      "difficulty": "深淺",
+      "extension": "包括延展部分（*）",
+      "language": "語言",
+      "minutes": "時間（分鐘）",
+      "focus": "要加強的知識點（每行一個）",
+      "focusPlaceholder": "例如：透鏡公式",
+      "notes": "給每一題的指示",
+      "notesPlaceholder": "例如：用香港的情境"
+    },
+    "generating": {
+      "title": "正在出卷：{done} / {total}",
+      "hint": "每題都會由程式檢查。你可以讓這頁開著；重新載入後會從中斷處繼續。",
+      "failed": "{count} 題出題失敗",
+      "retry": "重試失敗的題目",
+      "continue": "不理會，繼續"
+    },
+    "review": {
+      "title": "檢查試卷",
+      "hint": "打開任何一題可預覽、修改、按你的指示重新出題，或在修改後請 AI 重做答案。",
+      "start": "開始作答（{minutes} 分鐘）",
+      "fillMissing": "補出 {count} 題",
+      "staleCount": "{count} 道修改過的題目需要更新答案",
+      "staleConfirm": "{count} 道修改過的題目仍是舊答案。仍要開始嗎？",
+      "failed": "出題失敗",
+      "empty": "尚未出題",
+      "check": "需檢查",
+      "stale": "答案已過時",
+      "staleBanner": "你修改了這題，所以答案和評卷參考已經過時。",
+      "reanswer": "AI 重做答案",
+      "edit": "修改",
+      "regenerate": "重新出題",
+      "undo": "還原",
+      "showAnswer": "顯示答案",
+      "hideAnswer": "隱藏答案",
+      "regenPlaceholder": "可選：想改甚麼，例如：難一點、用升降機情境",
+      "regenGo": "重新出題"
+    },
+    "edit": {
+      "title": "修改第 {n} 題",
+      "hint": "修改題目本身。之後請 AI 重做答案和評卷參考。",
+      "stem": "題目（Markdown + LaTeX，寫在 $…$ 內）",
+      "options": "選項",
+      "key": "正確選項",
+      "keyHint": "AI 重做答案時會再核對答案。",
+      "removeFigure": "移除圖表",
+      "preview": "預覽",
+      "cancel": "取消",
+      "save": "儲存修改",
+      "incomplete": "請填寫題目和全部四個選項。"
+    },
+    "sitting": {
+      "answered": "已答 {done} / {total}",
+      "handIn": "交卷",
+      "navigator": "題目",
+      "question": "第 {n} 題",
+      "flag": "標記",
+      "unflag": "取消標記",
+      "writeOnPaper": "請在紙上作答。交卷後拍照上載，AI 會替你評分。",
+      "prev": "上一題",
+      "next": "下一題",
+      "confirm": "現在交卷？",
+      "confirmBlank": "還有 {count} 道多項選擇題未答。仍要交卷嗎？"
+    },
+    "results": {
+      "title": "成績",
+      "levelNote": "等級只是按一般分數線的粗略估計，並非考評局的正式等級。",
+      "total": "得分（已評分部分）",
+      "level": "估計等級",
+      "levelValue": "第 {level} 級",
+      "markedOf": "已評 {marked} / {total} 題",
+      "unmarked": "{count} 題尚未評分，未計入分數。",
+      "bTitle": "乙部 — 評改你的答案",
+      "bHint": "每一題上載你的手寫答案照片，AI 會按評卷參考評分。",
+      "skipped": "已略過",
+      "inProgress": "進行中",
+      "viewMarking": "查看評分",
+      "uploadMark": "上載並評分",
+      "skip": "略過",
+      "unskip": "計入分數",
+      "aTitle": "甲部 — 你的答案"
+    },
+    "strands": {
+      "heat": "熱和氣體",
+      "force": "力和運動",
+      "waves": "波動",
+      "electricity": "電和磁",
+      "nuclear": "放射現象和核能"
+    }
   }
 }

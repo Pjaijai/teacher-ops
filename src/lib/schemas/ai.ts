@@ -24,6 +24,9 @@ export type QuestionLite = z.infer<typeof QuestionLiteSchema>;
 
 export const AiGenerateSchema = NextQuestionSchema.extend({ language: ExamLanguageSchema });
 
+/** Exam paper review: re-answer a hand-edited Physics question. */
+export const AiPhysicsAnswerSchema = z.object({ question: QuestionLiteSchema });
+
 export const AiWritingHelperSchema = z.object({ question: QuestionLiteSchema, kind: HelperKindSchema });
 export const AiWritingTranscribeSchema = z.object({
   subject: z.enum(["chi_writing", "eng_writing"]),

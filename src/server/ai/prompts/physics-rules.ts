@@ -27,9 +27,15 @@ export function topicList(ids?: string[]) {
   return list.map((t) => `${t.id}${t.extension ? " [EXT]" : ""} ${t.strand} — ${t.nameEn} (${t.nameZh})`).join("\n");
 }
 
+/** Topics with their objectives. Objective ids (e.g. PHY-II-2.1) narrow a topic to just those subtopics. */
 export function topicDetail(ids: string[]) {
-  return PHYSICS_TOPICS.filter((t) => ids.includes(t.id))
-    .map((t) => `${t.id} ${t.nameEn} (${t.nameZh})${t.extension ? " [EXT — extension component]" : ""}${isElective(t.id) ? " [ELECTIVE — Paper 2]" : ""}\n${t.objectives.map((o) => `  - ${o.id} ${o.textEn}`).join("\n")}`)
+  return PHYSICS_TOPICS.filter((t) => ids.includes(t.id) || t.objectives.some((o) => ids.includes(o.id)))
+    .map((t) => {
+      const picked = t.objectives.filter((o) => ids.includes(o.id));
+      const objectives = picked.length ? picked : t.objectives;
+      const focus = picked.length ? " — FOCUS on these subtopics only:" : "";
+      return `${t.id} ${t.nameEn} (${t.nameZh})${t.extension ? " [EXT — extension component]" : ""}${isElective(t.id) ? " [ELECTIVE — Paper 2]" : ""}${focus}\n${objectives.map((o) => `  - ${o.id} ${o.textEn}`).join("\n")}`;
+    })
     .join("\n");
 }
 

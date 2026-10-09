@@ -85,6 +85,19 @@ ${opts.text?.trim() ? `The student typed:\n"""\n${opts.text.trim()}\n"""` : ""}$
 Transcribe it, identify the topic, solve it, and return the answer, marking scheme, 解題 and tips.`;
 }
 
+/** An edited question (exam paper review): keep the question, redo everything on the answer side. */
+export function physicsAnswerEditedPrompt(question: GeneratedPhysicsQuestion, kind: string) {
+  return `The question below was EDITED by hand, so its answer side is out of date. Treat it as the student's own question.
+Keep the question EXACTLY as it is: same stem, numbers, parts, MC options (same order and text) and figure. Question kind: ${kind}.
+Recompute everything on the answer side from scratch so it matches the edited question: variables (with units), answers,
+correctOption and distractorNotes (MC), markingScheme, solution, taskAnalysis, tips, and the title and topicIds if they no
+longer fit. If the edit made the question wrong or unanswerable, still answer the most reasonable reading and say what is
+wrong in the first tip.
+
+Question (with its old answers):
+${JSON.stringify(toAi(question))}`;
+}
+
 export function physicsSolveRepairPrompt(question: GeneratedPhysicsQuestion, problems: string[]) {
   return `Your answer to the student's question failed an automatic check. Fix EVERY problem listed by correcting the
 SOLUTION side only — answers, variables, units, marking scheme, solution steps, correctOption, figure data. Do NOT change

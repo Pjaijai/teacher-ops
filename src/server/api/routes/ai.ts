@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { stripMarkers, textLength } from "@/features/writing/lib/text-markers";
 import {
   AiGenerateSchema,
+  AiPhysicsAnswerSchema,
   AiPracticeMarkSchema,
   AiPracticeTranscribeSchema,
   AiPracticeSolveSchema,
@@ -13,6 +14,7 @@ import {
   AiWritingTranscribeSchema,
   type QuestionLite,
 } from "@/lib/schemas/ai";
+import { AiPaperPlanSchema } from "@/lib/schemas/paper";
 import { ReferenceGenerateSchema } from "@/lib/schemas/practice";
 import { askStructured, type UsageSink } from "@/server/ai/open-router";
 import { referenceExtra, type VariationLevel } from "@/server/ai/prompts/math-reference";
@@ -28,6 +30,8 @@ import {
   understandPhysicsReference,
   type PhysicsGenerateRequest,
   solvePhysicsQuestion,
+  answerPhysicsQuestion,
+  planPhysicsPaper,
 } from "@/server/services/practice/generate-physics-question";
 import { markMathAnswer } from "@/server/services/practice/mark-answer";
 import { understandReference } from "@/server/services/practice/reference-understand";
@@ -247,6 +251,19 @@ export const aiRoutes = new Hono<AppEnv>()
         checkProblems: r.problems,
       });
       return { question, note: r.note };
+    });
+  })
+  // --- Physics exam paper mode
+  .post("/papers/plan", zValidator("json", AiPaperPlanSchema), async (c) => {
+    const { messages, spec } = c.req.valid("json");
+    return c.json(await planPhysicsPaper({ messages, spec, onUsage: noUsage }));
+  })
+  .post("/physics/answer", zValidator("json", AiPhysicsAnswerSchema), (c) => {
+    const { question } = c.req.valid("json");
+    if (question.subject !== "physics") throw invalid("Only Physics questions can be re-answered here.");
+    return streamWork(c, async (step) => {
+      const r = await answerPhysicsQuestion({ question, onUsage: noUsage, step });
+      return { question: { ...question, title: r.question.title.trim().slice(0, 200) || question.title, topicIds: r.question.topicIds, content: r.question.content, checkProblems: r.problems } };
     });
   })
   .post("/practice/transcribe", zValidator("json", AiPracticeTranscribeSchema), (c) => {
