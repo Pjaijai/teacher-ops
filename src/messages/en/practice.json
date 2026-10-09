@@ -265,7 +265,12 @@
       "greeting": "Hi! Let's build your mock paper. Do you want the full Paper 1, only 1A (multiple choice) or only 1B (structured questions)? And should it cover the whole syllabus or just some topics?",
       "placeholder": "e.g. 1B only, just mechanics and electricity, a bit hard",
       "send": "Send",
-      "notReady": "You can generate any time — or finish the chat first so the AI confirms the details."
+      "notReady": "You can generate any time — or finish the chat first so the AI confirms the details.",
+      "listening": "Listening… speak now",
+      "micStart": "Speak instead of typing",
+      "micStop": "Stop listening",
+      "micBlocked": "Microphone access is blocked. Allow it in the browser's site settings to use voice input.",
+      "micError": "Voice input didn't work. Try again, or type your message."
     },
     "spec": {
       "title": "Paper settings",

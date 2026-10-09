@@ -1,9 +1,10 @@
 "use client";
 
 import { Bot, Send, Sparkles, X } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
+import { MicButton } from "@/components/common/mic-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +16,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { TopicTreePicker } from "@/features/practice/components/topic-tree-picker";
 import type { LocalPaper } from "@/features/local/local-db";
 import { B_MAX, MC_DEFAULT, MC_MAX, PAPER_MINUTES, type PaperPreset, type PaperSpec } from "@/lib/schemas/paper";
+import { speechLang, useSpeechToText } from "@/lib/use-speech-to-text";
 import { cn } from "@/lib/utils";
 import { generatePaper, saveSpec, sendPlanMessage } from "../api/local-papers";
 import { buildPhysicsBlueprint } from "../lib/physics-blueprint";
@@ -22,6 +24,7 @@ import { buildPhysicsBlueprint } from "../lib/physics-blueprint";
 /** Setup: chat with the AI about the paper on the left; the spec it fills in (editable by hand) on the right. */
 export function PaperChat({ paper }: { paper: LocalPaper }) {
   const t = useTranslations("practice.paper");
+  const locale = useLocale();
   const [spec, setSpec] = useState<PaperSpec>(paper.spec);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
@@ -46,9 +49,16 @@ export function PaperChat({ paper }: { paper: LocalPaper }) {
     void saveSpec(paper.id, next);
   };
 
+  // Dictation adds each finished phrase to the box; the student checks it, then sends.
+  const speech = useSpeechToText({
+    lang: speechLang(locale),
+    onFinal: (said) => setText((cur) => (cur && said ? `${cur}${locale === "zh-HK" ? "" : " "}${said}` : cur || said)),
+  });
+
   const send = async () => {
     const msg = text.trim();
     if (!msg || sending) return;
+    speech.stop();
     setText("");
     setSending(true);
     try {
@@ -99,11 +109,28 @@ export function PaperChat({ paper }: { paper: LocalPaper }) {
               void send();
             }}
           >
-            <Input value={text} onChange={(e) => setText(e.target.value)} placeholder={t("chat.placeholder")} maxLength={2000} disabled={sending} />
+            <Input
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder={speech.listening ? t("chat.listening") : t("chat.placeholder")}
+              maxLength={2000}
+              disabled={sending}
+            />
+            {speech.supported && (
+              <MicButton
+                listening={speech.listening}
+                onStart={speech.start}
+                onStop={speech.stop}
+                disabled={sending}
+                labels={{ start: t("chat.micStart"), stop: t("chat.micStop") }}
+              />
+            )}
             <Button type="submit" size="icon" disabled={sending || !text.trim()} aria-label={t("chat.send")}>
               <Send className="size-4" />
             </Button>
           </form>
+          {speech.listening && speech.interim && <p className="text-muted-foreground -mt-1 text-xs italic">{speech.interim}…</p>}
+          {speech.error && <p className="text-destructive -mt-1 text-xs">{t(speech.error === "not-allowed" ? "chat.micBlocked" : "chat.micError")}</p>}
         </CardContent>
       </Card>
 
