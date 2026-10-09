@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MC_MAX, PAPER_MINUTES, type ChatMessage, type PaperSpec } from "@/lib/schemas/paper";
+import { B_MAX, MC_MAX, PAPER_MINUTES, type ChatMessage, type PaperSpec } from "@/lib/schemas/paper";
 import { PHYSICS_TOPICS } from "./physics-rules";
 
 /**
@@ -27,6 +27,7 @@ export const AiPaperPlanReplySchema = z.object({
     extension: z.boolean().describe("true = include extension [EXT] (starred *) content"),
     language: z.enum(["zh", "en"]).describe("Language of the questions"),
     mcCount: z.number().describe("Number of MC questions in Section A (default 33)"),
+    bCount: z.number().nullable().describe(`Number of structured questions in Section B (1–${B_MAX}); null = automatic (about 84 marks)`),
     durationMin: z.number().describe("Sitting time in minutes"),
     focus: z.array(z.string()).describe("Knowledge points the student wants stressed, short phrases"),
     notes: z.string().describe("Other instructions for every question (contexts, style); \"\" if none"),
@@ -47,7 +48,8 @@ Electives (Paper 2) are not offered.
 What to find out, ONE or TWO questions per message, skipping anything already answered or set in the spec:
 1. Which paper: full, 1A or 1B.
 2. Topics: whole syllabus, or only some topics / subtopics (use ids from the list; a topic id means all its subtopics).
-3. For full or 1A: how many MC questions (default 33 as in the real paper). Difficulty 1–5 (3 = typical DSE) and whether to include extension [EXT] (*) content.
+3. How many questions: for full or 1A the number of MC questions (mcCount, default 33 as in the real paper); for full or
+   1B the number of structured questions (bCount, null = automatic, about 9–10 questions / 84 marks). Difficulty 1–5 (3 = typical DSE) and whether to include extension [EXT] (*) content.
 4. Anything to stress (knowledge points → focus) or other wishes (contexts, style → notes).
 Then give a short summary of the paper and ask them to confirm. When they confirm (or say "go"/"generate"), set
 ready=true. If they change something later, set ready=false and confirm again.

@@ -283,7 +283,9 @@
       "focusPlaceholder": "例如：透鏡公式",
       "notes": "給每一題的指示",
       "notesPlaceholder": "例如：用香港的情境",
-      "mcCount": "多項選擇題數目"
+      "mcCount": "多項選擇題數目",
+      "bCount": "結構式題目數目",
+      "bCountAuto": "自動（約 84 分）"
     },
     "generating": {
       "title": "正在出卷：{done} / {total}",

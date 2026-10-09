@@ -38,6 +38,14 @@ assert.equal(new Set(short.map((s) => s.strand)).size, 5);
 assert.equal(buildPhysicsBlueprint(spec({ preset: "full", mcCount: 20 }), rand).filter((s) => s.section === "A").length, 20);
 assert.equal(buildPhysicsBlueprint({ ...spec({ preset: "1A" }), mcCount: undefined as unknown as number }, rand).length, 33, "old papers default to 33");
 
+// Structured-question count: shrink keeps nuclear last; grow repeats; null = automatic (~84 marks).
+const b4 = buildPhysicsBlueprint(spec({ preset: "1B", bCount: 4 }), rand);
+assert.equal(b4.length, 4);
+assert.equal(b4.at(-1)!.strand, "V");
+assert.equal(b4.filter((s) => s.kind === "experiment").length, 1);
+assert.equal(buildPhysicsBlueprint(spec({ preset: "1B", bCount: 12 }), rand).length, 12);
+assert.equal(buildPhysicsBlueprint(spec({ preset: "full", mcCount: 5, bCount: 2 }), rand).length, 7);
+
 // Presets.
 assert.equal(buildPhysicsBlueprint(spec({ preset: "1A" }), rand).filter((s) => s.section === "B").length, 0);
 assert.equal(buildPhysicsBlueprint(spec({ preset: "1B" }), rand).filter((s) => s.section === "A").length, 0);

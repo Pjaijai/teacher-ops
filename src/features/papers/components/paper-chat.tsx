@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { TopicTreePicker } from "@/features/practice/components/topic-tree-picker";
 import type { LocalPaper } from "@/features/local/local-db";
-import { MC_DEFAULT, MC_MAX, PAPER_MINUTES, type PaperPreset, type PaperSpec } from "@/lib/schemas/paper";
+import { B_MAX, MC_DEFAULT, MC_MAX, PAPER_MINUTES, type PaperPreset, type PaperSpec } from "@/lib/schemas/paper";
 import { cn } from "@/lib/utils";
 import { generatePaper, saveSpec, sendPlanMessage } from "../api/local-papers";
 import { buildPhysicsBlueprint } from "../lib/physics-blueprint";
@@ -143,6 +143,23 @@ export function PaperChat({ paper }: { paper: LocalPaper }) {
                 value={spec.mcCount ?? MC_DEFAULT}
                 onChange={(e) => edit({ mcCount: Math.min(MC_MAX, Math.max(1, Number(e.target.value) || 1)) })}
                 className="w-24"
+              />
+            </div>
+          )}
+          {spec.preset !== "1A" && (
+            <div className="grid gap-1.5">
+              <Label className="text-xs" htmlFor="paper-b">
+                {t("spec.bCount")}
+              </Label>
+              <Input
+                id="paper-b"
+                type="number"
+                min={1}
+                max={B_MAX}
+                value={spec.bCount ?? ""}
+                placeholder={t("spec.bCountAuto")}
+                onChange={(e) => edit({ bCount: e.target.value ? Math.min(B_MAX, Math.max(1, Number(e.target.value) || 1)) : null })}
+                className="w-40"
               />
             </div>
           )}

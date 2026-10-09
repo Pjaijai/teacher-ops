@@ -21,7 +21,7 @@ import {
 } from "@/server/ai/prompts/physics-solve";
 import { AiPaperPlanReplySchema, PAPER_TOPIC_IDS, physicsPaperPlanSystem, physicsPaperPlanUserPrompt } from "@/server/ai/prompts/physics-paper-plan";
 import type { QuestionContent } from "@/lib/schemas/question";
-import { MC_MAX, type ChatMessage, type PaperPlanReply, type PaperSpec } from "@/lib/schemas/paper";
+import { B_MAX, MC_MAX, type ChatMessage, type PaperPlanReply, type PaperSpec } from "@/lib/schemas/paper";
 import { registerGenerator } from "@/server/services/questions/generators";
 import type { NewQuestion } from "@/server/services/questions/question-bank";
 import { checkPhysicsFigure, checkPhysicsQuestion } from "./physics-check";
@@ -313,6 +313,7 @@ export async function planPhysicsPaper(opts: { messages: ChatMessage[]; spec: Pa
     extension: r.spec.extension,
     language: r.spec.language,
     mcCount: round(r.spec.mcCount, 1, MC_MAX, opts.spec.mcCount),
+    bCount: r.spec.bCount == null ? null : round(r.spec.bCount, 1, B_MAX, opts.spec.bCount ?? 9),
     durationMin: round(r.spec.durationMin, 5, 240, opts.spec.durationMin),
     focus: r.spec.focus.map((f) => f.trim().slice(0, 200)).filter(Boolean).slice(0, 12),
     notes: r.spec.notes.trim().slice(0, 500),

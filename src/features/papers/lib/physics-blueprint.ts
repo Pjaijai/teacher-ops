@@ -1,5 +1,5 @@
 import physicsTopics from "../../../../syllabus/physics.json";
-import { MC_DEFAULT, MC_MAX, type PaperSpec } from "@/lib/schemas/paper";
+import { B_MAX, MC_DEFAULT, MC_MAX, type PaperSpec } from "@/lib/schemas/paper";
 
 /**
  * The shape of a mock HKDSE Physics Paper 1, distilled from syllabus/physics-question-design.md §1, §2 and §5.
@@ -155,6 +155,15 @@ function sectionB(spec: PaperSpec, p: ReturnType<typeof pools>, rand: () => numb
   for (let i = 0; plan.reduce((s, t) => s + t.marks, 0) < B_TARGET_MARKS - 4 && i < 20; i++) {
     const extra = base[i % base.length];
     plan.push({ strand: extra.strand, marks: extra.marks });
+  }
+  // A chosen number of questions: repeat the plan to grow it, or keep an even spread (first and last kept) to shrink it.
+  const want = spec.bCount ? Math.min(B_MAX, Math.max(1, spec.bCount)) : null;
+  if (want && want > plan.length) {
+    for (let i = 0; plan.length < want; i++) plan.push({ strand: base[i % base.length].strand, marks: base[i % base.length].marks });
+  } else if (want && want < plan.length) {
+    const sorted = STRANDS.flatMap((s) => plan.filter((t) => t.strand === s));
+    const keep = new Set(Array.from({ length: want }, (_, i) => (want === 1 ? sorted.length - 1 : Math.round((i * (sorted.length - 1)) / (want - 1)))));
+    plan = sorted.filter((_, i) => keep.has(i));
   }
   plan = STRANDS.flatMap((s) => plan.filter((t) => t.strand === s));
   if (!plan.some((t) => t.style === "experiment")) plan[Math.min(2, plan.length - 1)] = { ...plan[Math.min(2, plan.length - 1)], style: "experiment" };
