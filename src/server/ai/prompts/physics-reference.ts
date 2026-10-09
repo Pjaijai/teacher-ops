@@ -6,7 +6,8 @@ import { PHYSICS_FIGURE_FORMATS, PHYSICS_FIGURE_RULES, PHYSICS_LATEX_RULES, pars
 
 /** Reference flow for Physics: read a photographed/typed physics question, then generate variants of it. */
 
-export const AiPhysicsUnderstandingSchema = UnderstandingSchema.omit({ figure: true, graph: true }).extend({
+// physicsFigure is a union (JSON-schema oneOf), which strict structured output rejects: it travels as figureJson instead.
+export const AiPhysicsUnderstandingSchema = UnderstandingSchema.omit({ figure: true, graph: true, physicsFigure: true }).extend({
   figureJson: z.string().describe('The reference figure as JSON in the PHYSICS FIGURE format, or "" if none / not supported'),
   graphJson: z.string().describe('A reference data/function graph as JSON in the GRAPH format, or ""'),
   figureDescription: z

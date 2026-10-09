@@ -39,6 +39,14 @@ export function topicsFor(subject?: Subject): TopicRow[] {
   return subject ? ALL.filter((t) => t.subject === subject) : ALL;
 }
 
+/** Subtopics (syllabus objectives, e.g. PHY-II-2.1) of a Physics topic; [] for other subjects. */
+export function subtopicsOf(topicId: string): { id: string; textEn: string }[] {
+  return (physicsTopics as { id: string; objectives?: { id: string; textEn: string }[] }[]).find((t) => t.id === topicId)?.objectives ?? [];
+}
+
+/** A subtopic id's topic, e.g. PHY-II-2.1 → PHY-II-2. */
+export const topicOfSubtopic = (id: string) => id.replace(/\.\d+$/, "");
+
 export function topicName(id: string, locale: string) {
   const t = ALL.find((x) => x.id === id);
   return t ? (locale === "en" ? t.nameEn : t.nameZh) : id;

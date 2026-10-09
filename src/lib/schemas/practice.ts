@@ -39,6 +39,8 @@ export const ReferenceGenerateSchema = z.object({
   kind: PracticeKindSchema,
   count: z.number().int().min(1).max(5),
   language: ExamLanguageSchema,
+  /** The student's own steer for the new questions, e.g. "make it harder" or "use a lift context". */
+  instructions: z.string().trim().max(500).optional(),
 });
 
 export const CreateAttemptSchema = z.object({ questionId: z.string().min(1) });

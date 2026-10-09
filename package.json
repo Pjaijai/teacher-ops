@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "test:handwriting": "tsx scripts/handwriting-test.mts",
     "test:checks": "tsx scripts/check-selftest.mts",
+    "test:paper": "tsx scripts/paper-selftest.mts",
     "render:pdf": "tsx scripts/render-pdf.mts",
     "corpus:build": "tsx scripts/build-corpus.mts",
     "test:scoring": "tsx scripts/scoring-test.mts",

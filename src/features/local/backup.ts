@@ -2,7 +2,7 @@
 
 import { localDb } from "./local-db";
 
-const STORES = ["questions", "submissions", "attempts", "helpers", "stats", "tags", "kv"] as const;
+const STORES = ["questions", "submissions", "attempts", "helpers", "stats", "tags", "papers", "kv"] as const;
 
 /** A JSON backup of everything on this device (photos are left out to keep the file small). */
 export async function exportBackup() {

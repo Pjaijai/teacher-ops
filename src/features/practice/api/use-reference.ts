@@ -31,6 +31,8 @@ export function useReferenceGenerate() {
       kind: PracticeKind;
       count: number;
       language: "zh" | "en";
+      /** The student's own steer for the new questions. */
+      instructions?: string;
     }) =>
       isLocalMode
         ? localReferenceGenerate(body, () => void qc.invalidateQueries({ queryKey: ["bank"] }))

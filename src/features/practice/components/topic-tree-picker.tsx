@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Subject } from "@/lib/subjects";
+import { subtopicsOf, topicOfSubtopic } from "@/lib/topic-tree";
 import { cn } from "@/lib/utils";
 import { useTopics, type TopicRow } from "../api/use-practice-question";
 import { PRACTISABLE, STRAND_KEYS, strandOf } from "../lib/units";
@@ -31,7 +32,11 @@ function groupOf(row: TopicRow, byId: Map<string, TopicRow>, locale: string): { 
   return { key: "", label: "" };
 }
 
-/** Learning Units (or topics) grouped by strand; pick up to `max`. Foundation status shown as a badge. */
+/**
+ * Learning Units (or topics) grouped by strand; pick up to `max`. Foundation status shown as a badge.
+ * Physics topics also offer their subtopics (syllabus objectives): `value` then holds the subtopic ids too,
+ * and a topic with subtopics picked is narrowed to them.
+ */
 export function TopicTreePicker({
   subject,
   value,
@@ -65,10 +70,14 @@ export function TopicTreePicker({
     group.items.push(u);
   }
 
+  const picked = value.filter((v) => topicOfSubtopic(v) === v);
   const toggle = (id: string) => {
-    if (value.includes(id)) onChange(value.filter((v) => v !== id));
-    else onChange(value.length >= max ? [...value.slice(1), id] : [...value, id]);
+    if (picked.includes(id)) onChange(value.filter((v) => topicOfSubtopic(v) !== id));
+    else if (picked.length < max) onChange([...value, id]);
+    else onChange([...value.filter((v) => topicOfSubtopic(v) !== picked[0]), id]);
   };
+  const toggleSub = (id: string) => onChange(value.includes(id) ? value.filter((v) => v !== id) : [...value, id]);
+  const withSubtopics = picked.map((id) => ({ topic: byId.get(id), subs: subtopicsOf(id) })).filter((x) => x.topic && x.subs.length > 1);
 
   return (
     <div className="grid gap-4">
@@ -113,6 +122,40 @@ export function TopicTreePicker({
           </section>
         );
       })}
+      {withSubtopics.length > 0 && (
+        <section className="bg-muted/40 grid gap-3 rounded-md border p-3">
+          <p className="text-muted-foreground text-xs">{t("subtopicsHint")}</p>
+          {withSubtopics.map(({ topic, subs }) => (
+            <div key={topic!.id} className="grid gap-1.5">
+              <h3 className="text-xs font-semibold">
+                <span className="text-muted-foreground mr-1.5 font-mono">{topic!.id}</span>
+                {topicName(topic!, locale)}
+              </h3>
+              <div className="flex flex-wrap gap-1.5">
+                {subs.map((s) => {
+                  const on = value.includes(s.id);
+                  return (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => toggleSub(s.id)}
+                      aria-pressed={on}
+                      title={s.textEn}
+                      className={cn(
+                        "hover:bg-muted max-w-full rounded-md border px-2 py-1 text-left text-xs transition-colors",
+                        on && "border-primary bg-primary/5",
+                      )}
+                    >
+                      <span className="text-muted-foreground mr-1 font-mono">{s.id.slice(topic!.id.length)}</span>
+                      {s.textEn.split(/[:;]/)[0]}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </section>
+      )}
     </div>
   );
 }

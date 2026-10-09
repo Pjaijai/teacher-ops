@@ -16,7 +16,9 @@ export async function nextQuestion(db: Db, userId: string, input: NextQuestionIn
   // Writing tasks follow the subject's language; maths follows the exam language.
   const language = input.language ?? (input.subject === "chi_writing" ? "zh" : input.subject === "eng_writing" ? "en" : profile.examLanguage);
 
-  if (!input.forceNew) {
+  // Bank questions are tagged by topic only, so subtopic ids (e.g. PHY-II-2.1) or own instructions mean a new question.
+  const custom = !!input.instructions || !!input.knowledgePoint || input.topicIds.some((t) => /\.\d+$/.test(t));
+  if (!input.forceNew && !custom) {
     const w = [
       eq(questions.status, "active"),
       isNull(questions.ownerId),

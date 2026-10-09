@@ -12,7 +12,16 @@ import {
 import { AiPhysicsUnderstandingSchema, physicsUnderstandingFromAi, physicsUnderstandSystem, type PhysicsUnderstanding } from "@/server/ai/prompts/physics-reference";
 import { understandUserPrompt } from "@/server/ai/prompts/math-reference";
 import { PHYSICS_TOPIC_IDS } from "@/server/ai/prompts/physics-rules";
-import { AiSolvedPhysicsQuestionSchema, physicsSolveRepairPrompt, physicsSolveSystem, physicsSolveUserPrompt } from "@/server/ai/prompts/physics-solve";
+import {
+  AiSolvedPhysicsQuestionSchema,
+  physicsAnswerEditedPrompt,
+  physicsSolveRepairPrompt,
+  physicsSolveSystem,
+  physicsSolveUserPrompt,
+} from "@/server/ai/prompts/physics-solve";
+import { AiPaperPlanReplySchema, PAPER_TOPIC_IDS, physicsPaperPlanSystem, physicsPaperPlanUserPrompt } from "@/server/ai/prompts/physics-paper-plan";
+import type { QuestionContent } from "@/lib/schemas/question";
+import { B_MAX, MC_MAX, type ChatMessage, type PaperPlanReply, type PaperSpec } from "@/lib/schemas/paper";
 import { registerGenerator } from "@/server/services/questions/generators";
 import type { NewQuestion } from "@/server/services/questions/question-bank";
 import { checkPhysicsFigure, checkPhysicsQuestion } from "./physics-check";
@@ -30,6 +39,10 @@ export type PhysicsGenerateRequest = {
   language: "zh" | "en";
   /** Extra instructions, e.g. the reference question and variation level. */
   extra?: string;
+  /** The student's own steer, typed in the generate panel. */
+  instructions?: string;
+  /** A specific knowledge point to test, typed by the student. */
+  knowledgePoint?: string;
 };
 
 export type PhysicsDraft = { question: GeneratedPhysicsQuestion; parseProblems: string[] };
@@ -140,6 +153,8 @@ registerGenerator(["physics"], async ({ input, step, onUsage }) => {
     difficulty: input.difficulty ?? 3,
     extension: input.extension ?? false,
     language: input.language,
+    instructions: input.instructions,
+    knowledgePoint: input.knowledgePoint,
   };
   const { question, problems } = await generateCheckedPhysicsQuestion(req, onUsage, step);
   return toNewPhysicsQuestion(req, question, problems);
@@ -209,4 +224,99 @@ export async function solvePhysicsQuestion(opts: {
     }
   }
   return { question, kind, language: raw.language, problems, note: raw.problemNote };
+}
+
+// --- Exam paper mode ----------------------------------------------------------------------
+
+/** Re-answer an edited question: the top model redoes the answer side; code keeps the question side as edited. */
+export async function answerPhysicsQuestion(opts: {
+  question: { title: string; kind: string; topicIds: string[]; content: QuestionContent };
+  onUsage?: UsageSink;
+  step?: <T>(name: string, fn: () => Promise<T>) => Promise<T>;
+}) {
+  const step = opts.step ?? ((_n, fn) => fn());
+  const kind = toPhysicsKind(opts.question.kind);
+  const original = opts.question.content;
+  // The question side stays exactly as the student edited it, whatever the model returns.
+  const keep = (d: PhysicsDraft): PhysicsDraft => {
+    const content: QuestionContent = {
+      ...d.question.content,
+      stem: original.stem,
+      options: original.options,
+      physicsFigure: original.physicsFigure ?? null,
+      graph: original.graph,
+      figure: null,
+      materials: null,
+      writing: null,
+    };
+    if (kind !== "mc") Object.assign(content, { options: [], correctOption: null, distractorNotes: [] });
+    const topicIds = cleanTopicIds(d.question.topicIds);
+    return { ...d, question: { ...d.question, topicIds: topicIds.length ? topicIds : cleanTopicIds(opts.question.topicIds), content } };
+  };
+  const edited: GeneratedPhysicsQuestion = { title: opts.question.title, archetype: "", topicIds: opts.question.topicIds, content: original, variableUnits: {} };
+
+  const first = keep(
+    fromAi(
+      await step("solve", () =>
+        askStructured({
+          purpose: "physics_answer_edited",
+          tier: "top",
+          system: physicsSolveSystem(),
+          text: physicsAnswerEditedPrompt(edited, kind),
+          schema: AiGeneratedPhysicsQuestionSchema,
+          onUsage: opts.onUsage,
+        }),
+      ),
+    ),
+  );
+  let question = first.question;
+  let problems = await step("check", async () => checkPhysicsDraft(first, kind));
+  if (problems.length > 0) {
+    const repaired = keep(
+      fromAi(
+        await step("repair", () =>
+          askStructured({
+            purpose: "physics_answer_repair",
+            tier: "top",
+            system: physicsSolveSystem(),
+            text: physicsSolveRepairPrompt(question, problems),
+            schema: AiGeneratedPhysicsQuestionSchema,
+            onUsage: opts.onUsage,
+          }),
+        ),
+      ),
+    );
+    const after = checkPhysicsDraft(repaired, kind);
+    if (after.length <= problems.length) {
+      question = repaired.question;
+      problems = after;
+    }
+  }
+  return { question, problems };
+}
+
+/** One turn of the paper setup chat. Code keeps the spec in range whatever the model returns. */
+export async function planPhysicsPaper(opts: { messages: ChatMessage[]; spec: PaperSpec; onUsage?: UsageSink }): Promise<PaperPlanReply> {
+  const r = await askStructured({
+    purpose: "physics_paper_plan",
+    tier: "light",
+    system: physicsPaperPlanSystem(),
+    text: physicsPaperPlanUserPrompt(opts.messages, opts.spec),
+    schema: AiPaperPlanReplySchema,
+    onUsage: opts.onUsage,
+  });
+  const round = (n: number, lo: number, hi: number, fallback: number) => (Number.isFinite(n) ? Math.min(hi, Math.max(lo, Math.round(n))) : fallback);
+  const spec: PaperSpec = {
+    preset: r.spec.preset,
+    topicIds: [...new Set(r.spec.topicIds.map((t) => t.trim()))].filter((t) => PAPER_TOPIC_IDS.has(t)).slice(0, 40),
+    difficulty: round(r.spec.difficulty, 1, 5, opts.spec.difficulty),
+    extension: r.spec.extension,
+    language: r.spec.language,
+    mcCount: round(r.spec.mcCount, 1, MC_MAX, opts.spec.mcCount),
+    bCount: r.spec.bCount == null ? null : round(r.spec.bCount, 1, B_MAX, opts.spec.bCount ?? 9),
+    durationMin: round(r.spec.durationMin, 5, 240, opts.spec.durationMin),
+    focus: r.spec.focus.map((f) => f.trim().slice(0, 200)).filter(Boolean).slice(0, 12),
+    notes: r.spec.notes.trim().slice(0, 500),
+  };
+  return { reply: r.reply.trim(), spec, ready: r.ready };
 }

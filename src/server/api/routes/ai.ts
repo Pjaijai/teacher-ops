@@ -3,6 +3,8 @@ import { Hono } from "hono";
 import { stripMarkers, textLength } from "@/features/writing/lib/text-markers";
 import {
   AiGenerateSchema,
+  AiPhysicsAnswerSchema,
+  AiSpeechSchema,
   AiPracticeMarkSchema,
   AiPracticeTranscribeSchema,
   AiPracticeSolveSchema,
@@ -13,9 +15,14 @@ import {
   AiWritingTranscribeSchema,
   type QuestionLite,
 } from "@/lib/schemas/ai";
+import { AiPaperPlanSchema } from "@/lib/schemas/paper";
 import { ReferenceGenerateSchema } from "@/lib/schemas/practice";
-import { askStructured, type UsageSink } from "@/server/ai/open-router";
+import { streamSSE } from "hono/streaming";
+import { audioModel } from "@/server/ai/models";
+import { askStructured, streamTranscript, type UsageSink } from "@/server/ai/open-router";
+import { transcribeSpeechSystem } from "@/server/ai/prompts/transcribe-speech";
 import { referenceExtra, type VariationLevel } from "@/server/ai/prompts/math-reference";
+import { studentRequestBlock } from "@/server/ai/prompts/physics-generate";
 import { physicsReferenceExtra } from "@/server/ai/prompts/physics-reference";
 import { HELPER_SCHEMAS, helperSystem } from "@/server/ai/prompts/writing-helpers";
 import { writingTaskBlock } from "@/server/ai/prompts/writing-task";
@@ -28,6 +35,8 @@ import {
   understandPhysicsReference,
   type PhysicsGenerateRequest,
   solvePhysicsQuestion,
+  answerPhysicsQuestion,
+  planPhysicsPaper,
 } from "@/server/services/practice/generate-physics-question";
 import { markMathAnswer } from "@/server/services/practice/mark-answer";
 import { understandReference } from "@/server/services/practice/reference-understand";
@@ -190,6 +199,7 @@ export const aiRoutes = new Hono<AppEnv>()
             extension: true,
             language: input.language,
             extra: physicsReferenceExtra(u, input.variation as VariationLevel, i, titles),
+            instructions: input.instructions,
           };
           try {
             const { question, problems } = await generateCheckedPhysicsQuestion(preq, noUsage, step);
@@ -207,7 +217,7 @@ export const aiRoutes = new Hono<AppEnv>()
           difficulty: 3,
           extension: true,
           language: input.language,
-          extra: referenceExtra(u, input.variation as VariationLevel, i, titles),
+          extra: `${referenceExtra(u, input.variation as VariationLevel, i, titles)}\n${studentRequestBlock(input.instructions)}`,
         };
         try {
           const draft = await step("generate", () => draftMathQuestion(req, noUsage));
@@ -247,6 +257,35 @@ export const aiRoutes = new Hono<AppEnv>()
         checkProblems: r.problems,
       });
       return { question, note: r.note };
+    });
+  })
+  // --- Voice input: one phrase of speech → transcript, streamed as `delta {text}` events, then `done` or `failed`
+  .post("/speech/transcribe", zValidator("json", AiSpeechSchema), (c) => {
+    const { audio, hint } = c.req.valid("json");
+    return streamSSE(c, async (stream) => {
+      try {
+        for await (const text of streamTranscript({ purpose: "speech_transcribe", model: audioModel(), system: transcribeSpeechSystem(), audioWavBase64: audio, hint })) {
+          await stream.writeSSE({ event: "delta", data: JSON.stringify({ text }) });
+        }
+        await stream.writeSSE({ event: "done", data: "{}" });
+      } catch (e) {
+        console.error("speech transcribe failed:", e);
+        await stream.writeSSE({ event: "failed", data: JSON.stringify({ error: e instanceof Error ? e.message : String(e) }) });
+      }
+    });
+  })
+
+  // --- Physics exam paper mode
+  .post("/papers/plan", zValidator("json", AiPaperPlanSchema), async (c) => {
+    const { messages, spec } = c.req.valid("json");
+    return c.json(await planPhysicsPaper({ messages, spec, onUsage: noUsage }));
+  })
+  .post("/physics/answer", zValidator("json", AiPhysicsAnswerSchema), (c) => {
+    const { question } = c.req.valid("json");
+    if (question.subject !== "physics") throw invalid("Only Physics questions can be re-answered here.");
+    return streamWork(c, async (step) => {
+      const r = await answerPhysicsQuestion({ question, onUsage: noUsage, step });
+      return { question: { ...question, title: r.question.title.trim().slice(0, 200) || question.title, topicIds: r.question.topicIds, content: r.question.content, checkProblems: r.problems } };
     });
   })
   .post("/practice/transcribe", zValidator("json", AiPracticeTranscribeSchema), (c) => {
