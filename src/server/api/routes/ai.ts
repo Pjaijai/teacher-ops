@@ -18,6 +18,7 @@ import { AiPaperPlanSchema } from "@/lib/schemas/paper";
 import { ReferenceGenerateSchema } from "@/lib/schemas/practice";
 import { askStructured, type UsageSink } from "@/server/ai/open-router";
 import { referenceExtra, type VariationLevel } from "@/server/ai/prompts/math-reference";
+import { studentRequestBlock } from "@/server/ai/prompts/physics-generate";
 import { physicsReferenceExtra } from "@/server/ai/prompts/physics-reference";
 import { HELPER_SCHEMAS, helperSystem } from "@/server/ai/prompts/writing-helpers";
 import { writingTaskBlock } from "@/server/ai/prompts/writing-task";
@@ -194,6 +195,7 @@ export const aiRoutes = new Hono<AppEnv>()
             extension: true,
             language: input.language,
             extra: physicsReferenceExtra(u, input.variation as VariationLevel, i, titles),
+            instructions: input.instructions,
           };
           try {
             const { question, problems } = await generateCheckedPhysicsQuestion(preq, noUsage, step);
@@ -211,7 +213,7 @@ export const aiRoutes = new Hono<AppEnv>()
           difficulty: 3,
           extension: true,
           language: input.language,
-          extra: referenceExtra(u, input.variation as VariationLevel, i, titles),
+          extra: `${referenceExtra(u, input.variation as VariationLevel, i, titles)}\n${studentRequestBlock(input.instructions)}`,
         };
         try {
           const draft = await step("generate", () => draftMathQuestion(req, noUsage));

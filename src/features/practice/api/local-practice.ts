@@ -353,7 +353,7 @@ export async function localReferenceUnderstand({ subject, files, text }: { subje
 }
 
 export async function localReferenceGenerate(
-  body: { subject: Subject; understanding: Understanding; variation: 1 | 2 | 3; kind: PracticeKind; count: number; language: "zh" | "en" },
+  body: { subject: Subject; understanding: Understanding; variation: 1 | 2 | 3; kind: PracticeKind; count: number; language: "zh" | "en"; instructions?: string },
   onSettled: () => void,
 ) {
   const jobId = startAiJob<{ questions: GeneratedQuestion[]; failed: number }>({

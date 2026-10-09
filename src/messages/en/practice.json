@@ -41,12 +41,10 @@
     "bankFirst": "Free when served from the bank.",
     "tabs": {
       "topic": "By topic",
-      "type": "By type",
-      "reference": "From a reference",
+      "reference": "New questions from a reference",
       "solve": "Solve my question",
       "paper": "Exam paper"
     },
-    "typeHint": "Any topic: choose the question type and difficulty.",
     "descriptionLocal": "We write a new DSE-style question for you, checked by code. It's saved in this browser.",
     "localNote": "Questions are saved on this device.",
     "instructions": "Instructions (optional)",
@@ -100,7 +98,9 @@
     "typePlaceholders": {
       "math_m1": "e.g. Let f(x) = x e^(1/(x−2)). (a) Find f′(x). (b) Someone claims the curve y = f(x) has only one horizontal tangent. Do you agree? Explain.",
       "math_m2": "e.g. Let f(x) = 1/(3x² + 4). Find f′(x) from first principles."
-    }
+    },
+    "instructions": "Instructions (optional)",
+    "instructionsPlaceholder": "e.g. make it harder; use a lift context; ask for a graph"
   },
   "question": {
     "back": "Practice",

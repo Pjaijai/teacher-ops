@@ -41,12 +41,10 @@
     "bankFirst": "從題庫提供的題目免費。",
     "tabs": {
       "topic": "按課題",
-      "type": "按題型",
-      "reference": "參考題目",
+      "reference": "參考題目出新題",
       "solve": "解答我的題目",
       "paper": "模擬試卷"
     },
-    "typeHint": "不限課題：選擇題型和難度。",
     "descriptionLocal": "我們會為你出一道新的 DSE 模擬題，並以程式核對答案。題目會儲存在這個瀏覽器。",
     "localNote": "題目儲存在這部裝置上。",
     "instructions": "出題指示（可選）",
@@ -100,7 +98,9 @@
     "typePlaceholders": {
       "math_m1": "例：設 f(x) = x e^(1/(x−2))。(a) 求 f′(x)。(b) 有人聲稱曲線 y = f(x) 只有一條水平切線。你同意嗎？試解釋你的答案。",
       "math_m2": "例：設 f(x) = 1/(3x² + 4)。由首原理求 f′(x)。"
-    }
+    },
+    "instructions": "出題指示（可選）",
+    "instructionsPlaceholder": "例如：難一點；用升降機情境；要求畫線圖"
   },
   "question": {
     "back": "練習",

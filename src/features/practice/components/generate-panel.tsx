@@ -158,7 +158,6 @@ export function GeneratePanel({
         <Tabs value={tab} onValueChange={setTab}>
           <TabsList className="mb-4 flex-wrap">
             <TabsTrigger value="topic">{t("tabs.topic")}</TabsTrigger>
-            <TabsTrigger value="type">{t("tabs.type")}</TabsTrigger>
             <TabsTrigger value="reference">{t("tabs.reference")}</TabsTrigger>
             {canSolve && (
               <TabsTrigger value="solve">{t("tabs.solve")}</TabsTrigger>
@@ -171,16 +170,6 @@ export function GeneratePanel({
               value={topicIds}
               onChange={setTopicIds}
             />
-            <QuestionOptions
-              subject={subject}
-              value={opts}
-              onChange={setOpts}
-            />
-            {steer}
-            {action}
-          </TabsContent>
-          <TabsContent value="type" className="grid gap-5">
-            <p className="text-muted-foreground text-sm">{t("typeHint")}</p>
             <QuestionOptions
               subject={subject}
               value={opts}
