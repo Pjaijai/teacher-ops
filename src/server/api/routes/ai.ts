@@ -4,6 +4,7 @@ import { stripMarkers, textLength } from "@/features/writing/lib/text-markers";
 import {
   AiGenerateSchema,
   AiPhysicsAnswerSchema,
+  AiSpeechSchema,
   AiPracticeMarkSchema,
   AiPracticeTranscribeSchema,
   AiPracticeSolveSchema,
@@ -16,7 +17,10 @@ import {
 } from "@/lib/schemas/ai";
 import { AiPaperPlanSchema } from "@/lib/schemas/paper";
 import { ReferenceGenerateSchema } from "@/lib/schemas/practice";
-import { askStructured, type UsageSink } from "@/server/ai/open-router";
+import { streamSSE } from "hono/streaming";
+import { audioModel } from "@/server/ai/models";
+import { askStructured, streamTranscript, type UsageSink } from "@/server/ai/open-router";
+import { transcribeSpeechSystem } from "@/server/ai/prompts/transcribe-speech";
 import { referenceExtra, type VariationLevel } from "@/server/ai/prompts/math-reference";
 import { studentRequestBlock } from "@/server/ai/prompts/physics-generate";
 import { physicsReferenceExtra } from "@/server/ai/prompts/physics-reference";
@@ -255,6 +259,22 @@ export const aiRoutes = new Hono<AppEnv>()
       return { question, note: r.note };
     });
   })
+  // --- Voice input: one phrase of speech → transcript, streamed as `delta {text}` events, then `done` or `failed`
+  .post("/speech/transcribe", zValidator("json", AiSpeechSchema), (c) => {
+    const { audio, hint } = c.req.valid("json");
+    return streamSSE(c, async (stream) => {
+      try {
+        for await (const text of streamTranscript({ purpose: "speech_transcribe", model: audioModel(), system: transcribeSpeechSystem(), audioWavBase64: audio, hint })) {
+          await stream.writeSSE({ event: "delta", data: JSON.stringify({ text }) });
+        }
+        await stream.writeSSE({ event: "done", data: "{}" });
+      } catch (e) {
+        console.error("speech transcribe failed:", e);
+        await stream.writeSSE({ event: "failed", data: JSON.stringify({ error: e instanceof Error ? e.message : String(e) }) });
+      }
+    });
+  })
+
   // --- Physics exam paper mode
   .post("/papers/plan", zValidator("json", AiPaperPlanSchema), async (c) => {
     const { messages, spec } = c.req.valid("json");

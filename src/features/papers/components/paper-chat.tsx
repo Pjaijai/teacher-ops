@@ -1,7 +1,7 @@
 "use client";
 
 import { Bot, Send, Sparkles, X } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { MicButton } from "@/components/common/mic-button";
@@ -16,7 +16,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { TopicTreePicker } from "@/features/practice/components/topic-tree-picker";
 import type { LocalPaper } from "@/features/local/local-db";
 import { B_MAX, MC_DEFAULT, MC_MAX, PAPER_MINUTES, type PaperPreset, type PaperSpec } from "@/lib/schemas/paper";
-import { speechLang, useSpeechToText } from "@/lib/use-speech-to-text";
+import { useAiDictation } from "@/lib/use-ai-dictation";
 import { cn } from "@/lib/utils";
 import { generatePaper, saveSpec, sendPlanMessage } from "../api/local-papers";
 import { buildPhysicsBlueprint } from "../lib/physics-blueprint";
@@ -24,7 +24,6 @@ import { buildPhysicsBlueprint } from "../lib/physics-blueprint";
 /** Setup: chat with the AI about the paper on the left; the spec it fills in (editable by hand) on the right. */
 export function PaperChat({ paper }: { paper: LocalPaper }) {
   const t = useTranslations("practice.paper");
-  const locale = useLocale();
   const [spec, setSpec] = useState<PaperSpec>(paper.spec);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
@@ -49,10 +48,11 @@ export function PaperChat({ paper }: { paper: LocalPaper }) {
     void saveSpec(paper.id, next);
   };
 
-  // Dictation adds each finished phrase to the box; the student checks it, then sends.
-  const speech = useSpeechToText({
-    lang: speechLang(locale),
-    onFinal: (said) => setText((cur) => (cur && said ? `${cur}${locale === "zh-HK" ? "" : " "}${said}` : cur || said)),
+  // Voice input: AI speech-to-text streams each phrase into the box; the student checks it, then sends.
+  const speech = useAiDictation({
+    hint: "The student is setting up a mock HKDSE Physics exam paper in a chat.",
+    onText: (chunk, startsPhrase) =>
+      setText((cur) => (startsPhrase && cur && !/\s$/.test(cur) && /^[A-Za-z0-9]/.test(chunk) ? `${cur} ${chunk}` : cur + chunk)),
   });
 
   const send = async () => {
@@ -112,13 +112,15 @@ export function PaperChat({ paper }: { paper: LocalPaper }) {
             <Input
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder={speech.listening ? t("chat.listening") : t("chat.placeholder")}
+              placeholder={speech.listening ? t("chat.listening") : speech.transcribing ? t("chat.transcribing") : t("chat.placeholder")}
               maxLength={2000}
               disabled={sending}
             />
             {speech.supported && (
               <MicButton
                 listening={speech.listening}
+                transcribing={speech.transcribing}
+                level={speech.level}
                 onStart={speech.start}
                 onStop={speech.stop}
                 disabled={sending}
@@ -129,8 +131,17 @@ export function PaperChat({ paper }: { paper: LocalPaper }) {
               <Send className="size-4" />
             </Button>
           </form>
-          {speech.listening && speech.interim && <p className="text-muted-foreground -mt-1 text-xs italic">{speech.interim}…</p>}
-          {speech.error && <p className="text-destructive -mt-1 text-xs">{t(speech.error === "not-allowed" ? "chat.micBlocked" : "chat.micError")}</p>}
+          {(speech.listening || speech.transcribing) && (
+            <p className="-mt-1 flex items-center gap-1.5 text-xs text-green-700 dark:text-green-500">
+              <span className="size-1.5 animate-pulse rounded-full bg-green-600" />
+              {speech.listening ? t("chat.listening") : t("chat.transcribing")}
+            </p>
+          )}
+          {speech.error && (
+            <p className="text-destructive -mt-1 text-xs">
+              {t(speech.error === "not-allowed" ? "chat.micBlocked" : speech.error === "no-mic" ? "chat.noMic" : "chat.micError")}
+            </p>
+          )}
         </CardContent>
       </Card>
 

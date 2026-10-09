@@ -103,3 +103,55 @@ export async function askStructured<S extends z.ZodType>(opts: {
   }
   return parsed.data;
 }
+
+/**
+ * Speech to text, streamed: one audio clip in, the transcript out as it is written (async iterator of text deltas).
+ * Reasoning is kept minimal so the first words arrive in about a second.
+ */
+export async function* streamTranscript(opts: { purpose: string; model: string; system: string; audioWavBase64: string; hint?: string }) {
+  const apiKey = requireSetting("OPENROUTER_API_KEY");
+  const res = await fetch(OPENROUTER_URL, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json", "X-Title": "HKDSE Practice" },
+    body: JSON.stringify({
+      model: opts.model,
+      stream: true,
+      max_tokens: 2000,
+      reasoning: { effort: "minimal" },
+      messages: [
+        { role: "system", content: opts.system },
+        {
+          role: "user",
+          content: [
+            ...(opts.hint ? [{ type: "text", text: opts.hint }] : []),
+            { type: "input_audio", input_audio: { data: opts.audioWavBase64, format: "wav" } },
+          ],
+        },
+      ],
+    }),
+  });
+  if (!res.ok || !res.body) {
+    const body = await res.json().catch(() => null);
+    if (res.status === 402) throw new AiError("The AI service is out of credits. Please try again later.", 503);
+    if (res.status === 429) throw new AiError("The AI service is busy. Please try again in a moment.", 503);
+    throw new AiError(`AI service error ${res.status}: ${body?.error?.message ?? res.statusText}`);
+  }
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    let i: number;
+    while ((i = buffer.indexOf("\n")) >= 0) {
+      const line = buffer.slice(0, i).trim();
+      buffer = buffer.slice(i + 1);
+      if (!line.startsWith("data:") || line === "data: [DONE]") continue;
+      const data = JSON.parse(line.slice(5)) as { error?: { message?: string }; choices?: { delta?: { content?: string } }[] };
+      if (data.error) throw new AiError(`AI service error: ${data.error.message ?? "stream failed"}`);
+      const text = data.choices?.[0]?.delta?.content;
+      if (text) yield text;
+    }
+  }
+}
