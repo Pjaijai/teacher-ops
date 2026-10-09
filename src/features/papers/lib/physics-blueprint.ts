@@ -1,5 +1,5 @@
 import physicsTopics from "../../../../syllabus/physics.json";
-import type { PaperPreset, PaperSpec } from "@/lib/schemas/paper";
+import { MC_DEFAULT, MC_MAX, type PaperSpec } from "@/lib/schemas/paper";
 
 /**
  * The shape of a mock HKDSE Physics Paper 1, distilled from syllabus/physics-question-design.md §1, §2 and §5.
@@ -114,7 +114,9 @@ function common(spec: PaperSpec, section: "A" | "B", n: number) {
 
 function sectionA(spec: PaperSpec, p: ReturnType<typeof pools>, rand: () => number): PaperSlot[] {
   const active = STRANDS.filter((s) => (p.get(s)?.other.length ?? 0) + (p.get(s)?.gases.length ?? 0) > 0);
-  const counts = share(33, active.map((s) => [s, MC_COUNTS[s]]));
+  // Papers saved before mcCount existed have no value: use the real paper's 33.
+  const total = Math.min(MC_MAX, Math.max(1, spec.mcCount ?? MC_DEFAULT));
+  const counts = share(total, active.map((s) => [s, MC_COUNTS[s]]));
   const slots: PaperSlot[] = [];
   for (const strand of active) {
     const k = counts.get(strand) ?? 0;

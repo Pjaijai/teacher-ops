@@ -282,7 +282,8 @@
       "focus": "要加強的知識點（每行一個）",
       "focusPlaceholder": "例如：透鏡公式",
       "notes": "給每一題的指示",
-      "notesPlaceholder": "例如：用香港的情境"
+      "notesPlaceholder": "例如：用香港的情境",
+      "mcCount": "多項選擇題數目"
     },
     "generating": {
       "title": "正在出卷：{done} / {total}",

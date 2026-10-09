@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PAPER_MINUTES, type ChatMessage, type PaperSpec } from "@/lib/schemas/paper";
+import { MC_MAX, PAPER_MINUTES, type ChatMessage, type PaperSpec } from "@/lib/schemas/paper";
 import { PHYSICS_TOPICS } from "./physics-rules";
 
 /**
@@ -26,6 +26,7 @@ export const AiPaperPlanReplySchema = z.object({
     difficulty: z.number().describe("1–5, the paper's average"),
     extension: z.boolean().describe("true = include extension [EXT] (starred *) content"),
     language: z.enum(["zh", "en"]).describe("Language of the questions"),
+    mcCount: z.number().describe("Number of MC questions in Section A (default 33)"),
     durationMin: z.number().describe("Sitting time in minutes"),
     focus: z.array(z.string()).describe("Knowledge points the student wants stressed, short phrases"),
     notes: z.string().describe("Other instructions for every question (contexts, style); \"\" if none"),
@@ -38,15 +39,15 @@ export function physicsPaperPlanSystem() {
 keep the paper spec up to date. You do not write questions here.
 
 Paper types (preset):
-- "full": Paper 1 — Section A (1A) 33 multiple choice + Section B (1B) about 9–10 structured questions, ~84 marks. ${PAPER_MINUTES.full} min.
-- "1A": Section A only — 33 MC. ${PAPER_MINUTES["1A"]} min.
+- "full": Paper 1 — Section A (1A) 33 multiple choice (mcCount; the student may ask for fewer or more, 1–${MC_MAX}) + Section B (1B) about 9–10 structured questions, ~84 marks. ${PAPER_MINUTES.full} min.
+- "1A": Section A only — 33 MC by default (mcCount). ${PAPER_MINUTES["1A"]} min.
 - "1B": Section B only — structured questions, ~84 marks. ${PAPER_MINUTES["1B"]} min.
 Electives (Paper 2) are not offered.
 
 What to find out, ONE or TWO questions per message, skipping anything already answered or set in the spec:
 1. Which paper: full, 1A or 1B.
 2. Topics: whole syllabus, or only some topics / subtopics (use ids from the list; a topic id means all its subtopics).
-3. Difficulty 1–5 (3 = typical DSE) and whether to include extension [EXT] (*) content.
+3. For full or 1A: how many MC questions (default 33 as in the real paper). Difficulty 1–5 (3 = typical DSE) and whether to include extension [EXT] (*) content.
 4. Anything to stress (knowledge points → focus) or other wishes (contexts, style → notes).
 Then give a short summary of the paper and ask them to confirm. When they confirm (or say "go"/"generate"), set
 ready=true. If they change something later, set ready=false and confirm again.

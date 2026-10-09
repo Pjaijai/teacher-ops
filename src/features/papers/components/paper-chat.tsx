@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { TopicTreePicker } from "@/features/practice/components/topic-tree-picker";
 import type { LocalPaper } from "@/features/local/local-db";
-import { PAPER_MINUTES, type PaperPreset, type PaperSpec } from "@/lib/schemas/paper";
+import { MC_DEFAULT, MC_MAX, PAPER_MINUTES, type PaperPreset, type PaperSpec } from "@/lib/schemas/paper";
 import { cn } from "@/lib/utils";
 import { generatePaper, saveSpec, sendPlanMessage } from "../api/local-papers";
 import { buildPhysicsBlueprint } from "../lib/physics-blueprint";
@@ -129,6 +129,23 @@ export function PaperChat({ paper }: { paper: LocalPaper }) {
             </ToggleGroup>
             <span className="text-muted-foreground text-xs">{t("spec.count", { count: count })}</span>
           </div>
+
+          {spec.preset !== "1B" && (
+            <div className="grid gap-1.5">
+              <Label className="text-xs" htmlFor="paper-mc">
+                {t("spec.mcCount")}
+              </Label>
+              <Input
+                id="paper-mc"
+                type="number"
+                min={1}
+                max={MC_MAX}
+                value={spec.mcCount ?? MC_DEFAULT}
+                onChange={(e) => edit({ mcCount: Math.min(MC_MAX, Math.max(1, Number(e.target.value) || 1)) })}
+                className="w-24"
+              />
+            </div>
+          )}
 
           <div className="grid gap-1.5">
             <Label className="text-xs">{t("spec.topics")}</Label>

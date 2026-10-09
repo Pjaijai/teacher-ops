@@ -30,6 +30,14 @@ assert.equal(b.filter((s) => s.kind === "experiment").length, 1);
 assert.ok(b.some((s) => /passage/.test(s.instructions)));
 assert.deepEqual(full.map((s) => s.n), [...a.map((_, i) => i + 1), ...b.map((_, i) => i + 1)]);
 
+// MC count: a shorter Section A keeps strand order and still covers each strand.
+const short = buildPhysicsBlueprint(spec({ preset: "1A", mcCount: 10 }), rand);
+assert.equal(short.length, 10);
+assert.ok(short.every((s, i) => i === 0 || strandIndex(short[i - 1].strand) <= strandIndex(s.strand)));
+assert.equal(new Set(short.map((s) => s.strand)).size, 5);
+assert.equal(buildPhysicsBlueprint(spec({ preset: "full", mcCount: 20 }), rand).filter((s) => s.section === "A").length, 20);
+assert.equal(buildPhysicsBlueprint({ ...spec({ preset: "1A" }), mcCount: undefined as unknown as number }, rand).length, 33, "old papers default to 33");
+
 // Presets.
 assert.equal(buildPhysicsBlueprint(spec({ preset: "1A" }), rand).filter((s) => s.section === "B").length, 0);
 assert.equal(buildPhysicsBlueprint(spec({ preset: "1B" }), rand).filter((s) => s.section === "A").length, 0);

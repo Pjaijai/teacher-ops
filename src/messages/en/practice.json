@@ -282,7 +282,8 @@
       "focus": "Knowledge points to stress (one per line)",
       "focusPlaceholder": "e.g. lens formula",
       "notes": "Instructions for every question",
-      "notesPlaceholder": "e.g. use Hong Kong contexts"
+      "notesPlaceholder": "e.g. use Hong Kong contexts",
+      "mcCount": "Number of MC questions"
     },
     "generating": {
       "title": "Writing your paper: {done} / {total}",
